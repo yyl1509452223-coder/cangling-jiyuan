@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.8.1";
+const APP_VERSION = "0.8.2";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -48,22 +48,31 @@ const accentVars = {
 
 const changelog = [
   {
+    version: "0.8.2",
+    date: "2026-07-08",
+    title: "文案统一",
+    notes: [
+      "公告、说明、指引和悬停预览统一为苍岭纪元自己的世界观表达。",
+      "清理会破坏沉浸感的开发说明，保留当前数值与玩法节奏不变。",
+    ],
+  },
+  {
     version: "0.8.1",
     date: "2026-07-08",
     title: "预览数值分区",
     notes: [
-      "卡片悬停预览改为原版风格的红绿分区。",
+      "卡片悬停预览改为红绿分区。",
       "成本、收益、扩容提示使用不同色块和右侧数字胶囊，区别更明显。",
     ],
   },
   {
     version: "0.8.0",
     date: "2026-07-08",
-    title: "原版早期数值同步",
+    title: "早期经济校准",
     notes: [
-      "基础粮食、木材、石料上限同步为原版 300；金币上限 600；学识按原版 research 同步为 500。",
-      "小屋、农田、木场、采石场、矿坑和职业产出改为原版早期对应数值，并恢复金币成本链条。",
-      "新增农耕、木材切削两项早期研究，并把农田、木场、采石场、矿坑解锁节奏调到原版口径。",
+      "基础粮食、木材、石料上限调整为 300；金币上限 600；学识上限 500。",
+      "小屋、农田、木场、采石场、矿坑和职业产出重新校准，并恢复金币成本链条。",
+      "新增农耕、木材切削两项早期研究，优化农田、木场、采石场、矿坑的解锁节奏。",
     ],
   },
   {
@@ -78,9 +87,9 @@ const changelog = [
   {
     version: "0.7.2",
     date: "2026-07-08",
-    title: "原版对照与上限审计",
+    title: "早期上限审计",
     notes: [
-      "对照原版的早期资源/人口/存储结构，补强生产建筑的配套存储上限。",
+      "梳理早期资源、人口和存储结构，补强生产建筑的配套存储上限。",
       "基础木材上限提高到 100，基础学识上限提高到 80，避免困难难度把早期研究变成隐形上限题。",
       "山麓木场、露天采石场、赤砂矿坑现在会分别提高木材、石料、矿砂上限。",
       "建筑、研究、训练和远征会在资源上限不足时提示“需扩容”。",
@@ -256,7 +265,7 @@ const paths = [
     color: "#43b883",
     icon: "food",
     desc: "你的先民修筑山腰水渠，让第一座村落在薄雾中稳定生长。",
-    bonuses: ["叙事分支", "不修改原版数值", "适合稳粮扩张"],
+    bonuses: ["叙事分支", "保持基础数值", "适合稳粮扩张"],
     mods: {},
     start: {},
   },
@@ -266,7 +275,7 @@ const paths = [
     color: "#e8894a",
     icon: "stone",
     desc: "你的先民熟悉峭壁与矿脉，懂得把坚硬山岩变成城邦的骨架。",
-    bonuses: ["叙事分支", "不修改原版数值", "适合工程扩张"],
+    bonuses: ["叙事分支", "保持基础数值", "适合工程扩张"],
     mods: {},
     start: {},
   },
@@ -276,7 +285,7 @@ const paths = [
     color: "#5b8def",
     icon: "knowledge",
     desc: "你的先民用星图安排播种、祭仪和远征，最早的文字刻在铜镜背面。",
-    bonuses: ["叙事分支", "不修改原版数值", "适合研究推进"],
+    bonuses: ["叙事分支", "保持基础数值", "适合研究推进"],
     mods: {},
     start: {},
   },
@@ -287,7 +296,7 @@ const buildings = [
     id: "hut",
     name: "苔顶小屋",
     tab: "settlement",
-    desc: "同步原版普通房屋：提供 1 人口和少量学识产出；粮食消耗由人口口粮统一计算。",
+    desc: "给族人遮风避雨，提供 1 人口和少量学识产出；粮食消耗由人口口粮统一计算。",
     costs: { wood: 15, stone: 10 },
     costScale: 1.3,
     effects: { population: 1, goldRateFlat: 0.2, knowledgeRateFlat: 0.3 },
@@ -297,7 +306,7 @@ const buildings = [
     id: "granary",
     name: "山腰农田",
     tab: "settlement",
-    desc: "同步原版农场：提供 1 个粮食岗位，并大幅提高粮食上限。",
+    desc: "开垦山腰薄田，提供 1 个粮食岗位，并大幅提高粮食上限。",
     costs: { gold: 10, wood: 24 },
     costScale: 1.4,
     effects: { cap_food: 240, jobCap_forager: 1 },
@@ -307,7 +316,7 @@ const buildings = [
     id: "lumberyard",
     name: "山麓木场",
     tab: "production",
-    desc: "同步原版伐木营：提供 1 个伐木岗位，并提高木材上限。",
+    desc: "在杉林边缘设立木料场，提供 1 个伐木岗位，并提高木材上限。",
     costs: { gold: 25, wood: 18, stone: 5 },
     costScale: 1.4,
     effects: { cap_wood: 100, jobCap_woodcutter: 1 },
@@ -317,7 +326,7 @@ const buildings = [
     id: "quarry",
     name: "露天采石场",
     tab: "production",
-    desc: "同步原版采石场：提供 1 个采石岗位，并提高石料上限。",
+    desc: "沿山壁开出稳定石源，提供 1 个采石岗位，并提高石料上限。",
     costs: { gold: 32, wood: 24, stone: 8 },
     costScale: 1.4,
     effects: { cap_stone: 100, jobCap_mason: 1 },
@@ -327,7 +336,7 @@ const buildings = [
     id: "orepit",
     name: "赤砂矿坑",
     tab: "production",
-    desc: "按原版矿井折算：提供 1 个矿工岗位，并提高矿砂上限。",
+    desc: "顺着赤砂岩脉向下开采，提供 1 个矿工岗位，并提高矿砂上限。",
     costs: { gold: 160, wood: 140, stone: 80 },
     costScale: 1.4,
     effects: { cap_ore: 100, jobCap_miner: 1 },
@@ -389,7 +398,7 @@ const techs = [
   {
     id: "housing",
     name: "住房",
-    desc: "同步原版 Housing：解锁普通房屋。",
+    desc: "整理营地住处，解锁苔顶小屋。",
     costs: {},
     effects: {},
     unlocked: () => true,
@@ -397,7 +406,7 @@ const techs = [
   {
     id: "agriculture",
     name: "农耕",
-    desc: "同步原版 Agriculture：解锁农田。",
+    desc: "掌握山腰耕作，解锁山腰农田。",
     costs: { knowledge: 10 },
     effects: {},
     unlocked: (s) => hasTech(s, "housing"),
@@ -405,7 +414,7 @@ const techs = [
   {
     id: "woodcutting",
     name: "木材切削",
-    desc: "同步原版 Wood Cutting：解锁伐木营。",
+    desc: "学会切削和堆放木料，解锁山麓木场。",
     costs: { knowledge: 20 },
     effects: {},
     unlocked: (s) => hasTech(s, "housing"),
@@ -413,7 +422,7 @@ const techs = [
   {
     id: "masonry",
     name: "干砌石墙",
-    desc: "同步原版 Stone Masonry：解锁采石场。",
+    desc: "学会干砌和取石，解锁露天采石场。",
     costs: { knowledge: 20 },
     effects: {},
     unlocked: (s) => hasTech(s, "housing"),
@@ -437,7 +446,7 @@ const techs = [
   {
     id: "smelting",
     name: "采矿",
-    desc: "按原版 Mining 折算：解锁矿砂采集和斧兵训练。",
+    desc: "辨认浅层矿脉，解锁矿砂采集和斧兵训练。",
     costs: { knowledge: 250 },
     effects: { oreRate: 0.1 },
     unlocked: (s) => hasTech(s, "masonry") && buildingCount(s, "quarry") >= 3,
@@ -480,21 +489,21 @@ const jobs = [
   {
     id: "forager",
     name: "采食者",
-    desc: "同步原版农夫：每人生产 1.6 粮食/秒。",
+    desc: "照看农田和野生作物，每人生产 1.6 粮食/秒。",
     baseCap: 0,
     effects: { foodRateFlat: 1.6 },
   },
   {
     id: "woodcutter",
     name: "伐木工",
-    desc: "同步原版伐木工：每人生产 0.7 木材/秒。",
+    desc: "砍伐、修枝并堆放可用木料，每人生产 0.7 木材/秒。",
     baseCap: 0,
     effects: { woodRateFlat: 0.7 },
   },
   {
     id: "mason",
     name: "石匠",
-    desc: "同步原版采石工：每人生产 0.6 石料/秒。",
+    desc: "从露天岩壁取下可用石块，每人生产 0.6 石料/秒。",
     effects: { stoneRateFlat: 0.6 },
     unlocked: (s) => hasTech(s, "masonry"),
   },
@@ -515,7 +524,7 @@ const jobs = [
   {
     id: "miner",
     name: "矿工",
-    desc: "按原版矿工铜/铁合并折算：每人生产 0.8 矿砂/秒。",
+    desc: "在浅层矿脉中筛出可冶炼矿砂，每人生产 0.8 矿砂/秒。",
     effects: { oreRateFlat: 0.8 },
     unlocked: (s) => hasTech(s, "smelting"),
   },
@@ -892,7 +901,7 @@ function renderGuide() {
       </article>
       <article class="guide-card" style="--accent:${accentVars.people}">
         <h3>3. 人口需要口粮</h3>
-        <p>每 1 人口消耗 1 粮食/秒；同步原版后，农田提供采食者岗位，采食者每人生产 1.6 粮食/秒。</p>
+        <p>每 1 人口消耗 1 粮食/秒；农田提供采食者岗位，采食者每人生产 1.6 粮食/秒。</p>
       </article>
       <article class="guide-card" style="--accent:${accentVars.knowledge}">
         <h3>4. 研究决定解锁</h3>
@@ -1797,7 +1806,7 @@ function renderPeople() {
       <div class="section-head">
         <div>
           <h2>人口</h2>
-          <p>每 1 人口消耗 1 粮食/秒；采食者同步原版农夫为 1.6 粮食/秒，伐木工 0.7 木材/秒，石匠 0.6 石料/秒。</p>
+          <p>每 1 人口消耗 1 粮食/秒；采食者 1.6 粮食/秒，伐木工 0.7 木材/秒，石匠 0.6 石料/秒。</p>
         </div>
       </div>
       <div class="stats-grid compact-stats">
