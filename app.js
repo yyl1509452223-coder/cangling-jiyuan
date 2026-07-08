@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.7.3";
+const APP_VERSION = "0.8.0";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -15,6 +15,7 @@ const icons = {
   ore: "ore",
   knowledge: "knowledge",
   faith: "faith",
+  gold: "spark",
   people: "people",
   army: "army",
   build: "build",
@@ -22,12 +23,13 @@ const icons = {
 };
 
 const resources = [
-  { id: "food", name: "粮食", icon: "food", cap: 120 },
-  { id: "wood", name: "木材", icon: "wood", cap: 100 },
-  { id: "stone", name: "石料", icon: "stone", cap: 90 },
-  { id: "ore", name: "矿砂", icon: "ore", cap: 40 },
-  { id: "knowledge", name: "学识", icon: "knowledge", cap: 80 },
-  { id: "faith", name: "星辉", icon: "faith", cap: 30 },
+  { id: "food", name: "粮食", icon: "food", cap: 300 },
+  { id: "gold", name: "金币", icon: "spark", cap: 600, unlocked: (s) => buildingCount(s, "hut") >= 1 },
+  { id: "wood", name: "木材", icon: "wood", cap: 300 },
+  { id: "stone", name: "石料", icon: "stone", cap: 300 },
+  { id: "ore", name: "矿砂", icon: "ore", cap: 200, unlocked: (s) => buildingCount(s, "orepit") >= 1 },
+  { id: "knowledge", name: "学识", icon: "knowledge", cap: 500 },
+  { id: "faith", name: "星辉", icon: "faith", cap: 500, unlocked: (s) => buildingCount(s, "shrine") >= 1 },
 ];
 
 const accentVars = {
@@ -37,6 +39,7 @@ const accentVars = {
   ore: "var(--orange)",
   knowledge: "var(--blue)",
   faith: "var(--purple)",
+  gold: "var(--gold)",
   people: "var(--green)",
   army: "var(--red)",
   build: "var(--gold)",
@@ -44,6 +47,16 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.8.0",
+    date: "2026-07-08",
+    title: "原版早期数值同步",
+    notes: [
+      "基础粮食、木材、石料上限同步为原版 300；金币上限 600；学识按原版 research 同步为 500。",
+      "小屋、农田、木场、采石场、矿坑和职业产出改为原版早期对应数值，并恢复金币成本链条。",
+      "新增农耕、木材切削两项早期研究，并把农田、木场、采石场、矿坑解锁节奏调到原版口径。",
+    ],
+  },
   {
     version: "0.7.3",
     date: "2026-07-08",
@@ -234,9 +247,9 @@ const paths = [
     color: "#43b883",
     icon: "food",
     desc: "你的先民修筑山腰水渠，让第一座村落在薄雾中稳定生长。",
-    bonuses: ["粮食产量 +15%", "开局额外 20 粮食", "适合稳粮扩张"],
-    mods: { foodRate: 1.15 },
-    start: { food: 20 },
+    bonuses: ["叙事分支", "不修改原版数值", "适合稳粮扩张"],
+    mods: {},
+    start: {},
   },
   {
     id: "flint",
@@ -244,9 +257,9 @@ const paths = [
     color: "#e8894a",
     icon: "stone",
     desc: "你的先民熟悉峭壁与矿脉，懂得把坚硬山岩变成城邦的骨架。",
-    bonuses: ["木材与石料产量 +10%", "建筑成本 -5%", "开局额外 15 石料"],
-    mods: { woodRate: 1.1, stoneRate: 1.1, buildCost: 0.95 },
-    start: { stone: 15 },
+    bonuses: ["叙事分支", "不修改原版数值", "适合工程扩张"],
+    mods: {},
+    start: {},
   },
   {
     id: "astral",
@@ -254,9 +267,9 @@ const paths = [
     color: "#5b8def",
     icon: "knowledge",
     desc: "你的先民用星图安排播种、祭仪和远征，最早的文字刻在铜镜背面。",
-    bonuses: ["学识产量 +20%", "研究成本 -8%", "开局额外 12 学识"],
-    mods: { knowledgeRate: 1.2, techCost: 0.92 },
-    start: { knowledge: 12 },
+    bonuses: ["叙事分支", "不修改原版数值", "适合研究推进"],
+    mods: {},
+    start: {},
   },
 ];
 
@@ -265,50 +278,50 @@ const buildings = [
     id: "hut",
     name: "苔顶小屋",
     tab: "settlement",
-    desc: "能遮风避雨的家。它提供一个稳定住处；新人口会按统一口粮规则消耗粮食。",
-    costs: { wood: 18, food: 8 },
-    costScale: 1.15,
-    effects: { population: 1 },
-    unlocked: () => true,
+    desc: "同步原版普通房屋：提供 1 人口和少量学识产出；粮食消耗由人口口粮统一计算。",
+    costs: { wood: 15, stone: 10 },
+    costScale: 1.3,
+    effects: { population: 1, goldRateFlat: 0.2, knowledgeRateFlat: 0.3 },
+    unlocked: (s) => hasTech(s, "housing"),
   },
   {
     id: "granary",
-    name: "风干粮仓",
+    name: "山腰农田",
     tab: "settlement",
-    desc: "抬高的仓房能储存更多粮食，并减少霉变损失。",
-    costs: { wood: 24, stone: 10 },
-    costScale: 1.18,
-    effects: { cap_food: 80, jobCap_forager: 2 },
-    unlocked: () => true,
+    desc: "同步原版农场：提供 1 个粮食岗位，并大幅提高粮食上限。",
+    costs: { gold: 10, wood: 24 },
+    costScale: 1.4,
+    effects: { cap_food: 240, jobCap_forager: 1 },
+    unlocked: (s) => hasTech(s, "agriculture"),
   },
   {
     id: "lumberyard",
     name: "山麓木场",
     tab: "production",
-    desc: "规划伐木路线，让采集者更快把木材送回村落。",
-    costs: { wood: 12, food: 14 },
-    costScale: 1.17,
-    effects: { woodRateFlat: 0.4, cap_wood: 45, jobCap_woodcutter: 2 },
-    unlocked: () => true,
+    desc: "同步原版伐木营：提供 1 个伐木岗位，并提高木材上限。",
+    costs: { gold: 25, wood: 18, stone: 5 },
+    costScale: 1.4,
+    effects: { cap_wood: 100, jobCap_woodcutter: 1 },
+    unlocked: (s) => hasTech(s, "woodcutting"),
   },
   {
     id: "quarry",
     name: "露天采石场",
     tab: "production",
-    desc: "从浅层岩壁切出整齐石块，是大型工程的开始。",
-    costs: { wood: 35, stone: 8 },
-    costScale: 1.18,
-    effects: { stoneRateFlat: 0.35, cap_stone: 50, jobCap_mason: 2 },
+    desc: "同步原版采石场：提供 1 个采石岗位，并提高石料上限。",
+    costs: { gold: 32, wood: 24, stone: 8 },
+    costScale: 1.4,
+    effects: { cap_stone: 100, jobCap_mason: 1 },
     unlocked: (s) => hasTech(s, "masonry"),
   },
   {
     id: "orepit",
     name: "赤砂矿坑",
     tab: "production",
-    desc: "矿砂并不纯净，但足以支撑最早的冶炼尝试。",
-    costs: { wood: 55, stone: 42, knowledge: 12 },
-    costScale: 1.2,
-    effects: { oreRateFlat: 0.22, cap_ore: 60, jobCap_miner: 2 },
+    desc: "按原版矿井折算：提供 1 个矿工岗位，并提高矿砂上限。",
+    costs: { gold: 160, wood: 140, stone: 80 },
+    costScale: 1.4,
+    effects: { cap_ore: 100, jobCap_miner: 1 },
     unlocked: (s) => hasTech(s, "smelting"),
   },
   {
@@ -365,20 +378,44 @@ const buildings = [
 
 const techs = [
   {
+    id: "housing",
+    name: "住房",
+    desc: "同步原版 Housing：解锁普通房屋。",
+    costs: {},
+    effects: {},
+    unlocked: () => true,
+  },
+  {
+    id: "agriculture",
+    name: "农耕",
+    desc: "同步原版 Agriculture：解锁农田。",
+    costs: { knowledge: 10 },
+    effects: {},
+    unlocked: (s) => hasTech(s, "housing"),
+  },
+  {
+    id: "woodcutting",
+    name: "木材切削",
+    desc: "同步原版 Wood Cutting：解锁伐木营。",
+    costs: { knowledge: 20 },
+    effects: {},
+    unlocked: (s) => hasTech(s, "housing"),
+  },
+  {
     id: "masonry",
     name: "干砌石墙",
-    desc: "石料上限提高，解锁采石场。",
-    costs: { knowledge: 18, stone: 20 },
-    effects: { cap_stone: 80 },
-    unlocked: () => true,
+    desc: "同步原版 Stone Masonry：解锁采石场。",
+    costs: { knowledge: 20 },
+    effects: {},
+    unlocked: (s) => hasTech(s, "housing"),
   },
   {
     id: "records",
     name: "结绳账簿",
     desc: "解锁书记棚，并让学识获取提高。",
-    costs: { knowledge: 35, food: 40 },
+    costs: { knowledge: 150 },
     effects: { knowledgeRate: 0.15 },
-    unlocked: () => true,
+    unlocked: (s) => hasTech(s, "housing"),
   },
   {
     id: "watch",
@@ -390,11 +427,11 @@ const techs = [
   },
   {
     id: "smelting",
-    name: "低炉冶炼",
-    desc: "解锁矿砂采集和斧兵训练。",
-    costs: { knowledge: 75, stone: 80, wood: 70 },
+    name: "采矿",
+    desc: "按原版 Mining 折算：解锁矿砂采集和斧兵训练。",
+    costs: { knowledge: 250 },
     effects: { oreRate: 0.1 },
-    unlocked: (s) => hasTech(s, "masonry") && buildingCount(s, "quarry") >= 1,
+    unlocked: (s) => hasTech(s, "masonry") && buildingCount(s, "quarry") >= 3,
   },
   {
     id: "omens",
@@ -434,21 +471,21 @@ const jobs = [
   {
     id: "forager",
     name: "采食者",
-    desc: "采集浆果、谷粒和可食根茎。",
-    baseCap: 4,
-    effects: { foodRateFlat: 2 },
+    desc: "同步原版农夫：每人生产 1.6 粮食/秒。",
+    baseCap: 0,
+    effects: { foodRateFlat: 1.6 },
   },
   {
     id: "woodcutter",
     name: "伐木工",
-    desc: "砍伐、剥皮、拖运木材。",
-    baseCap: 3,
+    desc: "同步原版伐木工：每人生产 0.7 木材/秒。",
+    baseCap: 0,
     effects: { woodRateFlat: 0.7 },
   },
   {
     id: "mason",
     name: "石匠",
-    desc: "从山壁切割石料。",
+    desc: "同步原版采石工：每人生产 0.6 石料/秒。",
     effects: { stoneRateFlat: 0.6 },
     unlocked: (s) => hasTech(s, "masonry"),
   },
@@ -469,8 +506,8 @@ const jobs = [
   {
     id: "miner",
     name: "矿工",
-    desc: "筛洗矿砂，准备冶炼。",
-    effects: { oreRateFlat: 0.35 },
+    desc: "按原版矿工铜/铁合并折算：每人生产 0.8 矿砂/秒。",
+    effects: { oreRateFlat: 0.8 },
     unlocked: (s) => hasTech(s, "smelting"),
   },
 ];
@@ -579,7 +616,7 @@ const randomEvents = [
 ];
 
 const defaultResources = () =>
-  Object.fromEntries(resources.map((resource) => [resource.id, resource.id === "food" ? 60 : resource.id === "wood" ? 45 : resource.id === "stone" ? 35 : 0]));
+  Object.fromEntries(resources.map((resource) => [resource.id, 0]));
 
 const defaultState = () => ({
   started: false,
@@ -594,13 +631,13 @@ const defaultState = () => ({
   lastTickAt: Date.now(),
   playTime: 0,
   resources: defaultResources(),
-  population: 5,
-  popCapBase: 8,
+  population: 0,
+  popCapBase: 0,
   buildings: {},
   techs: [],
   jobs: {
-    forager: 2,
-    woodcutter: 2,
+    forager: 0,
+    woodcutter: 0,
     mason: 0,
     scribe: 0,
     acolyte: 0,
@@ -701,6 +738,7 @@ function migrate(save) {
   if (save.started && !save.difficulty) save.difficulty = "normal";
   if (save.started && !save.tribeName) save.tribeName = "苍岭部落";
   save.resources = { ...defaultResources(), ...(save.resources || {}) };
+  save.popCapBase = defaultState().popCapBase;
   save.buildings = save.buildings || {};
   save.jobs = { ...defaultState().jobs, ...(save.jobs || {}) };
   save.army = save.army || {};
@@ -709,12 +747,40 @@ function migrate(save) {
   save.achievements = Array.isArray(save.achievements) ? save.achievements : [];
   save.log = Array.isArray(save.log) ? save.log : [];
   save.stats = { ...defaultState().stats, ...(save.stats || {}) };
-  const jobCaps = derive(save).jobCaps;
+  let derived = derive(save);
+  save.population = clamp(Math.floor(save.population || 0), 0, derived.popCap);
+  derived = derive(save);
+  const jobCaps = derived.jobCaps;
   Object.keys(save.jobs).forEach((id) => {
     save.jobs[id] = clamp(Math.floor(save.jobs[id] || 0), 0, jobCaps[id] ?? 0);
   });
+  Object.keys(save.army).forEach((id) => {
+    save.army[id] = Math.max(0, Math.floor(save.army[id] || 0));
+    if (save.army[id] <= 0) delete save.army[id];
+  });
+  normalizeAssignedPeople(save);
   save.lastTickAt = Date.now();
   return save;
+}
+
+function normalizeAssignedPeople(save) {
+  const assigned = () => totalAssignedJobs(save) + armySize(save);
+  const reduceJobs = () => {
+    const id = Object.keys(save.jobs).find((jobId) => save.jobs[jobId] > 0);
+    if (!id) return false;
+    save.jobs[id] -= 1;
+    return true;
+  };
+  const reduceArmy = () => {
+    const id = Object.keys(save.army).find((unitId) => save.army[unitId] > 0);
+    if (!id) return false;
+    save.army[id] -= 1;
+    if (save.army[id] <= 0) delete save.army[id];
+    return true;
+  };
+  while (assigned() > save.population) {
+    if (!reduceJobs() && !reduceArmy()) break;
+  }
 }
 
 function saveState(silent = true) {
@@ -813,11 +879,11 @@ function renderGuide() {
       </article>
       <article class="guide-card" style="--accent:${accentVars.wood}">
         <h3>2. 开局先稳资源</h3>
-        <p>右侧可以手动采集粮食、木材、石料和学识。中间点击建筑卡片即可建造，不需要找按钮。</p>
+        <p>先完成无成本的住房研究，再手动采集粮食、木材和石料建小屋。学识和金币会由小屋等建筑自动产出。</p>
       </article>
       <article class="guide-card" style="--accent:${accentVars.people}">
         <h3>3. 人口需要口粮</h3>
-        <p>基础规则是每 1 人口消耗 1 粮食/秒；分配成采食者后，每人会生产 2 粮食/秒。困难和地狱难度会让口粮压力更高。</p>
+        <p>每 1 人口消耗 1 粮食/秒；同步原版后，农田提供采食者岗位，采食者每人生产 1.6 粮食/秒。</p>
       </article>
       <article class="guide-card" style="--accent:${accentVars.knowledge}">
         <h3>4. 研究决定解锁</h3>
@@ -1110,7 +1176,7 @@ function scaledRewards(rewards, scale = 1) {
 }
 
 function manualGather(id) {
-  const gains = { food: 4, wood: 3, stone: 2, knowledge: 1 };
+  const gains = { food: 1, wood: 1, stone: 1 };
   addResources({ [id]: (gains[id] || 1) * getDifficulty().mods.manualGather });
   state.stats.clicks += 1;
   scheduleSave();
@@ -1435,6 +1501,7 @@ function renderSidebar() {
   const difficulty = getDifficulty();
   const foodRate = cached.rates.food || 0;
   const foodPressure = effectiveNegativeRate("food");
+  const visibleResources = resources.filter((resource) => !resource.unlocked || resource.unlocked(state));
   return `
     <section class="panel">
       <div class="panel-head">
@@ -1444,7 +1511,7 @@ function renderSidebar() {
         </div>
       </div>
       <div class="resource-list">
-        ${resources.map(renderResourceRow).join("")}
+        ${visibleResources.map(renderResourceRow).join("")}
       </div>
     </section>
     <section class="panel">
@@ -1472,7 +1539,6 @@ function renderSidebar() {
         <button class="secondary-btn" data-action="gather" data-id="food">${icon("food")}粮食</button>
         <button class="secondary-btn" data-action="gather" data-id="wood">${icon("wood")}木材</button>
         <button class="secondary-btn" data-action="gather" data-id="stone">${icon("stone")}石料</button>
-        <button class="secondary-btn" data-action="gather" data-id="knowledge">${icon("knowledge")}学识</button>
       </div>
     </section>
   `;
@@ -1578,7 +1644,11 @@ function renderOverview() {
 function renderStarterGoals() {
   if (!state.started) return "";
   const goals = [
-    { text: "建造 1 座苔顶小屋", done: buildingCount(state, "hut") >= 1, accent: accentVars.food },
+    { text: "完成研究：住房", done: hasTech(state, "housing"), accent: accentVars.food },
+    { text: "采集木材和石料，建造 1 座苔顶小屋", done: buildingCount(state, "hut") >= 1, accent: accentVars.food },
+    { text: "完成研究：农耕", done: hasTech(state, "agriculture"), accent: accentVars.food },
+    { text: "建造 1 座山腰农田", done: buildingCount(state, "granary") >= 1, accent: accentVars.food },
+    { text: "完成研究：木材切削", done: hasTech(state, "woodcutting"), accent: accentVars.wood },
     { text: "建造 1 座山麓木场", done: buildingCount(state, "lumberyard") >= 1, accent: accentVars.wood },
     { text: "完成研究：干砌石墙", done: hasTech(state, "masonry"), accent: accentVars.stone },
     { text: "建造 1 座采石场", done: buildingCount(state, "quarry") >= 1, accent: accentVars.stone },
@@ -1702,7 +1772,7 @@ function renderPeople() {
       <div class="section-head">
         <div>
           <h2>人口</h2>
-          <p>基础规则是每 1 人口消耗 1 粮食/秒；采食者每人生产 2 粮食/秒，其他职业专注产出对应资源。</p>
+          <p>每 1 人口消耗 1 粮食/秒；采食者同步原版农夫为 1.6 粮食/秒，伐木工 0.7 木材/秒，石匠 0.6 石料/秒。</p>
         </div>
       </div>
       <div class="stats-grid compact-stats">
