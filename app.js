@@ -1,6 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
-const APP_VERSION = "0.5.0";
+const GUIDE_KEY = "ridge-age-guide-seen";
+const APP_VERSION = "0.7.0";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -43,6 +44,26 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.7.0",
+    date: "2026-07-08",
+    title: "人口口粮制",
+    notes: [
+      "基础规则改为每 1 人口消耗 1 粮食/秒，困难和地狱难度仍会加压。",
+      "采食者调整为每人基础生产 2 粮食/秒。",
+      "小屋只增加人口，不再单独额外消耗粮食。",
+    ],
+  },
+  {
+    version: "0.6.0",
+    date: "2026-07-08",
+    title: "新手指引",
+    notes: [
+      "首次访问会显示简短开局指引。",
+      "顶部增加指引入口，可随时重新查看。",
+      "早期总览会显示低调的新手目标，帮助判断下一步该做什么。",
+    ],
+  },
   {
     version: "0.5.0",
     date: "2026-07-08",
@@ -214,10 +235,10 @@ const buildings = [
     id: "hut",
     name: "苔顶小屋",
     tab: "settlement",
-    desc: "能遮风避雨的家。它提供一个稳定住处，但也会持续消耗粮食。",
+    desc: "能遮风避雨的家。它提供一个稳定住处；新人口会按统一口粮规则消耗粮食。",
     costs: { wood: 18, food: 8 },
     costScale: 1.15,
-    effects: { population: 1, foodRateFlat: -1 },
+    effects: { population: 1 },
     unlocked: () => true,
   },
   {
@@ -385,41 +406,41 @@ const jobs = [
     name: "采食者",
     desc: "采集浆果、谷粒和可食根茎。",
     baseCap: 4,
-    effects: { foodRateFlat: 1.2 },
+    effects: { foodRateFlat: 2 },
   },
   {
     id: "woodcutter",
     name: "伐木工",
     desc: "砍伐、剥皮、拖运木材。",
     baseCap: 3,
-    effects: { woodRateFlat: 0.7, foodRateFlat: -0.15 },
+    effects: { woodRateFlat: 0.7 },
   },
   {
     id: "mason",
     name: "石匠",
     desc: "从山壁切割石料。",
-    effects: { stoneRateFlat: 0.6, foodRateFlat: -0.2 },
+    effects: { stoneRateFlat: 0.6 },
     unlocked: (s) => hasTech(s, "masonry"),
   },
   {
     id: "scribe",
     name: "书记",
     desc: "整理账册，研究古老符号。",
-    effects: { knowledgeRateFlat: 0.35, foodRateFlat: -0.25 },
+    effects: { knowledgeRateFlat: 0.35 },
     unlocked: (s) => hasTech(s, "records"),
   },
   {
     id: "acolyte",
     name: "守灯人",
     desc: "照看祭坛并收集星辉。",
-    effects: { faithRateFlat: 0.18, foodRateFlat: -0.25 },
+    effects: { faithRateFlat: 0.18 },
     unlocked: (s) => hasTech(s, "omens"),
   },
   {
     id: "miner",
     name: "矿工",
     desc: "筛洗矿砂，准备冶炼。",
-    effects: { oreRateFlat: 0.35, foodRateFlat: -0.3 },
+    effects: { oreRateFlat: 0.35 },
     unlocked: (s) => hasTech(s, "smelting"),
   },
 ];
@@ -431,7 +452,7 @@ const units = [
     desc: "轻装巡行，适合早期远征。",
     costs: { food: 28, wood: 18 },
     power: 1,
-    upkeep: { foodRateFlat: -0.2 },
+    upkeep: {},
     unlocked: (s) => hasTech(s, "watch"),
   },
   {
@@ -440,7 +461,7 @@ const units = [
     desc: "防线的基础，用木盾和短矛拖住敌人。",
     costs: { food: 42, wood: 36, stone: 12 },
     power: 2.1,
-    upkeep: { foodRateFlat: -0.45 },
+    upkeep: {},
     unlocked: (s) => hasTech(s, "watch") && buildingCount(s, "barracks") >= 1,
   },
   {
@@ -449,7 +470,7 @@ const units = [
     desc: "佩戴粗铁刃口，是山岭战斗的硬拳头。",
     costs: { food: 70, wood: 35, ore: 22 },
     power: 4.5,
-    upkeep: { foodRateFlat: -0.8 },
+    upkeep: {},
     unlocked: (s) => hasTech(s, "iron"),
   },
 ];
@@ -576,6 +597,7 @@ let state = loadState();
 let cached = derive(state);
 let autosaveTimer = null;
 let announcementCheckQueued = false;
+let guideCheckQueued = false;
 
 function icon(id, className = "icon") {
   return `<svg class="${className}" aria-hidden="true"><use href="#icon-${icons[id] || id}"></use></svg>`;
@@ -751,8 +773,67 @@ function openAnnouncements() {
   ]);
 }
 
+function renderGuide() {
+  return `
+    <div class="guide-list">
+      <article class="guide-card" style="--accent:${accentVars.food}">
+        <h3>1. 先选难度和部落名</h3>
+        <p>第一次玩建议选简单或正常。简单只让手动采集翻倍，适合先熟悉节奏。</p>
+      </article>
+      <article class="guide-card" style="--accent:${accentVars.wood}">
+        <h3>2. 开局先稳资源</h3>
+        <p>右侧可以手动采集粮食、木材、石料和学识。中间点击建筑卡片即可建造，不需要找按钮。</p>
+      </article>
+      <article class="guide-card" style="--accent:${accentVars.people}">
+        <h3>3. 人口需要口粮</h3>
+        <p>基础规则是每 1 人口消耗 1 粮食/秒；分配成采食者后，每人会生产 2 粮食/秒。困难和地狱难度会让口粮压力更高。</p>
+      </article>
+      <article class="guide-card" style="--accent:${accentVars.knowledge}">
+        <h3>4. 研究决定解锁</h3>
+        <p>完成研究会解锁采石、文化建筑、军队和远征。夜哨制度完成后才会出现军队与远征。</p>
+      </article>
+      <article class="guide-card" style="--accent:${accentVars.spark}">
+        <h3>5. 信息藏在悬停里</h3>
+        <p>建筑和研究的成本、效果会在鼠标放上去时显示。需要低调时，顶部“视图”可以切到工作面板样式。</p>
+      </article>
+    </div>
+  `;
+}
+
+function openGuide() {
+  try {
+    localStorage.setItem(GUIDE_KEY, APP_VERSION);
+  } catch {
+    // Ignore storage errors; the guide can still be viewed.
+  }
+  openModal("新手指引", renderGuide(), [
+    { label: "知道了", className: "primary-btn", action: closeModal },
+  ]);
+}
+
+function showGuideIfNeeded() {
+  if (state.started || state.stealth || guideCheckQueued) return;
+  let seenGuide = "";
+  try {
+    seenGuide = localStorage.getItem(GUIDE_KEY) || "";
+  } catch {
+    return;
+  }
+  if (seenGuide) return;
+  guideCheckQueued = true;
+  try {
+    localStorage.setItem(GUIDE_KEY, APP_VERSION);
+  } catch {
+    // Ignore storage errors; avoid blocking the page.
+  }
+  setTimeout(() => {
+    guideCheckQueued = false;
+    if (!state.started && !state.stealth && !$("#modal-backdrop")) openGuide();
+  }, 220);
+}
+
 function showAnnouncementIfNeeded() {
-  if (state.stealth || announcementCheckQueued) return;
+  if (!state.started || state.stealth || announcementCheckQueued) return;
   let seenVersion = "";
   try {
     seenVersion = localStorage.getItem(ANNOUNCEMENT_KEY) || "";
@@ -911,6 +992,7 @@ function derive(s) {
     });
   };
 
+  negativeRates.food -= s.population || 0;
   buildings.forEach((building) => applyEffects(building.effects, buildingCount(s, building.id)));
   techs.filter((tech) => hasTech(s, tech.id)).forEach((tech) => applyEffects(tech.effects, 1));
   jobs.filter((job) => !job.unlocked || job.unlocked(s)).forEach((job) => {
@@ -1180,6 +1262,7 @@ function render() {
     ${state.started ? renderGame() : renderStart()}
   `;
   bindEvents();
+  showGuideIfNeeded();
   showAnnouncementIfNeeded();
 }
 
@@ -1198,6 +1281,7 @@ function renderTopbar() {
       </div>
       <div class="top-actions">
         <button class="secondary-btn version-btn" data-action="announcements"><span>v${APP_VERSION}</span><span>公告</span></button>
+        <button class="secondary-btn" data-action="guide">${icon("knowledge")}<span>指引</span></button>
         <button class="secondary-btn" data-action="stealth">${icon("spark")}<span>${state.stealth ? "标准" : "视图"}</span></button>
         ${state.started ? `<button class="secondary-btn" data-action="save">${icon("spark")}<span>保存</span></button>` : ""}
         ${state.started ? `<button class="secondary-btn" data-action="export">${icon("knowledge")}<span>导出</span></button>` : ""}
@@ -1424,6 +1508,7 @@ function renderOverview() {
         <div class="stat"><div class="stat-label">${militaryUnlocked ? "军力" : "防务"}</div><div class="stat-value">${militaryUnlocked ? fmt(armyPower(), 1) : "未解锁"}</div></div>
       </div>
       ${cached.starved ? `<div class="status-note negative">${icon("food")}粮食为 0，除粮食外的自动生产暂时停摆。</div>` : ""}
+      ${renderStarterGoals()}
     </section>
     <section class="panel">
       <div class="panel-head">
@@ -1439,6 +1524,29 @@ function renderOverview() {
       </div>
       <div class="log-list overview-log">${state.log.map((entry) => `<div class="log-entry">${entry}</div>`).join("")}</div>
     </section>
+    </div>
+  `;
+}
+
+function renderStarterGoals() {
+  if (!state.started) return "";
+  const goals = [
+    { text: "建造 1 座苔顶小屋", done: buildingCount(state, "hut") >= 1, accent: accentVars.food },
+    { text: "建造 1 座山麓木场", done: buildingCount(state, "lumberyard") >= 1, accent: accentVars.wood },
+    { text: "完成研究：干砌石墙", done: hasTech(state, "masonry"), accent: accentVars.stone },
+    { text: "建造 1 座采石场", done: buildingCount(state, "quarry") >= 1, accent: accentVars.stone },
+    { text: "完成研究：夜哨制度", done: hasTech(state, "watch"), accent: accentVars.army },
+  ];
+  if (goals.every((goal) => goal.done)) return "";
+  return `
+    <div class="starter-goals">
+      <div class="starter-title">${icon("spark")}新手目标</div>
+      ${goals.map((goal) => `
+        <div class="starter-goal ${goal.done ? "done" : ""}" style="--accent:${goal.accent}">
+          <span>${goal.done ? "✓" : "·"}</span>
+          <p>${goal.text}</p>
+        </div>
+      `).join("")}
     </div>
   `;
 }
@@ -1542,13 +1650,14 @@ function renderPeople() {
       <div class="section-head">
         <div>
           <h2>人口</h2>
-          <p>人口可分配到职业或军队；住处、职业和士兵会形成粮食负担。</p>
+          <p>基础规则是每 1 人口消耗 1 粮食/秒；采食者每人生产 2 粮食/秒，其他职业专注产出对应资源。</p>
         </div>
       </div>
       <div class="stats-grid compact-stats">
         <div class="stat"><div class="stat-label">总人口</div><div class="stat-value">${fmt(state.population)}</div></div>
         <div class="stat"><div class="stat-label">已分配</div><div class="stat-value">${fmt(totalAssignedJobs(state) + armySize(state))}</div></div>
         <div class="stat"><div class="stat-label">空闲</div><div class="stat-value">${fmt(idlePopulation())}</div></div>
+        <div class="stat"><div class="stat-label">口粮消耗</div><div class="stat-value negative">${signed(-state.population * foodUseMult())}/秒</div></div>
         <div class="stat"><div class="stat-label">粮食净变</div><div class="stat-value ${rateClass(cached.rates.food)}">${signed(cached.rates.food || 0)}/秒</div></div>
       </div>
       <div class="panel">
@@ -1857,6 +1966,7 @@ function bindEvents() {
       }
       if (action === "save") saveState(false);
       if (action === "announcements") openAnnouncements();
+      if (action === "guide") openGuide();
       if (action === "reset") resetGame();
       if (action === "export") exportSave();
       if (action === "import") importSave();
