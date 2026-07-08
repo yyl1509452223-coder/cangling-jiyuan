@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.7.2";
+const APP_VERSION = "0.7.3";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -44,6 +44,15 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.7.3",
+    date: "2026-07-08",
+    title: "悬停预览稳定",
+    notes: [
+      "修复资源每秒刷新时，中间卡片悬停预览被反复重置的问题。",
+      "鼠标停在建筑、研究、军队或远征卡片上时，只刷新左右信息栏，中间内容会在移开后补刷新。",
+    ],
+  },
   {
     version: "0.7.2",
     date: "2026-07-08",
@@ -619,6 +628,7 @@ let cached = derive(state);
 let autosaveTimer = null;
 let announcementCheckQueued = false;
 let guideCheckQueued = false;
+let currentViewRefreshPending = false;
 
 function icon(id, className = "icon") {
   return `<svg class="${className}" aria-hidden="true"><use href="#icon-${icons[id] || id}"></use></svg>`;
@@ -1286,7 +1296,7 @@ function tick() {
   }
 
   checkAchievements();
-  renderSidebarAndCurrent();
+  renderSidebarAndCurrent({ deferCurrentOnPreview: true });
   scheduleSave();
 }
 
@@ -1987,6 +1997,15 @@ function buildingCategoryName(tab) {
 }
 
 function bindEvents() {
+  app.querySelectorAll("#current-view .has-tip").forEach((item) => {
+    const flushCurrentView = () => {
+      if (!currentViewRefreshPending || isCurrentViewPreviewActive()) return;
+      renderSidebarAndCurrent();
+    };
+    item.onmouseleave = flushCurrentView;
+    item.onfocusout = () => setTimeout(flushCurrentView, 0);
+  });
+
   app.querySelectorAll("[data-action]").forEach((button) => {
     if (button.classList.contains("click-card")) {
       button.onkeydown = (event) => {
@@ -2057,7 +2076,13 @@ function escapeHtml(value) {
     .replaceAll('"', "&quot;");
 }
 
-function renderSidebarAndCurrent() {
+function isCurrentViewPreviewActive() {
+  const current = $("#current-view");
+  return !!current?.querySelector(".has-tip:hover, .has-tip:focus-within");
+}
+
+function renderSidebarAndCurrent(options = {}) {
+  const { updateCurrent = true, deferCurrentOnPreview = false } = options;
   cached = derive(state);
   document.documentElement.dataset.theme = state.theme;
   const overview = $("#overview-column");
@@ -2065,7 +2090,14 @@ function renderSidebarAndCurrent() {
   const current = $("#current-view");
   if (overview) overview.innerHTML = renderOverview();
   if (sidebar) sidebar.innerHTML = renderSidebar();
-  if (current) current.innerHTML = renderCurrentView();
+  if (current && updateCurrent) {
+    if (deferCurrentOnPreview && isCurrentViewPreviewActive()) {
+      currentViewRefreshPending = true;
+    } else {
+      currentViewRefreshPending = false;
+      current.innerHTML = renderCurrentView();
+    }
+  }
   bindEvents();
 }
 
