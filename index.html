@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#171717" />
+    <title>苍岭纪元</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <svg class="sprite" aria-hidden="true">
+      <symbol id="icon-food" viewBox="0 0 24 24">
+        <path d="M12 21c-3.5-1.2-5.8-3.3-6.8-6.3-.8-2.5-.5-5.6.9-9.1 3.7.3 6.2 1.7 7.4 4.2.5-2.9 2.8-5.2 6.8-6.8.7 3.9.3 7.1-1.4 9.6-1.3 2-3.3 3.2-6 3.7v4.7H12Zm-.1-7.2c-.5-2.4-1.9-4.2-4.2-5.4-.4 2-.3 3.8.2 5.2.6 1.8 1.9 3.1 4 4v-3.8Zm2-.1c2-.5 3.4-1.5 4.2-2.9.7-1.2 1-2.8.8-4.7-2.7 1.5-4.3 3.7-5 6.7v.9Z" />
+      </symbol>
+      <symbol id="icon-wood" viewBox="0 0 24 24">
+        <path d="M4 7.5C4 5.6 5.6 4 7.5 4h9C18.4 4 20 5.6 20 7.5S18.4 11 16.5 11h-9C5.6 11 4 9.4 4 7.5Zm3.5-1.6a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2ZM4 16.5C4 14.6 5.6 13 7.5 13h9c1.9 0 3.5 1.6 3.5 3.5S18.4 20 16.5 20h-9C5.6 20 4 18.4 4 16.5Zm12.5-1.6a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2Z" />
+      </symbol>
+      <symbol id="icon-stone" viewBox="0 0 24 24">
+        <path d="m4 13 4.7-8h6.8L20 12.6 16.4 20H7.2L4 13Zm4.1-.4 2.2 5.2h4.8l2.2-4.7-2.9-5H9.9l-1.8 4.5Z" />
+      </symbol>
+      <symbol id="icon-ore" viewBox="0 0 24 24">
+        <path d="M6 19 3.5 9.8 12 3l8.5 6.8L18 19H6Zm3.1-2.2h5.8l2.1-6-5-4-5 4 2.1 6Z" />
+      </symbol>
+      <symbol id="icon-knowledge" viewBox="0 0 24 24">
+        <path d="M5 4.5C6.8 4.2 8.7 4.4 10.5 5.1c.6.2 1.1.6 1.5 1.1.4-.5.9-.9 1.5-1.1 1.8-.7 3.7-.9 5.5-.6v14.1c-2-.3-3.8-.1-5.5.6-.6.3-1.1.7-1.5 1.3-.4-.6-.9-1-1.5-1.3-1.7-.7-3.5-.9-5.5-.6V4.5Zm2 2.2v9.6c1.5 0 2.9.3 4 .9V8.1c-.2-.5-.6-.8-1.2-1A7.4 7.4 0 0 0 7 6.7Zm10 0c-1-.1-1.9 0-2.8.4-.6.2-1 .5-1.2 1v9.1c1.1-.6 2.5-.9 4-.9V6.7Z" />
+      </symbol>
+      <symbol id="icon-faith" viewBox="0 0 24 24">
+        <path d="m12 2.5 2.8 6 6.5.8-4.8 4.5 1.2 6.5L12 17.1l-5.7 3.2 1.2-6.5-4.8-4.5 6.5-.8L12 2.5Z" />
+      </symbol>
+      <symbol id="icon-people" viewBox="0 0 24 24">
+        <path d="M8.5 11a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm7.5 1a3 3 0 1 1 0-6 3 3 0 0 1 0 6ZM3 20.5c.2-4.2 2.1-6.4 5.5-6.4s5.3 2.2 5.5 6.4H3Zm10.6-3.6c.9-1.6 2.4-2.4 4.4-2.4 2.7 0 4.2 1.8 4.4 5.5H16c-.2-1.3-.9-2.3-2.4-3.1Z" />
+      </symbol>
+      <symbol id="icon-army" viewBox="0 0 24 24">
+        <path d="M5 20.5 3.5 19 10 12.5 5 7.4 6.4 6 11.5 11 18 4.5 19.5 6 13 12.5 20.5 20 19 21.5 11.5 14 5 20.5Z" />
+      </symbol>
+      <symbol id="icon-build" viewBox="0 0 24 24">
+        <path d="M4 20V9.5l8-6 8 6V20h-6v-6h-4v6H4Zm2-2h2v-6h8v6h2v-7.5l-6-4.5-6 4.5V18Z" />
+      </symbol>
+      <symbol id="icon-spark" viewBox="0 0 24 24">
+        <path d="M12 2 9.8 8.3 3.5 10.5l6.3 2.2L12 19l2.2-6.3 6.3-2.2-6.3-2.2L12 2Zm-6.5 14.5L4 20l3.5-1.5L11 20l-1.5-3.5L11 13l-3.5 1.5L4 13l1.5 3.5Z" />
+      </symbol>
+      <symbol id="icon-moon" viewBox="0 0 24 24">
+        <path d="M20.5 15.7A8.8 8.8 0 0 1 8.3 3.5a9.2 9.2 0 1 0 12.2 12.2Z" />
+      </symbol>
+      <symbol id="icon-sun" viewBox="0 0 24 24">
+        <path d="M12 6.2a5.8 5.8 0 1 1 0 11.6 5.8 5.8 0 0 1 0-11.6ZM11 1h2v3h-2V1Zm0 19h2v3h-2v-3ZM1 11h3v2H1v-2Zm19 0h3v2h-3v-2ZM4.2 2.8l2.1 2.1-1.4 1.4-2.1-2.1 1.4-1.4Zm14.9 14.9 2.1 2.1-1.4 1.4-2.1-2.1 1.4-1.4Zm0-12.8 2.1-2.1 1.4 1.4-2.1 2.1-1.4-1.4ZM4.9 17.7l1.4 1.4-2.1 2.1-1.4-1.4 2.1-2.1Z" />
+      </symbol>
+    </svg>
+
+    <div id="app" class="app-shell"></div>
+    <div id="toast-root" class="toast-root" aria-live="polite"></div>
+    <script defer src="./app.js"></script>
+  </body>
+</html>

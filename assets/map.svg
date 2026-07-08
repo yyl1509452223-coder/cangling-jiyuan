@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" role="img" aria-label="苍岭地图">
+  <defs>
+    <linearGradient id="sky" x1="0" x2="1">
+      <stop stop-color="#273140"/>
+      <stop offset=".55" stop-color="#26312a"/>
+      <stop offset="1" stop-color="#3c2d31"/>
+    </linearGradient>
+    <linearGradient id="land" x1="0" x2="1">
+      <stop stop-color="#315f4a"/>
+      <stop offset=".45" stop-color="#6b7842"/>
+      <stop offset="1" stop-color="#8f5d3c"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="360" fill="url(#sky)"/>
+  <path d="M0 242c80-52 154-82 222-90 75-9 139 14 207 16 98 3 153-56 254-48 91 7 178 63 277 45v195H0V242Z" fill="url(#land)"/>
+  <path d="M0 288c94-31 191-38 289-20 117 21 213 25 327-10 137-42 238-30 344 8v94H0v-72Z" fill="#1e2521" opacity=".55"/>
+  <path d="M137 192h30v84h-30zm480-44h26v112h-26zm30 18h18v94h-18zm-312 34 46-46 46 46v64h-92v-64Z" fill="#171717" opacity=".65"/>
+  <path d="M104 130c32-35 64-35 96 0M734 118c44-46 88-46 132 0" fill="none" stroke="#f6c453" stroke-width="9" stroke-linecap="round" opacity=".55"/>
+  <circle cx="804" cy="82" r="23" fill="#f6c453" opacity=".8"/>
+</svg>

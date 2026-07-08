@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 360" role="img" aria-label="苍岭纪元徽记">
+  <defs>
+    <linearGradient id="g" x1="70" x2="290" y1="40" y2="320" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f6c453"/>
+      <stop offset=".45" stop-color="#43b883"/>
+      <stop offset="1" stop-color="#5b8def"/>
+    </linearGradient>
+    <filter id="s" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="14" flood-color="#000" flood-opacity=".25"/>
+    </filter>
+  </defs>
+  <path fill="#171717" d="M180 20 312 84v96c0 82-53 132-132 160C101 312 48 262 48 180V84L180 20Z" filter="url(#s)"/>
+  <path fill="url(#g)" d="M180 43 289 96v82c0 64-38 106-109 132C109 284 71 242 71 178V96l109-53Z"/>
+  <path fill="#171717" d="M94 216 148 96l32 77 32-77 54 120h-43l-16-39-27 62-27-62-16 39H94Z"/>
+  <path fill="#fff7" d="M180 43 289 96v20L180 64 71 116V96l109-53Z"/>
+</svg>
