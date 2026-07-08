@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.8.0";
+const APP_VERSION = "0.8.1";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -47,6 +47,15 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.8.1",
+    date: "2026-07-08",
+    title: "预览数值分区",
+    notes: [
+      "卡片悬停预览改为原版风格的红绿分区。",
+      "成本、收益、扩容提示使用不同色块和右侧数字胶囊，区别更明显。",
+    ],
+  },
   {
     version: "0.8.0",
     date: "2026-07-08",
@@ -1716,16 +1725,24 @@ function renderBuildingCard(item) {
   const shortfalls = capShortfalls(costs);
   const afford = canAfford(costs) && !shortfalls.length;
   const badge = shortfalls.length ? "需扩容" : afford ? "可建造" : `已有 ${count}`;
-  const effects = effectText(item.effects);
-  const tip = cardTip(item.desc, effects, [...costText(costs), ...shortfalls.map((text) => `需扩容 ${text}`)]);
+  const effects = splitTipRows(effectRows(item.effects));
+  const tip = renderCardTooltip({
+    desc: item.desc,
+    positiveTitle: "效果",
+    positiveRows: effects.positive,
+    negativeTitle: "成本 / 消耗",
+    negativeRows: [...costRows(costs), ...effects.negative],
+    warningRows: shortfallRows(costs),
+  });
   return `
-    <article class="item-card compact-card click-card has-tip ${afford ? "" : "unavailable locked"}" style="--accent:${accentForBuilding(item)}" data-action="build" data-id="${item.id}" data-tooltip="${escapeHtml(tip)}" role="button" tabindex="0" aria-disabled="${afford ? "false" : "true"}">
+    <article class="item-card compact-card click-card has-tip ${afford ? "" : "unavailable locked"}" style="--accent:${accentForBuilding(item)}" data-action="build" data-id="${item.id}" role="button" tabindex="0" aria-disabled="${afford ? "false" : "true"}">
       <div class="item-title">
         <h3>${item.name}</h3>
         <span class="badge">${badge}</span>
       </div>
       <div class="compact-meta">${buildingCategoryName(item.tab)}</div>
       <div class="card-hint" aria-hidden="true">${afford ? "+" : shortfalls.length ? "!" : "…"}</div>
+      ${tip}
     </article>
   `;
 }
@@ -1751,16 +1768,24 @@ function renderTechCard(item) {
   const shortfalls = capShortfalls(costs);
   const afford = canAfford(costs) && !shortfalls.length;
   const badge = done ? "已完成" : shortfalls.length ? "需扩容" : afford ? "可研究" : "待资源";
-  const effects = effectText(item.effects);
-  const tip = cardTip(item.desc, effects, done ? ["已完成"] : [...costText(costs), ...shortfalls.map((text) => `需扩容 ${text}`)]);
+  const effects = splitTipRows(effectRows(item.effects));
+  const tip = renderCardTooltip({
+    desc: item.desc,
+    positiveTitle: "效果",
+    positiveRows: [...(done ? [{ label: "状态", value: "已完成" }] : []), ...effects.positive],
+    negativeTitle: "成本 / 消耗",
+    negativeRows: done ? [] : [...costRows(costs), ...effects.negative],
+    warningRows: done ? [] : shortfallRows(costs),
+  });
   return `
-    <article class="item-card compact-card click-card has-tip ${done || !afford ? "unavailable locked" : ""}" style="--accent:${accentForTech(item)}" data-action="research" data-id="${item.id}" data-tooltip="${escapeHtml(tip)}" role="button" tabindex="0" aria-disabled="${done || !afford ? "true" : "false"}">
+    <article class="item-card compact-card click-card has-tip ${done || !afford ? "unavailable locked" : ""}" style="--accent:${accentForTech(item)}" data-action="research" data-id="${item.id}" role="button" tabindex="0" aria-disabled="${done || !afford ? "true" : "false"}">
       <div class="item-title">
         <h3>${item.name}</h3>
         <span class="badge">${badge}</span>
       </div>
       <div class="compact-meta">研究项目</div>
       <div class="card-hint" aria-hidden="true">${done ? "✓" : afford ? "+" : shortfalls.length ? "!" : "…"}</div>
+      ${tip}
     </article>
   `;
 }
@@ -1839,9 +1864,22 @@ function renderUnitCard(unit) {
   const costs = adjustedCost(unit.costs, "train");
   const shortfalls = capShortfalls(costs);
   const afford = canAfford(costs) && !shortfalls.length && armySize() < cached.armyCap && idlePopulation() > 0;
-  const tip = cardTip(unit.desc, [`军力 +${fmt(unit.power, 1)}`, ...effectText(unit.upkeep || {})], [...costText(costs), ...shortfalls.map((text) => `需扩容 ${text}`)]);
+  const upkeep = splitTipRows(effectRows(unit.upkeep || {}));
+  const warnings = [
+    ...shortfallRows(costs),
+    ...(armySize() >= cached.armyCap ? [{ label: "军队容量", value: `${fmt(armySize())} / ${fmt(cached.armyCap)}` }] : []),
+    ...(idlePopulation() <= 0 ? [{ label: "空闲人口", value: "0" }] : []),
+  ];
+  const tip = renderCardTooltip({
+    desc: unit.desc,
+    positiveTitle: "效果",
+    positiveRows: [{ label: "军力", value: `+${fmt(unit.power, 1)}` }, ...upkeep.positive],
+    negativeTitle: "成本 / 消耗",
+    negativeRows: [...costRows(costs), ...upkeep.negative],
+    warningRows: warnings,
+  });
   return `
-    <article class="item-card compact-card has-tip" style="--accent:${accentForUnit(unit)}" data-tooltip="${escapeHtml(tip)}">
+    <article class="item-card compact-card has-tip" style="--accent:${accentForUnit(unit)}">
       <div class="item-title">
         <h3>${unit.name}</h3>
         <span class="badge">${count} 名</span>
@@ -1852,6 +1890,7 @@ function renderUnitCard(unit) {
         <button class="${afford ? "primary-btn" : "secondary-btn"}" data-action="train" data-id="${unit.id}" ${afford ? "" : "disabled"}>${icon("army")}训练</button>
         <button class="secondary-btn" data-action="disband" data-id="${unit.id}" ${count ? "" : "disabled"}>遣散</button>
       </div>
+      ${tip}
     </article>
   `;
 }
@@ -1900,9 +1939,24 @@ function renderExpeditionCard(item) {
     difficulty.mods.expeditionMax,
   );
   const afford = canAfford(costs) && !shortfalls.length && armyPower() >= item.power && !state.currentExpedition;
-  const tip = cardTip(item.desc, [`需要军力 ${item.power}`, `成功率约 ${fmt(chance * 100)}%`, ...costText(rewards, "奖励")], [...costText(costs, "补给"), ...shortfalls.map((text) => `需扩容 ${text}`), `耗时 ${item.duration} 秒`]);
+  const tip = renderCardTooltip({
+    desc: item.desc,
+    positiveTitle: "奖励",
+    positiveRows: resourceRows(rewards, { signedValues: true, emptyLabel: "无奖励" }),
+    negativeTitle: "补给",
+    negativeRows: costRows(costs),
+    warningTitle: "条件",
+    warningRows: [
+      { label: "需要军力", value: fmt(item.power) },
+      { label: "成功率约", value: `${fmt(chance * 100)}%` },
+      { label: "耗时", value: `${item.duration} 秒` },
+      ...shortfallRows(costs),
+      ...(armyPower() < item.power ? [{ label: "当前军力", value: fmt(armyPower()) }] : []),
+      ...(state.currentExpedition ? [{ label: "远征队", value: "忙碌" }] : []),
+    ],
+  });
   return `
-    <article class="item-card compact-card has-tip" style="--accent:${accentVars.stone}" data-tooltip="${escapeHtml(tip)}">
+    <article class="item-card compact-card has-tip" style="--accent:${accentVars.stone}">
       <div class="item-title">
         <h3>${item.name}</h3>
         <span class="badge">${done ? "已探索" : `军力 ${item.power}`}</span>
@@ -1912,6 +1966,7 @@ function renderExpeditionCard(item) {
       <div class="card-actions">
         <button class="${afford ? "primary-btn" : "secondary-btn"}" data-action="expedition" data-id="${item.id}" ${afford ? "" : "disabled"}>${icon("army")}出发</button>
       </div>
+      ${tip}
     </article>
   `;
 }
@@ -1968,22 +2023,123 @@ function effectText(effects = {}, count = 1) {
   });
 }
 
-function costText(costs = {}, prefix = "消耗") {
-  const entries = Object.entries(costs);
-  if (!entries.length) return [`${prefix} 无`];
-  return entries.map(([id, value]) => `${prefix} ${resourceName(id)} ${fmt(value)}`);
+function effectRows(effects = {}, count = 1) {
+  const labels = {
+    popCap: "人口上限",
+    population: "人口",
+    growth: "人口成长",
+    armyCap: "军队容量",
+    morale: "民心",
+    allRate: "全部产量",
+    armyPower: "军队战力",
+  };
+  return Object.entries(effects).map(([key, value]) => {
+    const total = value * count;
+    if (key.startsWith("cap_")) {
+      const id = key.slice(4);
+      return tipRow(`${resourceName(id)}上限`, signed(total), id, total);
+    }
+    if (key.startsWith("jobCap_")) return tipRow(`${jobName(key.slice(7))}岗位`, signed(total), "people", total);
+    if (key.endsWith("RateFlat")) {
+      const id = key.replace("RateFlat", "");
+      const rate = effectiveRateFlat(id, total);
+      return tipRow(resourceName(id), `${signed(rate)}/秒`, id, rate);
+    }
+    if (key.endsWith("Rate")) {
+      const id = key.replace("Rate", "");
+      return tipRow(`${resourceName(id)}产量`, `${signed(total * 100)}%`, id, total);
+    }
+    if (key === "growth") return tipRow(labels[key], `${signed(total * 100)}%/秒`, "people", total);
+    if (key === "morale" || key === "allRate" || key === "armyPower") return tipRow(labels[key], `${signed(total * 100)}%`, key === "armyPower" ? "army" : "spark", total);
+    return tipRow(labels[key] || key, signed(total), "spark", total);
+  });
 }
 
-function cardTip(desc, positives = [], costs = []) {
-  return [
+function splitTipRows(rows = []) {
+  return rows.reduce(
+    (groups, row) => {
+      groups[row.tone === "negative" ? "negative" : "positive"].push(row);
+      return groups;
+    },
+    { positive: [], negative: [] },
+  );
+}
+
+function tipRow(label, value, color = "spark", delta = 1) {
+  return {
+    label,
+    value,
+    color,
+    tone: Number(delta) < 0 ? "negative" : "positive",
+  };
+}
+
+function resourceRows(values = {}, options = {}) {
+  const { signedValues = false, emptyLabel = "无" } = options;
+  const entries = Object.entries(values || {});
+  if (!entries.length) return [{ label: emptyLabel, value: "0" }];
+  return entries.map(([id, value]) => ({
+    label: resourceName(id),
+    value: signedValues ? signed(value) : fmt(value),
+    color: id,
+    tone: signedValues && value < 0 ? "negative" : "positive",
+  }));
+}
+
+function costRows(costs = {}) {
+  if (!Object.keys(costs || {}).length) return [];
+  return resourceRows(costs).map((row) => ({ ...row, tone: "negative" }));
+}
+
+function shortfallRows(costs = {}, caps = cached.caps) {
+  return Object.entries(costs)
+    .filter(([id, value]) => Number.isFinite(caps[id]) && value > (caps[id] || 0))
+    .map(([id, value]) => ({
+      label: `${resourceName(id)}上限`,
+      value: `${fmt(caps[id] || 0)} / ${fmt(value)}`,
+      color: id,
+      tone: "warning",
+    }));
+}
+
+function renderCardTooltip(options = {}) {
+  const {
     desc,
-    positives.length ? "\n效果" : "",
-    ...positives,
-    costs.length ? "\n成本" : "",
-    ...costs,
-  ]
-    .filter(Boolean)
-    .join("\n");
+    positiveTitle = "效果",
+    positiveRows = [],
+    negativeTitle = "成本",
+    negativeRows = [],
+    warningTitle = "限制",
+    warningRows = [],
+  } = options;
+  return `
+    <div class="tip-panel" role="tooltip">
+      ${desc ? `<div class="tip-desc">${escapeHtml(desc)}</div>` : ""}
+      ${renderTipSection(negativeTitle, negativeRows, "negative")}
+      ${renderTipSection(positiveTitle, positiveRows, "positive")}
+      ${renderTipSection(warningTitle, warningRows, "warning")}
+    </div>
+  `;
+}
+
+function renderTipSection(title, rows = [], tone = "positive") {
+  if (!rows.length) return "";
+  return `
+    <div class="tip-section ${tone}">
+      <div class="tip-section-title">${escapeHtml(title)}</div>
+      ${rows.map(renderTipRow).join("")}
+    </div>
+  `;
+}
+
+function renderTipRow(row) {
+  const color = row.color ? accentForResource(row.color) : "var(--accent, var(--gold))";
+  return `
+    <div class="tip-row" style="--row-accent:${color}">
+      <span class="tip-label"><span class="tip-dot" aria-hidden="true"></span>${escapeHtml(row.label)}</span>
+      <span class="tip-value">${escapeHtml(row.value)}</span>
+    </div>
+  `;
 }
 
 function resourceName(id) {
