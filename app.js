@@ -27,6 +27,19 @@ const resources = [
   { id: "faith", name: "星辉", icon: "faith", cap: 30 },
 ];
 
+const accentVars = {
+  food: "var(--green)",
+  wood: "var(--wood)",
+  stone: "var(--stone)",
+  ore: "var(--orange)",
+  knowledge: "var(--blue)",
+  faith: "var(--purple)",
+  people: "var(--green)",
+  army: "var(--red)",
+  build: "var(--gold)",
+  spark: "var(--gold)",
+};
+
 const difficulties = [
   {
     id: "easy",
@@ -1254,7 +1267,7 @@ function renderResourceRow(resource) {
   const halted = cached.starved && resource.id !== "food";
   return `
     <div class="resource-row ${halted ? "halted" : ""}">
-      <span style="color:var(--${resource.id === "faith" ? "purple" : resource.id === "ore" ? "orange" : resource.id === "knowledge" ? "blue" : resource.id === "food" ? "green" : "gold"})">${icon(resource.icon, "resource-icon")}</span>
+      <span style="color:${accentForResource(resource.id)}">${icon(resource.icon, "resource-icon")}</span>
       <div>
         <div class="resource-name">${resource.name}</div>
         <div class="resource-rate ${rateClass(rate)}">${halted ? "停摆" : `${signed(rate)}/秒`}</div>
@@ -1270,7 +1283,7 @@ function renderResourceRow(resource) {
 function renderTabs() {
   const tabs = visibleTabs();
   if (!tabs.some((tab) => tab.id === state.activeTab)) state.activeTab = "buildings";
-  return `<nav class="tabs">${tabs.map((tab) => `<button class="tab-btn ${state.activeTab === tab.id ? "active" : ""}" data-action="tab" data-id="${tab.id}">${icon(tab.icon)}${tab.label}</button>`).join("")}</nav>`;
+  return `<nav class="tabs">${tabs.map((tab) => `<button class="tab-btn ${state.activeTab === tab.id ? "active" : ""}" style="--accent:${accentForTab(tab.id)}" data-action="tab" data-id="${tab.id}">${icon(tab.icon)}${tab.label}</button>`).join("")}</nav>`;
 }
 
 function renderCurrentView() {
@@ -1378,7 +1391,7 @@ function renderBuildings() {
       ${categories.map(([id, title]) => {
         const items = buildings.filter((building) => building.tab === id && building.unlocked(state));
         if (!items.length) return "";
-        return `<div class="section-head"><h3>${title}</h3></div><div class="item-grid">${items.map(renderBuildingCard).join("")}</div>`;
+        return `<div class="section-head category-head" style="--accent:${accentForCategory(id)}"><h3>${title}</h3></div><div class="item-grid">${items.map(renderBuildingCard).join("")}</div>`;
       }).join("")}
     </section>
   `;
@@ -1391,7 +1404,7 @@ function renderBuildingCard(item) {
   const effects = effectText(item.effects);
   const tip = cardTip(item.desc, effects, costText(costs));
   return `
-    <article class="item-card compact-card click-card has-tip ${afford ? "" : "unavailable locked"}" data-action="build" data-id="${item.id}" data-tooltip="${escapeHtml(tip)}" role="button" tabindex="0" aria-disabled="${afford ? "false" : "true"}">
+    <article class="item-card compact-card click-card has-tip ${afford ? "" : "unavailable locked"}" style="--accent:${accentForBuilding(item)}" data-action="build" data-id="${item.id}" data-tooltip="${escapeHtml(tip)}" role="button" tabindex="0" aria-disabled="${afford ? "false" : "true"}">
       <div class="item-title">
         <h3>${item.name}</h3>
         <span class="badge">已有 ${count}</span>
@@ -1424,7 +1437,7 @@ function renderTechCard(item) {
   const effects = effectText(item.effects);
   const tip = cardTip(item.desc, effects, done ? ["已完成"] : costText(costs));
   return `
-    <article class="item-card compact-card click-card has-tip ${done || !afford ? "unavailable locked" : ""}" data-action="research" data-id="${item.id}" data-tooltip="${escapeHtml(tip)}" role="button" tabindex="0" aria-disabled="${done || !afford ? "true" : "false"}">
+    <article class="item-card compact-card click-card has-tip ${done || !afford ? "unavailable locked" : ""}" style="--accent:${accentForTech(item)}" data-action="research" data-id="${item.id}" data-tooltip="${escapeHtml(tip)}" role="button" tabindex="0" aria-disabled="${done || !afford ? "true" : "false"}">
       <div class="item-title">
         <h3>${item.name}</h3>
         <span class="badge">${done ? "已完成" : "可研究"}</span>
@@ -1471,7 +1484,7 @@ function renderJobRow(job) {
   const totalText = value > 0 ? effectText(job.effects, value) : perWorker;
   const canAdd = idlePopulation() > 0 && value < cap;
   return `
-    <div class="job-row">
+    <div class="job-row" style="--accent:${accentForJob(job)}">
       <div>
         <strong>${job.name}</strong>
         <div class="item-desc">${job.desc}</div>
@@ -1509,7 +1522,7 @@ function renderUnitCard(unit) {
   const afford = canAfford(costs) && armySize() < cached.armyCap && idlePopulation() > 0;
   const tip = cardTip(unit.desc, [`军力 +${fmt(unit.power, 1)}`, ...effectText(unit.upkeep || {})], costText(costs));
   return `
-    <article class="item-card compact-card has-tip" data-tooltip="${escapeHtml(tip)}">
+    <article class="item-card compact-card has-tip" style="--accent:${accentForUnit(unit)}" data-tooltip="${escapeHtml(tip)}">
       <div class="item-title">
         <h3>${unit.name}</h3>
         <span class="badge">${count} 名</span>
@@ -1569,7 +1582,7 @@ function renderExpeditionCard(item) {
   const afford = canAfford(costs) && armyPower() >= item.power && !state.currentExpedition;
   const tip = cardTip(item.desc, [`需要军力 ${item.power}`, `成功率约 ${fmt(chance * 100)}%`, ...costText(rewards, "奖励")], [...costText(costs, "补给"), `耗时 ${item.duration} 秒`]);
   return `
-    <article class="item-card compact-card has-tip" data-tooltip="${escapeHtml(tip)}">
+    <article class="item-card compact-card has-tip" style="--accent:${accentVars.stone}" data-tooltip="${escapeHtml(tip)}">
       <div class="item-title">
         <h3>${item.name}</h3>
         <span class="badge">${done ? "已探索" : `军力 ${item.power}`}</span>
@@ -1596,7 +1609,7 @@ function renderAchievements() {
         ${achievements.map((achievement) => {
           const done = state.achievements.includes(achievement.id);
           return `
-            <article class="item-card ${done ? "" : "locked"}">
+            <article class="item-card ${done ? "" : "locked"}" style="--accent:${accentVars.faith}">
               <div class="item-title">
                 <h3>${achievement.name}</h3>
                 <span class="badge">${done ? "已达成" : "未达成"}</span>
@@ -1661,6 +1674,67 @@ function resourceName(id) {
 function jobName(id) {
   const found = jobs.find((job) => job.id === id);
   return found ? found.name : id;
+}
+
+function accentForResource(id) {
+  return accentVars[id] || accentVars.spark;
+}
+
+function accentForCategory(id) {
+  return {
+    settlement: accentVars.food,
+    production: accentVars.wood,
+    culture: accentVars.knowledge,
+    war: accentVars.army,
+  }[id] || accentVars.spark;
+}
+
+function accentForTab(id) {
+  return {
+    buildings: accentVars.build,
+    research: accentVars.knowledge,
+    people: accentVars.people,
+    army: accentVars.army,
+    expedition: accentVars.stone,
+    achievements: accentVars.faith,
+  }[id] || accentVars.spark;
+}
+
+function accentForEffects(effects = {}, fallback = "spark") {
+  const keys = Object.keys(effects);
+  const resourceKey = keys.find((key) => key.startsWith("cap_") || key.endsWith("RateFlat") || key.endsWith("Rate"));
+  if (!resourceKey) return accentForResource(fallback);
+  if (resourceKey.startsWith("cap_")) return accentForResource(resourceKey.slice(4));
+  if (resourceKey.endsWith("RateFlat")) return accentForResource(resourceKey.replace("RateFlat", ""));
+  if (resourceKey.endsWith("Rate")) return accentForResource(resourceKey.replace("Rate", ""));
+  return accentForResource(fallback);
+}
+
+function accentForBuilding(item) {
+  if (item.tab === "war") return accentVars.army;
+  if (item.id === "orepit" || item.effects?.oreRateFlat || item.effects?.cap_ore) return accentVars.ore;
+  if (item.effects?.faithRateFlat || item.effects?.cap_faith) return accentVars.faith;
+  if (item.effects?.knowledgeRateFlat || item.effects?.cap_knowledge) return accentVars.knowledge;
+  if (item.effects?.stoneRateFlat || item.effects?.cap_stone) return accentVars.stone;
+  if (item.effects?.woodRateFlat || item.effects?.cap_wood) return accentVars.wood;
+  if (item.effects?.population || item.effects?.foodRateFlat || item.effects?.cap_food) return accentVars.food;
+  return accentForCategory(item.tab);
+}
+
+function accentForTech(item) {
+  if (item.id === "watch" || item.id === "iron") return accentVars.army;
+  if (item.costs?.faith || item.effects?.faithRate) return accentVars.faith;
+  if (item.costs?.ore || item.effects?.oreRate) return accentVars.ore;
+  if (item.effects?.cap_stone) return accentVars.stone;
+  return accentVars.knowledge;
+}
+
+function accentForJob(job) {
+  return accentForEffects(job.effects, "people");
+}
+
+function accentForUnit() {
+  return accentVars.army;
 }
 
 function buildingCategoryName(tab) {
