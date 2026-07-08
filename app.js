@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.7.0";
+const APP_VERSION = "0.7.1";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -24,7 +24,7 @@ const icons = {
 const resources = [
   { id: "food", name: "粮食", icon: "food", cap: 120 },
   { id: "wood", name: "木材", icon: "wood", cap: 90 },
-  { id: "stone", name: "石料", icon: "stone", cap: 70 },
+  { id: "stone", name: "石料", icon: "stone", cap: 90 },
   { id: "ore", name: "矿砂", icon: "ore", cap: 40 },
   { id: "knowledge", name: "学识", icon: "knowledge", cap: 60 },
   { id: "faith", name: "星辉", icon: "faith", cap: 30 },
@@ -44,6 +44,16 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.7.1",
+    date: "2026-07-08",
+    title: "早期石料修正",
+    notes: [
+      "基础石料存储上限从 70 提高到 90。",
+      "开局石料储备从 25 提高到 35，困难和地狱难度也能支撑第一个干砌石墙的石料需求。",
+      "修正早期石料门槛可能卡住第一段扩张的问题。",
+    ],
+  },
   {
     version: "0.7.0",
     date: "2026-07-08",
@@ -549,7 +559,7 @@ const randomEvents = [
 ];
 
 const defaultResources = () =>
-  Object.fromEntries(resources.map((resource) => [resource.id, resource.id === "food" ? 60 : resource.id === "wood" ? 45 : resource.id === "stone" ? 25 : 0]));
+  Object.fromEntries(resources.map((resource) => [resource.id, resource.id === "food" ? 60 : resource.id === "wood" ? 45 : resource.id === "stone" ? 35 : 0]));
 
 const defaultState = () => ({
   started: false,
