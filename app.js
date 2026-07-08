@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.7.1";
+const APP_VERSION = "0.7.2";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -23,10 +23,10 @@ const icons = {
 
 const resources = [
   { id: "food", name: "粮食", icon: "food", cap: 120 },
-  { id: "wood", name: "木材", icon: "wood", cap: 90 },
+  { id: "wood", name: "木材", icon: "wood", cap: 100 },
   { id: "stone", name: "石料", icon: "stone", cap: 90 },
   { id: "ore", name: "矿砂", icon: "ore", cap: 40 },
-  { id: "knowledge", name: "学识", icon: "knowledge", cap: 60 },
+  { id: "knowledge", name: "学识", icon: "knowledge", cap: 80 },
   { id: "faith", name: "星辉", icon: "faith", cap: 30 },
 ];
 
@@ -44,6 +44,17 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.7.2",
+    date: "2026-07-08",
+    title: "原版对照与上限审计",
+    notes: [
+      "对照原版的早期资源/人口/存储结构，补强生产建筑的配套存储上限。",
+      "基础木材上限提高到 100，基础学识上限提高到 80，避免困难难度把早期研究变成隐形上限题。",
+      "山麓木场、露天采石场、赤砂矿坑现在会分别提高木材、石料、矿砂上限。",
+      "建筑、研究、训练和远征会在资源上限不足时提示“需扩容”。",
+    ],
+  },
   {
     version: "0.7.1",
     date: "2026-07-08",
@@ -268,7 +279,7 @@ const buildings = [
     desc: "规划伐木路线，让采集者更快把木材送回村落。",
     costs: { wood: 12, food: 14 },
     costScale: 1.17,
-    effects: { woodRateFlat: 0.4, jobCap_woodcutter: 2 },
+    effects: { woodRateFlat: 0.4, cap_wood: 45, jobCap_woodcutter: 2 },
     unlocked: () => true,
   },
   {
@@ -278,7 +289,7 @@ const buildings = [
     desc: "从浅层岩壁切出整齐石块，是大型工程的开始。",
     costs: { wood: 35, stone: 8 },
     costScale: 1.18,
-    effects: { stoneRateFlat: 0.35, jobCap_mason: 2 },
+    effects: { stoneRateFlat: 0.35, cap_stone: 50, jobCap_mason: 2 },
     unlocked: (s) => hasTech(s, "masonry"),
   },
   {
@@ -288,7 +299,7 @@ const buildings = [
     desc: "矿砂并不纯净，但足以支撑最早的冶炼尝试。",
     costs: { wood: 55, stone: 42, knowledge: 12 },
     costScale: 1.2,
-    effects: { oreRateFlat: 0.22, cap_ore: 28, jobCap_miner: 2 },
+    effects: { oreRateFlat: 0.22, cap_ore: 60, jobCap_miner: 2 },
     unlocked: (s) => hasTech(s, "smelting"),
   },
   {
@@ -1060,6 +1071,12 @@ function canAfford(costs) {
   return Object.entries(costs || {}).every(([id, value]) => (state.resources[id] || 0) >= value);
 }
 
+function capShortfalls(costs = {}, caps = cached.caps) {
+  return Object.entries(costs)
+    .filter(([id, value]) => Number.isFinite(caps[id]) && value > (caps[id] || 0))
+    .map(([id, value]) => `${resourceName(id)}上限需 ${fmt(value)}，当前 ${fmt(caps[id] || 0)}`);
+}
+
 function spend(costs) {
   if (!canAfford(costs)) return false;
   Object.entries(costs || {}).forEach(([id, value]) => {
@@ -1095,6 +1112,8 @@ function buyBuilding(id) {
   if (!item || !item.unlocked(state)) return;
   const count = buildingCount(state, id);
   const costs = scaledCost(item, count);
+  const shortfalls = capShortfalls(costs);
+  if (shortfalls.length) return toast(`需要扩容：${shortfalls[0]}`);
   if (!spend(costs)) return toast("资源不足");
   state.buildings[id] = count + 1;
   if (item.effects?.population) {
@@ -1109,6 +1128,8 @@ function research(id) {
   const item = techs.find((tech) => tech.id === id);
   if (!item || hasTech(state, id) || !item.unlocked(state)) return;
   const costs = adjustedCost(item.costs, "tech");
+  const shortfalls = capShortfalls(costs);
+  if (shortfalls.length) return toast(`需要扩容：${shortfalls[0]}`);
   if (!spend(costs)) return toast("资源不足");
   state.techs.push(id);
   state.stats.researched += 1;
@@ -1133,7 +1154,10 @@ function trainUnit(id) {
   if (!unit || !unit.unlocked(state)) return;
   if (armySize() >= cached.armyCap) return toast("军队容量不足");
   if (idlePopulation() <= 0) return toast("没有空闲人口");
-  if (!spend(adjustedCost(unit.costs, "train"))) return toast("资源不足");
+  const costs = adjustedCost(unit.costs, "train");
+  const shortfalls = capShortfalls(costs);
+  if (shortfalls.length) return toast(`需要扩容：${shortfalls[0]}`);
+  if (!spend(costs)) return toast("资源不足");
   state.army[id] = (state.army[id] || 0) + 1;
   state.stats.trained += 1;
   addLog(`训练了 ${unit.name}。`);
@@ -1152,7 +1176,10 @@ function startExpedition(id) {
   const item = expeditions.find((expedition) => expedition.id === id);
   if (!item || state.currentExpedition) return;
   if (armyPower() < item.power) return toast("军力不足");
-  if (!spend(adjustedCost(item.costs, "expedition"))) return toast("资源不足");
+  const costs = adjustedCost(item.costs, "expedition");
+  const shortfalls = capShortfalls(costs);
+  if (shortfalls.length) return toast(`需要扩容：${shortfalls[0]}`);
+  if (!spend(costs)) return toast("资源不足");
   state.currentExpedition = {
     id,
     startedAt: Date.now(),
@@ -1545,6 +1572,7 @@ function renderStarterGoals() {
     { text: "建造 1 座山麓木场", done: buildingCount(state, "lumberyard") >= 1, accent: accentVars.wood },
     { text: "完成研究：干砌石墙", done: hasTech(state, "masonry"), accent: accentVars.stone },
     { text: "建造 1 座采石场", done: buildingCount(state, "quarry") >= 1, accent: accentVars.stone },
+    { text: "建造书记棚，扩大学识上限", done: buildingCount(state, "scribe") >= 1, accent: accentVars.knowledge },
     { text: "完成研究：夜哨制度", done: hasTech(state, "watch"), accent: accentVars.army },
   ];
   if (goals.every((goal) => goal.done)) return "";
@@ -1605,17 +1633,19 @@ function renderBuildings() {
 function renderBuildingCard(item) {
   const count = buildingCount(state, item.id);
   const costs = scaledCost(item, count);
-  const afford = canAfford(costs);
+  const shortfalls = capShortfalls(costs);
+  const afford = canAfford(costs) && !shortfalls.length;
+  const badge = shortfalls.length ? "需扩容" : afford ? "可建造" : `已有 ${count}`;
   const effects = effectText(item.effects);
-  const tip = cardTip(item.desc, effects, costText(costs));
+  const tip = cardTip(item.desc, effects, [...costText(costs), ...shortfalls.map((text) => `需扩容 ${text}`)]);
   return `
     <article class="item-card compact-card click-card has-tip ${afford ? "" : "unavailable locked"}" style="--accent:${accentForBuilding(item)}" data-action="build" data-id="${item.id}" data-tooltip="${escapeHtml(tip)}" role="button" tabindex="0" aria-disabled="${afford ? "false" : "true"}">
       <div class="item-title">
         <h3>${item.name}</h3>
-        <span class="badge">已有 ${count}</span>
+        <span class="badge">${badge}</span>
       </div>
       <div class="compact-meta">${buildingCategoryName(item.tab)}</div>
-      <div class="card-hint" aria-hidden="true">${afford ? "+" : "…"}</div>
+      <div class="card-hint" aria-hidden="true">${afford ? "+" : shortfalls.length ? "!" : "…"}</div>
     </article>
   `;
 }
@@ -1638,17 +1668,19 @@ function renderResearch() {
 function renderTechCard(item) {
   const done = hasTech(state, item.id);
   const costs = adjustedCost(item.costs, "tech");
-  const afford = canAfford(costs);
+  const shortfalls = capShortfalls(costs);
+  const afford = canAfford(costs) && !shortfalls.length;
+  const badge = done ? "已完成" : shortfalls.length ? "需扩容" : afford ? "可研究" : "待资源";
   const effects = effectText(item.effects);
-  const tip = cardTip(item.desc, effects, done ? ["已完成"] : costText(costs));
+  const tip = cardTip(item.desc, effects, done ? ["已完成"] : [...costText(costs), ...shortfalls.map((text) => `需扩容 ${text}`)]);
   return `
     <article class="item-card compact-card click-card has-tip ${done || !afford ? "unavailable locked" : ""}" style="--accent:${accentForTech(item)}" data-action="research" data-id="${item.id}" data-tooltip="${escapeHtml(tip)}" role="button" tabindex="0" aria-disabled="${done || !afford ? "true" : "false"}">
       <div class="item-title">
         <h3>${item.name}</h3>
-        <span class="badge">${done ? "已完成" : "可研究"}</span>
+        <span class="badge">${badge}</span>
       </div>
       <div class="compact-meta">研究项目</div>
-      <div class="card-hint" aria-hidden="true">${done ? "✓" : afford ? "+" : "…"}</div>
+      <div class="card-hint" aria-hidden="true">${done ? "✓" : afford ? "+" : shortfalls.length ? "!" : "…"}</div>
     </article>
   `;
 }
@@ -1725,8 +1757,9 @@ function renderArmy() {
 function renderUnitCard(unit) {
   const count = state.army[unit.id] || 0;
   const costs = adjustedCost(unit.costs, "train");
-  const afford = canAfford(costs) && armySize() < cached.armyCap && idlePopulation() > 0;
-  const tip = cardTip(unit.desc, [`军力 +${fmt(unit.power, 1)}`, ...effectText(unit.upkeep || {})], costText(costs));
+  const shortfalls = capShortfalls(costs);
+  const afford = canAfford(costs) && !shortfalls.length && armySize() < cached.armyCap && idlePopulation() > 0;
+  const tip = cardTip(unit.desc, [`军力 +${fmt(unit.power, 1)}`, ...effectText(unit.upkeep || {})], [...costText(costs), ...shortfalls.map((text) => `需扩容 ${text}`)]);
   return `
     <article class="item-card compact-card has-tip" style="--accent:${accentForUnit(unit)}" data-tooltip="${escapeHtml(tip)}">
       <div class="item-title">
@@ -1779,14 +1812,15 @@ function renderExpeditionCard(item) {
   const done = state.expeditionsDone.includes(item.id);
   const difficulty = getDifficulty();
   const costs = adjustedCost(item.costs, "expedition");
+  const shortfalls = capShortfalls(costs);
   const rewards = scaledRewards(item.rewards, difficulty.mods.expeditionReward);
   const chance = clamp(
     0.55 + (armyPower() - item.power) / Math.max(item.power * 2, 1) + difficulty.mods.expeditionChance,
     difficulty.mods.expeditionMin,
     difficulty.mods.expeditionMax,
   );
-  const afford = canAfford(costs) && armyPower() >= item.power && !state.currentExpedition;
-  const tip = cardTip(item.desc, [`需要军力 ${item.power}`, `成功率约 ${fmt(chance * 100)}%`, ...costText(rewards, "奖励")], [...costText(costs, "补给"), `耗时 ${item.duration} 秒`]);
+  const afford = canAfford(costs) && !shortfalls.length && armyPower() >= item.power && !state.currentExpedition;
+  const tip = cardTip(item.desc, [`需要军力 ${item.power}`, `成功率约 ${fmt(chance * 100)}%`, ...costText(rewards, "奖励")], [...costText(costs, "补给"), ...shortfalls.map((text) => `需扩容 ${text}`), `耗时 ${item.duration} 秒`]);
   return `
     <article class="item-card compact-card has-tip" style="--accent:${accentVars.stone}" data-tooltip="${escapeHtml(tip)}">
       <div class="item-title">
