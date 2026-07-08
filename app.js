@@ -1,4 +1,6 @@
 const SAVE_KEY = "ridge-age-save-v1";
+const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
+const APP_VERSION = "0.5.0";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -39,6 +41,37 @@ const accentVars = {
   build: "var(--gold)",
   spark: "var(--gold)",
 };
+
+const changelog = [
+  {
+    version: "0.5.0",
+    date: "2026-07-08",
+    title: "版本公告系统",
+    notes: [
+      "顶部增加版本号与公告入口。",
+      "非隐身视图下，版本更新后首次进入会自动显示更新公告。",
+      "隐身视图下不自动弹窗，只保留公告入口提示，避免过于显眼。",
+    ],
+  },
+  {
+    version: "0.4.0",
+    date: "2026-07-08",
+    title: "资源色系区分",
+    notes: [
+      "建筑、研究、职业、军队、远征和成就增加资源同色系标记。",
+      "木材、石料、矿砂、学识、星辉等颜色与右侧资源图标保持一致。",
+    ],
+  },
+  {
+    version: "0.3.0",
+    date: "2026-07-08",
+    title: "三栏布局调整",
+    notes: [
+      "总览移到左侧信息栏。",
+      "中间主区域默认用于建筑、研究、人口等操作。",
+    ],
+  },
+];
 
 const difficulties = [
   {
@@ -542,6 +575,7 @@ const defaultState = () => ({
 let state = loadState();
 let cached = derive(state);
 let autosaveTimer = null;
+let announcementCheckQueued = false;
 
 function icon(id, className = "icon") {
   return `<svg class="${className}" aria-hidden="true"><use href="#icon-${icons[id] || id}"></use></svg>`;
@@ -685,6 +719,57 @@ function importSave() {
     },
     { label: "取消", className: "secondary-btn", action: closeModal },
   ]);
+}
+
+function renderChangelog() {
+  return `
+    <div class="announcement-list">
+      ${changelog.map((entry, index) => `
+        <article class="announcement-card ${index === 0 ? "latest" : ""}">
+          <div class="announcement-head">
+            <span class="version-chip">v${entry.version}</span>
+            <span class="cap">${entry.date}</span>
+          </div>
+          <h3>${entry.title}</h3>
+          <ul>
+            ${entry.notes.map((note) => `<li>${note}</li>`).join("")}
+          </ul>
+        </article>
+      `).join("")}
+    </div>
+  `;
+}
+
+function openAnnouncements() {
+  try {
+    localStorage.setItem(ANNOUNCEMENT_KEY, APP_VERSION);
+  } catch {
+    // Ignore storage errors; the announcement can still be viewed.
+  }
+  openModal("版本公告", renderChangelog(), [
+    { label: "知道了", className: "primary-btn", action: closeModal },
+  ]);
+}
+
+function showAnnouncementIfNeeded() {
+  if (state.stealth || announcementCheckQueued) return;
+  let seenVersion = "";
+  try {
+    seenVersion = localStorage.getItem(ANNOUNCEMENT_KEY) || "";
+  } catch {
+    return;
+  }
+  if (seenVersion === APP_VERSION) return;
+  announcementCheckQueued = true;
+  try {
+    localStorage.setItem(ANNOUNCEMENT_KEY, APP_VERSION);
+  } catch {
+    // Ignore storage errors; avoid blocking the page.
+  }
+  setTimeout(() => {
+    announcementCheckQueued = false;
+    if (!state.stealth && !$("#modal-backdrop")) openAnnouncements();
+  }, 250);
 }
 
 function openModal(title, body, actions) {
@@ -1095,6 +1180,7 @@ function render() {
     ${state.started ? renderGame() : renderStart()}
   `;
   bindEvents();
+  showAnnouncementIfNeeded();
 }
 
 function renderTopbar() {
@@ -1111,6 +1197,7 @@ function renderTopbar() {
         </div>
       </div>
       <div class="top-actions">
+        <button class="secondary-btn version-btn" data-action="announcements"><span>v${APP_VERSION}</span><span>公告</span></button>
         <button class="secondary-btn" data-action="stealth">${icon("spark")}<span>${state.stealth ? "标准" : "视图"}</span></button>
         ${state.started ? `<button class="secondary-btn" data-action="save">${icon("spark")}<span>保存</span></button>` : ""}
         ${state.started ? `<button class="secondary-btn" data-action="export">${icon("knowledge")}<span>导出</span></button>` : ""}
@@ -1769,6 +1856,7 @@ function bindEvents() {
         render();
       }
       if (action === "save") saveState(false);
+      if (action === "announcements") openAnnouncements();
       if (action === "reset") resetGame();
       if (action === "export") exportSave();
       if (action === "import") importSave();
