@@ -1091,7 +1091,6 @@ function renderTopbar() {
   return `
     <header class="topbar">
       <div class="brand">
-        <img src="./assets/crest.svg" alt="" />
         <div>
           <div class="brand-title">${title}</div>
           <div class="brand-subtitle">${subtitle}</div>
@@ -1117,7 +1116,6 @@ function renderStart() {
         <section class="hero">
           <div class="hero-media">
             <img src="./assets/map.svg" alt="苍岭地图" />
-            <img class="hero-crest" src="./assets/crest.svg" alt="" />
           </div>
           <div class="hero-copy">
             <div class="eyebrow">一座城邦，从山雾中醒来</div>

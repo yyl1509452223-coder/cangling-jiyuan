@@ -112,11 +112,6 @@ button:disabled {
   color: var(--text);
 }
 
-.brand img {
-  width: 34px;
-  height: 34px;
-}
-
 .brand-title {
   font-size: 1.1rem;
   font-weight: 800;
@@ -140,7 +135,6 @@ button:disabled {
 }
 
 :root[data-stealth="true"] .hero-media,
-:root[data-stealth="true"] .hero-crest,
 :root[data-stealth="true"] .brand-credit {
   display: none;
 }
@@ -224,15 +218,6 @@ button:disabled {
   height: 100%;
   min-height: 280px;
   object-fit: cover;
-}
-
-.hero-crest {
-  position: absolute;
-  right: 22px;
-  bottom: 18px;
-  width: 96px;
-  height: 96px;
-  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.35));
 }
 
 .hero-copy {
@@ -1106,11 +1091,6 @@ h1 {
   .hero-media,
   .hero-media img {
     min-height: 200px;
-  }
-
-  .hero-crest {
-    width: 72px;
-    height: 72px;
   }
 
   .start-page {
