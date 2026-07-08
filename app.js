@@ -491,7 +491,7 @@ const defaultState = () => ({
   tribeName: "",
   stealth: false,
   theme: "dark",
-  activeTab: "overview",
+  activeTab: "buildings",
   createdAt: Date.now(),
   lastSavedAt: Date.now(),
   lastTickAt: Date.now(),
@@ -1189,6 +1189,7 @@ function renderPathCard(path) {
 function renderGame() {
   return `
     <main class="game-layout">
+      <aside class="overview-column" id="overview-column">${renderOverview()}</aside>
       <section class="main-panel">
         ${renderTabs()}
         <div id="current-view">${renderCurrentView()}</div>
@@ -1268,14 +1269,13 @@ function renderResourceRow(resource) {
 
 function renderTabs() {
   const tabs = visibleTabs();
-  if (!tabs.some((tab) => tab.id === state.activeTab)) state.activeTab = "overview";
+  if (!tabs.some((tab) => tab.id === state.activeTab)) state.activeTab = "buildings";
   return `<nav class="tabs">${tabs.map((tab) => `<button class="tab-btn ${state.activeTab === tab.id ? "active" : ""}" data-action="tab" data-id="${tab.id}">${icon(tab.icon)}${tab.label}</button>`).join("")}</nav>`;
 }
 
 function renderCurrentView() {
-  if (!isTabAvailable(state.activeTab)) state.activeTab = "overview";
+  if (!isTabAvailable(state.activeTab)) state.activeTab = "buildings";
   const views = {
-    overview: renderOverview,
     buildings: renderBuildings,
     research: renderResearch,
     people: renderPeople,
@@ -1288,7 +1288,6 @@ function renderCurrentView() {
 
 function tabDefinitions() {
   return [
-    { id: "overview", label: "总览", icon: "spark" },
     { id: "buildings", label: "建筑", icon: "build" },
     { id: "research", label: "研究", icon: "knowledge" },
     { id: "people", label: "人口", icon: "people" },
@@ -1310,14 +1309,15 @@ function visibleTabs(s = state) {
 function renderOverview() {
   const militaryUnlocked = hasTech(state, "watch");
   return `
+    <div class="overview-stack">
     <section>
       <div class="section-head">
         <div>
           <h2>城邦总览</h2>
-          <p>观察增长、处理事件，并决定下一步扩张方向。</p>
+          <p>状态、事件与日志。</p>
         </div>
       </div>
-      <div class="stats-grid">
+      <div class="stats-grid overview-stats">
         <div class="stat"><div class="stat-label">人口</div><div class="stat-value">${fmt(state.population)} / ${fmt(cached.popCap)}</div></div>
         <div class="stat"><div class="stat-label">建筑</div><div class="stat-value">${fmt(totalBuildings(state))}</div></div>
         <div class="stat"><div class="stat-label">研究</div><div class="stat-value">${fmt(state.techs.length)} / ${techs.length}</div></div>
@@ -1337,8 +1337,9 @@ function renderOverview() {
       <div class="panel-head">
         <div class="panel-title">${icon("knowledge")}日志</div>
       </div>
-      <div class="log-list">${state.log.map((entry) => `<div class="log-entry">${entry}</div>`).join("")}</div>
+      <div class="log-list overview-log">${state.log.map((entry) => `<div class="log-entry">${entry}</div>`).join("")}</div>
     </section>
+    </div>
   `;
 }
 
@@ -1743,8 +1744,10 @@ function escapeHtml(value) {
 function renderSidebarAndCurrent() {
   cached = derive(state);
   document.documentElement.dataset.theme = state.theme;
+  const overview = $("#overview-column");
   const sidebar = $("#sidebar");
   const current = $("#current-view");
+  if (overview) overview.innerHTML = renderOverview();
   if (sidebar) sidebar.innerHTML = renderSidebar();
   if (current) current.innerHTML = renderCurrentView();
   bindEvents();

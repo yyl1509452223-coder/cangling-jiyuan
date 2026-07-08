@@ -454,12 +454,19 @@ h1 {
 
 .game-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 280px;
+  grid-template-columns: 310px minmax(0, 1fr) 280px;
   gap: 16px;
   align-items: start;
   width: min(1600px, 100%);
   margin: 0 auto;
   padding: 16px;
+}
+
+.overview-column {
+  position: sticky;
+  top: 74px;
+  align-self: start;
+  min-width: 0;
 }
 
 .sidebar {
@@ -589,6 +596,10 @@ h1 {
   display: block;
   min-width: 0;
   align-self: start;
+}
+
+.overview-stack > * + * {
+  margin-top: 12px;
 }
 
 .main-panel > * + * {
@@ -816,6 +827,10 @@ h1 {
   gap: 12px;
 }
 
+.overview-stats {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .compact-stats {
   margin-bottom: 12px;
 }
@@ -825,6 +840,10 @@ h1 {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--panel);
+}
+
+.overview-column .stat {
+  padding: 10px;
 }
 
 .stat-label {
@@ -837,6 +856,10 @@ h1 {
   font-size: 1.35rem;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
+}
+
+.overview-column .stat-value {
+  font-size: 1.08rem;
 }
 
 .status-note {
@@ -918,6 +941,10 @@ h1 {
   max-height: 260px;
   overflow: auto;
   padding: 8px;
+}
+
+.overview-log {
+  max-height: 320px;
 }
 
 .log-entry {
@@ -1045,14 +1072,30 @@ h1 {
   font-size: 0.82rem;
 }
 
+@media (max-width: 1280px) {
+  .game-layout {
+    grid-template-columns: 300px minmax(0, 1fr);
+  }
+
+  .sidebar {
+    position: static;
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 1040px) {
   .hero,
   .game-layout {
     grid-template-columns: 1fr;
   }
 
+  .overview-column,
   .sidebar {
     position: static;
+  }
+
+  .sidebar {
     grid-template-columns: 1fr 1fr;
   }
 
