@@ -51,4 +51,6 @@ Current generated pack:
 - Building and technology effects map into caps, flat rates, percentage rates, population, job caps, army cap, morale, all-rate, and army-power bonuses.
 - One-shot outputs map into `grantResources`, `grantsTechs`, and `removesTechs`.
 - Enemy requirements are satisfied by completed expedition ids, including `enemy_<id>`.
+- Enemy location discovery now preserves the original `found` area pools and `reqFound` prerequisites. Expedition targets stay hidden until a scout action discovers them.
+- Recon units preserve their original `reqAttack` exploration costs as `attackCosts` for the scout action.
 - Legacy, prayer, spell, and diplomacy requirements are reserved as save flags for later systems.
