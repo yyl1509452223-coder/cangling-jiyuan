@@ -753,7 +753,7 @@ h1 {
   padding: 14px;
   border-color: color-mix(in srgb, var(--accent, var(--gold)) 34%, var(--line));
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--accent, var(--gold)) 8%, transparent), transparent 52%),
+    linear-gradient(45deg, color-mix(in srgb, var(--accent, var(--gold)) 14%, transparent), transparent 56%),
     color-mix(in srgb, var(--panel) var(--surface-alpha), transparent);
 }
 
@@ -768,7 +768,7 @@ h1 {
 .click-card:focus {
   border-color: color-mix(in srgb, var(--accent, var(--gold)) 72%, var(--line));
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--accent, var(--gold)) 14%, transparent), transparent 52%),
+    linear-gradient(45deg, color-mix(in srgb, var(--accent, var(--gold)) 22%, transparent), transparent 56%),
     color-mix(in srgb, var(--panel-2) var(--surface-alpha), transparent);
 }
 
@@ -788,11 +788,20 @@ h1 {
 }
 
 .item-card.locked:not(.has-tip) {
-  opacity: 0.62;
+  filter: saturate(0.9);
 }
 
-.item-card.locked.has-tip > :not(.tip-panel) {
-  opacity: 0.62;
+.item-card.locked.has-tip .badge,
+.item-card.locked.has-tip .card-hint {
+  opacity: 0.72;
+}
+
+.item-card.locked.has-tip .item-title h3 {
+  color: color-mix(in srgb, var(--accent, var(--gold)) 34%, var(--text));
+}
+
+.item-card.locked.has-tip .compact-meta {
+  color: color-mix(in srgb, var(--accent, var(--gold)) 28%, var(--muted));
 }
 
 .item-title {
@@ -804,7 +813,8 @@ h1 {
 
 .item-title h3 {
   font-size: 0.98rem;
-  font-weight: 700;
+  font-weight: 800;
+  color: var(--text);
 }
 
 .badge {
@@ -829,8 +839,9 @@ h1 {
 
 .compact-meta {
   margin-top: 8px;
-  color: var(--dim);
+  color: var(--muted);
   font-size: 0.78rem;
+  font-weight: 600;
 }
 
 .card-hint {

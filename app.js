@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.8.6";
+const APP_VERSION = "0.8.7";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -47,6 +47,15 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.8.7",
+    date: "2026-07-09",
+    title: "卡片标题强化",
+    notes: [
+      "增强锁定卡片标题与分类文字可读性。",
+      "卡片色彩底纹改为 45 度斜向渐变，分组感更自然。",
+    ],
+  },
   {
     version: "0.8.6",
     date: "2026-07-09",
