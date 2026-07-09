@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.9.13";
+const APP_VERSION = "0.9.14";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -50,6 +50,15 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.9.14",
+    date: "2026-07-09",
+    title: "成本框按缺口显示",
+    notes: [
+      "材料足够时，成本行只显示本次需要消耗的数量。",
+      "材料不足时，才在右侧显示第二个负数缺口框。",
+    ],
+  },
   {
     version: "0.9.13",
     date: "2026-07-09",
@@ -3212,7 +3221,7 @@ function formatCostRequired(cost) {
 
 function formatCostMissing(missing) {
   const shortfall = Math.max(0, missing);
-  return shortfall > 0 ? `-${fmt(shortfall, 1)}` : "0";
+  return shortfall > 0 ? `-${fmt(shortfall, 1)}` : "";
 }
 
 function shortfallRows(costs = {}, caps = cached.caps) {
@@ -3263,8 +3272,9 @@ function renderTipRow(row) {
     row.resource ? `data-resource="${escapeHtml(row.resource)}"` : "",
     Number.isFinite(row.cost) ? `data-cost="${row.cost}"` : "",
   ].filter(Boolean).join(" ");
+  const hasMissing = Boolean(row.missingValue);
   const valueHtml = row.kind === "cost"
-    ? `<span class="tip-cost-values" aria-label="资源需求和缺口"><span class="tip-cost-box tip-cost-required">${escapeHtml(row.requiredValue ?? formatCostRequired(row.cost))}</span><span class="tip-cost-box tip-cost-missing">${escapeHtml(row.missingValue ?? "0")}</span></span>`
+    ? `<span class="tip-cost-values${hasMissing ? " has-missing" : ""}" aria-label="资源需求和缺口"><span class="tip-cost-box tip-cost-required">${escapeHtml(row.requiredValue ?? formatCostRequired(row.cost))}</span><span class="tip-cost-box tip-cost-missing"${hasMissing ? "" : " hidden"}>${escapeHtml(row.missingValue ?? "")}</span></span>`
     : `<span class="tip-value">${escapeHtml(row.value)}</span>`;
   return `
     <div class="tip-row tip-row-${row.tone || "neutral"}" style="--row-accent:${color}" ${attrs}>
@@ -3467,8 +3477,14 @@ function refreshActiveCostPreview() {
     row.classList.toggle("tip-row-warning", tone === "warning");
     const required = $(".tip-cost-required", row);
     const missingBox = $(".tip-cost-missing", row);
+    const costValues = $(".tip-cost-values", row);
     if (required) required.textContent = formatCostRequired(cost);
-    if (missingBox) missingBox.textContent = formatCostMissing(missing);
+    if (missingBox) {
+      const missingText = formatCostMissing(missing);
+      missingBox.textContent = missingText;
+      missingBox.hidden = !missingText;
+      costValues?.classList.toggle("has-missing", Boolean(missingText));
+    }
   });
 }
 

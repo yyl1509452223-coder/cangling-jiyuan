@@ -1096,11 +1096,16 @@ h1 {
 
 .tip-cost-values {
   display: inline-grid;
-  grid-template-columns: minmax(32px, auto) minmax(34px, auto);
-  gap: 4px;
+  grid-template-columns: minmax(32px, auto);
+  gap: 0;
   justify-content: end;
   align-items: center;
   white-space: nowrap;
+}
+
+.tip-cost-values.has-missing {
+  grid-template-columns: minmax(32px, auto) minmax(34px, auto);
+  gap: 4px;
 }
 
 .tip-cost-box {
