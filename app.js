@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.9.7";
+const APP_VERSION = "0.9.8";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -25,7 +25,7 @@ const icons = {
 
 const resources = [
   { id: "food", name: "粮食", icon: "food", cap: 300 },
-  { id: "gold", name: "金币", icon: "spark", cap: 600, unlocked: (s) => buildingCount(s, "hut") >= 1 },
+  { id: "gold", name: "金币", icon: "spark", cap: 600, unlocked: (s) => buildingCount(s, "quarry") >= 1 || buildingCount(s, "orepit") >= 1 || buildingCount(s, "market") >= 1 || (s.resources.gold || 0) > 0 },
   { id: "wood", name: "木材", icon: "wood", cap: 300 },
   { id: "stone", name: "石料", icon: "stone", cap: 300 },
   { id: "tools", name: "工具", icon: "tools", cap: 180, unlocked: (s) => hasTech(s, "craftsmanship") || buildingCount(s, "workshop") >= 1 },
@@ -50,6 +50,16 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.9.8",
+    date: "2026-07-09",
+    title: "金币来源调整",
+    notes: [
+      "小屋不再凭空产出金币，金币改为主要来自采石、矿坑、矿架和市集。",
+      "前期关键建筑去掉或降低金币成本，避免新金币链导致早期卡住。",
+      "部分随机事件调整解锁条件和奖励，避免金币资源尚未出现时提前刷出金币选项。",
+    ],
+  },
   {
     version: "0.9.7",
     date: "2026-07-09",
@@ -447,7 +457,7 @@ const buildings = [
     desc: "给族人遮风避雨，提供 1 人口和少量学识产出；粮食消耗由人口口粮统一计算。",
     costs: { wood: 15, stone: 10 },
     costScale: 1.3,
-    effects: { population: 1, goldRateFlat: 0.2, knowledgeRateFlat: 0.3 },
+    effects: { population: 1, knowledgeRateFlat: 0.3 },
     unlocked: (s) => hasTech(s, "housing"),
   },
   {
@@ -455,7 +465,7 @@ const buildings = [
     name: "山腰农田",
     tab: "settlement",
     desc: "开垦山腰薄田，提供 1 个粮食岗位，并大幅提高粮食上限。",
-    costs: { gold: 10, wood: 24 },
+    costs: { wood: 24, stone: 6 },
     costScale: 1.4,
     effects: { cap_food: 240, jobCap_forager: 1 },
     unlocked: (s) => hasTech(s, "agriculture"),
@@ -475,7 +485,7 @@ const buildings = [
     name: "陶工棚",
     tab: "settlement",
     desc: "烧制陶罐和粮瓮，让粮食储备更稳。",
-    costs: { gold: 18, wood: 36, stone: 30 },
+    costs: { wood: 38, stone: 32 },
     costScale: 1.28,
     effects: { cap_food: 180, foodRateFlat: 0.25, jobCap_forager: 1 },
     unlocked: (s) => hasTech(s, "pottery"),
@@ -485,7 +495,7 @@ const buildings = [
     name: "长屋",
     tab: "settlement",
     desc: "把几户人家连成共享屋脊，提供更多人口容量。",
-    costs: { gold: 60, wood: 120, stone: 45, food: 80 },
+    costs: { gold: 30, wood: 120, stone: 45, food: 80 },
     costScale: 1.28,
     effects: { population: 3, cap_food: 80, knowledgeRateFlat: 0.25 },
     unlocked: (s) => hasTech(s, "villagePlanning"),
@@ -495,7 +505,7 @@ const buildings = [
     name: "山泉水渠",
     tab: "settlement",
     desc: "把山泉引入梯田和住处，提高粮食产出与储备。",
-    costs: { gold: 70, wood: 80, stone: 120, tools: 20 },
+    costs: { gold: 40, wood: 80, stone: 120, tools: 20 },
     costScale: 1.28,
     effects: { foodRateFlat: 0.55, cap_food: 220, jobCap_forager: 1 },
     unlocked: (s) => hasTech(s, "irrigation"),
@@ -505,7 +515,7 @@ const buildings = [
     name: "谷仓库房",
     tab: "settlement",
     desc: "集中保管粮食、木料、石料和工具，显著提高物资上限。",
-    costs: { gold: 90, wood: 140, stone: 95, tools: 30 },
+    costs: { gold: 70, wood: 140, stone: 95, tools: 30 },
     costScale: 1.24,
     effects: { cap_food: 360, cap_wood: 220, cap_stone: 220, cap_tools: 90, cap_gold: 160 },
     unlocked: (s) => hasTech(s, "warehousing"),
@@ -515,7 +525,7 @@ const buildings = [
     name: "山麓木场",
     tab: "production",
     desc: "在杉林边缘设立木料场，提供 1 个伐木岗位，并提高木材上限。",
-    costs: { gold: 25, wood: 18, stone: 5 },
+    costs: { wood: 18, stone: 5 },
     costScale: 1.4,
     effects: { cap_wood: 100, jobCap_woodcutter: 1 },
     unlocked: (s) => hasTech(s, "woodcutting"),
@@ -525,7 +535,7 @@ const buildings = [
     name: "木工棚",
     tab: "production",
     desc: "把木料切成可复用构件，提高木材处理效率。",
-    costs: { gold: 42, wood: 70, stone: 20 },
+    costs: { gold: 18, wood: 70, stone: 20 },
     costScale: 1.3,
     effects: { woodRateFlat: 0.35, cap_wood: 160, jobCap_woodcutter: 1 },
     unlocked: (s) => hasTech(s, "carpentry"),
@@ -535,7 +545,7 @@ const buildings = [
     name: "共用工坊",
     tab: "production",
     desc: "木匠和石匠共用的工棚，开始稳定产出工具。",
-    costs: { gold: 75, wood: 110, stone: 85 },
+    costs: { gold: 55, wood: 110, stone: 85 },
     costScale: 1.28,
     effects: { toolsRateFlat: 0.35, cap_tools: 120, jobCap_artisan: 1 },
     unlocked: (s) => hasTech(s, "craftsmanship"),
@@ -564,10 +574,10 @@ const buildings = [
     id: "quarry",
     name: "露天采石场",
     tab: "production",
-    desc: "沿山壁开出稳定石源，提供 1 个采石岗位，并提高石料上限。",
-    costs: { gold: 32, wood: 24, stone: 8 },
+    desc: "沿山壁开出稳定石源，提供 1 个采石岗位，提高石料上限，并筛出少量可用于交易的矿石。",
+    costs: { wood: 24, stone: 8 },
     costScale: 1.4,
-    effects: { cap_stone: 100, jobCap_mason: 1 },
+    effects: { cap_stone: 100, cap_gold: 80, goldRateFlat: 0.18, jobCap_mason: 1 },
     unlocked: (s) => hasTech(s, "masonry"),
   },
   {
@@ -575,7 +585,7 @@ const buildings = [
     name: "石匠棚",
     tab: "production",
     desc: "集中存放石锤和楔子，提高石料处理效率。",
-    costs: { gold: 45, wood: 48, stone: 64 },
+    costs: { gold: 20, wood: 48, stone: 64 },
     costScale: 1.3,
     effects: { stoneRateFlat: 0.3, cap_stone: 160, jobCap_mason: 1 },
     unlocked: (s) => hasTech(s, "stoneTools"),
@@ -585,7 +595,7 @@ const buildings = [
     name: "石作坊",
     tab: "production",
     desc: "用滑轮和楔槽处理大块石料，提高石料产出。",
-    costs: { gold: 135, wood: 90, stone: 190, tools: 45 },
+    costs: { gold: 90, wood: 90, stone: 190, tools: 45 },
     costScale: 1.28,
     effects: { stoneRateFlat: 0.7, cap_stone: 300, jobCap_mason: 1 },
     unlocked: (s) => hasTech(s, "stonecutting"),
@@ -594,20 +604,20 @@ const buildings = [
     id: "orepit",
     name: "赤砂矿坑",
     tab: "production",
-    desc: "顺着赤砂岩脉向下开采，提供 1 个矿工岗位，并提高矿砂上限。",
-    costs: { gold: 160, wood: 140, stone: 80 },
+    desc: "顺着赤砂岩脉向下开采，提供 1 个矿工岗位，提高矿砂上限，并带来稳定金币。",
+    costs: { gold: 90, wood: 140, stone: 80 },
     costScale: 1.4,
-    effects: { cap_ore: 100, jobCap_miner: 1 },
+    effects: { cap_ore: 100, cap_gold: 120, goldRateFlat: 0.45, jobCap_miner: 1 },
     unlocked: (s) => hasTech(s, "smelting"),
   },
   {
     id: "mineShaft",
     name: "竖井矿架",
     tab: "production",
-    desc: "支起木架深入赤砂矿脉，提高矿砂产出与储量。",
-    costs: { gold: 180, wood: 170, stone: 140, tools: 70 },
+    desc: "支起木架深入赤砂矿脉，提高矿砂产出、金币收入与储量。",
+    costs: { gold: 120, wood: 170, stone: 140, tools: 70 },
     costScale: 1.3,
-    effects: { oreRateFlat: 0.65, cap_ore: 180, jobCap_miner: 1 },
+    effects: { oreRateFlat: 0.65, goldRateFlat: 0.75, cap_ore: 180, cap_gold: 160, jobCap_miner: 1 },
     unlocked: (s) => hasTech(s, "deepMining"),
   },
   {
@@ -717,7 +727,7 @@ const buildings = [
     desc: "商旅会带来消息和稀缺物资，也会带走过剩粮木。",
     costs: { wood: 110, stone: 80, knowledge: 38 },
     costScale: 1.24,
-    effects: { allRate: 0.03, foodRateFlat: -0.5, cap_food: 60, cap_wood: 60, cap_stone: 50 },
+    effects: { allRate: 0.03, goldRateFlat: 0.4, foodRateFlat: -0.5, cap_food: 60, cap_wood: 60, cap_stone: 50, cap_gold: 120 },
     unlocked: (s) => hasTech(s, "trade"),
   },
   {
@@ -1423,7 +1433,7 @@ const randomEvents = [
       { label: "换些口粮", costs: { wood: 45 }, rewards: { food: 85 }, log: "村里的木料换成了耐放口粮。" },
       { label: "只问价格", rewards: { knowledge: 10 }, log: "书记把商队的报价记进账册。" },
     ],
-    unlocked: (s) => buildingCount(s, "hut") >= 1,
+    unlocked: (s) => buildingCount(s, "quarry") >= 1 || buildingCount(s, "market") >= 1,
   },
   {
     id: "rain",
@@ -1473,7 +1483,7 @@ const randomEvents = [
       { label: "卖出余粮", costs: { food: 46 }, rewards: { gold: 38 }, log: "多余口粮换成了更灵活的金币。" },
       { label: "旁听议价", rewards: { knowledge: 16 }, log: "书记学会了几句很有用的还价话术。" },
     ],
-    unlocked: (s) => buildingCount(s, "hut") >= 1,
+    unlocked: (s) => buildingCount(s, "quarry") >= 1 || buildingCount(s, "market") >= 1,
   },
   {
     id: "workplaceFish",
@@ -1549,7 +1559,7 @@ const randomEvents = [
       { label: "改进扣带", costs: { stone: 18 }, rewards: { knowledge: 34 }, log: "盾带被重新加固，训练记录也更可靠。" },
       { label: "围观片刻", rewards: { knowledge: 10 }, log: "围观的人很克制，但大家都看得挺认真。" },
     ],
-    unlocked: (s) => hasTech(s, "watch") && buildingCount(s, "barracks") >= 1,
+    unlocked: (s) => hasTech(s, "watch") && buildingCount(s, "barracks") >= 1 && buildingCount(s, "quarry") >= 1,
   },
   {
     id: "hotSearchGate",
@@ -1560,7 +1570,7 @@ const randomEvents = [
       { label: "借势募粮", costs: { gold: 18 }, rewards: { food: 86 }, log: "传闻被讲得很稳，村民愿意多交些粮。" },
       { label: "写入简报", rewards: { knowledge: 18 }, log: "热闹被压缩成一条不显眼的简报。" },
     ],
-    unlocked: (s) => buildingCount(s, "hut") >= 1 && (hasTech(s, "records") || buildingCount(s, "scribe") >= 1),
+    unlocked: (s) => (buildingCount(s, "quarry") >= 1 || buildingCount(s, "market") >= 1) && (hasTech(s, "records") || buildingCount(s, "scribe") >= 1),
   },
   {
     id: "clipMasterScribe",
@@ -1571,7 +1581,7 @@ const randomEvents = [
       { label: "重排路线图", costs: { food: 30 }, rewards: { knowledge: 42 }, log: "路线图被重排，后续远行少走了些弯路。" },
       { label: "收进档案", rewards: { knowledge: 15 }, log: "书记的剪辑手法被归档，标题被改得低调许多。" },
     ],
-    unlocked: (s) => buildingCount(s, "hut") >= 1 && (hasTech(s, "trailMapping") || s.expeditionsDone.length >= 1),
+    unlocked: (s) => (buildingCount(s, "quarry") >= 1 || buildingCount(s, "market") >= 1) && (hasTech(s, "trailMapping") || s.expeditionsDone.length >= 1),
   },
   {
     id: "stubbornMiner",
@@ -1603,7 +1613,7 @@ const randomEvents = [
       { label: "给工匠加餐", costs: { food: 48 }, rewards: { wood: 52, stone: 34 }, log: "工匠吃完加餐，连夜整理出一批可用材料。" },
       { label: "安静散会", rewards: { gold: 16 }, log: "庆功预算被省下，账册看起来很健康。" },
     ],
-    unlocked: (s) => totalBuildings(s) >= 6,
+    unlocked: (s) => totalBuildings(s) >= 6 && buildingCount(s, "quarry") >= 1,
   },
   {
     id: "starTea",
