@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.9.0";
+const APP_VERSION = "0.9.1";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -47,6 +47,15 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.9.1",
+    date: "2026-07-09",
+    title: "研究子标签整理",
+    notes: [
+      "研究页新增待研究和已完成两个子标签，避免研究项目变多后混在一起。",
+      "默认显示待研究内容，已完成项目可单独查看。",
+    ],
+  },
   {
     version: "0.9.0",
     date: "2026-07-09",
@@ -729,6 +738,7 @@ const defaultState = () => ({
   stealth: false,
   theme: "dark",
   activeTab: "buildings",
+  researchView: "pending",
   createdAt: Date.now(),
   lastSavedAt: Date.now(),
   lastTickAt: Date.now(),
@@ -841,6 +851,7 @@ function migrate(save) {
   if (save.started && !save.difficulty) save.difficulty = "normal";
   if (save.started && !save.tribeName) save.tribeName = "苍岭部落";
   save.resources = { ...defaultResources(), ...(save.resources || {}) };
+  if (!["pending", "completed"].includes(save.researchView)) save.researchView = "pending";
   save.popCapBase = defaultState().popCapBase;
   save.buildings = save.buildings || {};
   save.jobs = { ...defaultState().jobs, ...(save.jobs || {}) };
@@ -1840,6 +1851,10 @@ function renderBuildingCard(item) {
 
 function renderResearch() {
   const visible = techs.filter((tech) => tech.unlocked(state) || hasTech(state, tech.id));
+  const view = state.researchView === "completed" ? "completed" : "pending";
+  const pendingCount = visible.filter((tech) => !hasTech(state, tech.id)).length;
+  const completedCount = visible.length - pendingCount;
+  const filtered = visible.filter((tech) => (view === "completed" ? hasTech(state, tech.id) : !hasTech(state, tech.id)));
   return `
     <section>
       <div class="section-head">
@@ -1848,11 +1863,15 @@ function renderResearch() {
           <p>研究会解锁更多建筑、职业、军队和远征路线。</p>
         </div>
       </div>
+      <div class="subtabs" role="tablist" aria-label="研究筛选">
+        <button class="subtab-btn ${view === "pending" ? "active" : ""}" data-action="research-view" data-id="pending" role="tab" aria-selected="${view === "pending"}">${icon("knowledge")}待研究 <span>${pendingCount}</span></button>
+        <button class="subtab-btn ${view === "completed" ? "active" : ""}" data-action="research-view" data-id="completed" role="tab" aria-selected="${view === "completed"}">${icon("spark")}已完成 <span>${completedCount}</span></button>
+      </div>
       ${projectCategories().map(([id, title]) => {
-        const items = visible.filter((tech) => (tech.tab || "culture") === id);
+        const items = filtered.filter((tech) => (tech.tab || "culture") === id);
         if (!items.length) return "";
         return `<div class="section-head category-head" style="--accent:${accentForCategory(id)}"><h3>${title}</h3></div><div class="item-grid">${items.map(renderTechCard).join("")}</div>`;
-      }).join("")}
+      }).join("") || `<div class="empty">${view === "completed" ? "还没有完成的研究。" : "当前没有可研究项目。"}</div>`}
     </section>
   `;
 }
@@ -2375,6 +2394,11 @@ function bindEvents() {
       if (action === "start") startPath(id);
       if (action === "tab") {
         state.activeTab = id;
+        saveState(true);
+        render();
+      }
+      if (action === "research-view") {
+        state.researchView = id === "completed" ? "completed" : "pending";
         saveState(true);
         render();
       }
