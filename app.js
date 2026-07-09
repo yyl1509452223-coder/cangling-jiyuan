@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.8.2";
+const APP_VERSION = "0.8.3";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -47,6 +47,16 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.8.3",
+    date: "2026-07-09",
+    title: "低调界面优化",
+    notes: [
+      "整体界面收敛为更像工作面板的低噪音风格，减少地图感、重阴影和高饱和装饰。",
+      "优化黑白主题下的文字、边框、卡片、标签和悬停预览对比度。",
+      "统一建筑、职业、公告和指引的色彩表达，保留资源颜色用于识别。",
+    ],
+  },
   {
     version: "0.8.2",
     date: "2026-07-08",
@@ -909,7 +919,7 @@ function renderGuide() {
       </article>
       <article class="guide-card" style="--accent:${accentVars.spark}">
         <h3>5. 信息藏在悬停里</h3>
-        <p>建筑和研究的成本、效果会在鼠标放上去时显示。需要低调时，顶部“视图”可以切到工作面板样式。</p>
+        <p>建筑和研究的成本、效果会在鼠标放上去时显示。需要低调时，顶部“面板”可以切到工作面板样式。</p>
       </article>
     </div>
   `;
@@ -1401,6 +1411,7 @@ function renderTopbar() {
   const themeIcon = state.theme === "dark" ? "sun" : "moon";
   const title = state.stealth ? "工作进度" : "苍岭纪元";
   const subtitle = state.stealth ? "任务与资源面板" : "山岭城邦增量策略";
+  const stealthLabel = state.stealth ? "标准" : "面板";
   return `
     <header class="topbar">
       <div class="brand">
@@ -1413,7 +1424,7 @@ function renderTopbar() {
       <div class="top-actions">
         <button class="secondary-btn version-btn" data-action="announcements"><span>v${APP_VERSION}</span><span>公告</span></button>
         <button class="secondary-btn" data-action="guide">${icon("knowledge")}<span>指引</span></button>
-        <button class="secondary-btn" data-action="stealth">${icon("spark")}<span>${state.stealth ? "标准" : "视图"}</span></button>
+        <button class="secondary-btn" data-action="stealth">${icon("spark")}<span>${stealthLabel}</span></button>
         ${state.started ? `<button class="secondary-btn" data-action="save">${icon("spark")}<span>保存</span></button>` : ""}
         ${state.started ? `<button class="secondary-btn" data-action="export">${icon("knowledge")}<span>导出</span></button>` : ""}
         ${state.started ? `<button class="danger-btn" data-action="reset">${icon("army")}<span>重置</span></button>` : `<button class="secondary-btn" data-action="import">${icon("knowledge")}<span>导入</span></button>`}
