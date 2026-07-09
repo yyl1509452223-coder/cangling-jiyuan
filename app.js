@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.10.4";
+const APP_VERSION = "0.10.5";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -57,6 +57,15 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.10.5",
+    date: "2026-07-10",
+    title: "研究树前置修复",
+    notes: [
+      "补全 Theresmore 原版研究前置类型，保留资源上限、外交拥有、外交同盟等条件。",
+      "修复部分 75K、150K 级后期研究只剩资源成本、提前显示在前期研究列表的问题。",
+    ],
+  },
   {
     version: "0.10.4",
     date: "2026-07-10",
@@ -2341,6 +2350,8 @@ function requirementValue(s, requirement = {}) {
       return s.resources?.[id] || 0;
     case "building":
       return buildingCount(s, id);
+    case "cap":
+      return cached?.caps?.[id] ?? derive(s).caps?.[id] ?? 0;
     case "tech":
       return hasTech(s, id) ? 1 : 0;
     case "enemy":
@@ -2349,6 +2360,7 @@ function requirementValue(s, requirement = {}) {
     case "prayer":
     case "spell":
     case "diplomacy_owned":
+    case "diplomacy_alliance":
       return hasFlag(s, requirement.type, id) ? 1 : 0;
     case "stat":
       return statValue(s, id);

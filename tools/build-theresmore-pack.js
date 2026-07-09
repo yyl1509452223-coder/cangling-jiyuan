@@ -168,7 +168,7 @@ function reqToParts(req = []) {
     if (type === "resource") {
       add(costs, id, value);
       if (item.multi) costScales.push(num(item.multi, 1));
-    } else if (["tech", "building", "legacy", "prayer", "spell", "enemy", "diplomacy_owned", "stat"].includes(type)) {
+    } else if (["tech", "building", "legacy", "prayer", "spell", "enemy", "diplomacy_owned", "diplomacy_alliance", "stat", "cap"].includes(type)) {
       requires.push({ type, id, value });
     }
   }

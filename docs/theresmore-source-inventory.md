@@ -47,7 +47,7 @@ Current generated pack:
 ## Runtime mapping status
 
 - Resource costs are mapped into card costs.
-- Building, technology, resource, enemy, stat, legacy, prayer, spell, and diplomacy requirements are represented in a common `requires` format.
+- Building, technology, resource, enemy, stat, legacy, prayer, spell, diplomacy-owned, diplomacy-alliance, and cap requirements are represented in a common `requires` format.
 - Building and technology effects map into caps, flat rates, percentage rates, population, job caps, army cap, morale, all-rate, and army-power bonuses.
 - One-shot outputs map into `grantResources`, `grantsTechs`, and `removesTechs`.
 - Enemy requirements are satisfied by completed expedition ids, including `enemy_<id>`.

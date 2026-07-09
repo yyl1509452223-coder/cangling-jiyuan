@@ -5,7 +5,7 @@ window.THERESMORE_PACK = {
   "source": {
     "rawBundle": "raw/main.480437b3.js",
     "analysisDir": "theresmore_analysis_2026-07-09/analysis",
-    "generatedAt": "2026-07-09T23:05:32.843Z"
+    "generatedAt": "2026-07-09T23:35:07.733Z"
   },
   "populationFoodUse": 0,
   "startResources": {
@@ -10318,7 +10318,13 @@ window.THERESMORE_PACK = {
       "grantResources": {},
       "grantsTechs": [],
       "removesTechs": [],
-      "requires": []
+      "requires": [
+        {
+          "type": "cap",
+          "id": "food",
+          "value": 5000
+        }
+      ]
     },
     {
       "id": "barbarian_tribes",
@@ -10586,7 +10592,28 @@ window.THERESMORE_PACK = {
       "grantResources": {},
       "grantsTechs": [],
       "removesTechs": [],
-      "requires": []
+      "requires": [
+        {
+          "type": "diplomacy_alliance",
+          "id": "theresmore_wanders",
+          "value": 1
+        },
+        {
+          "type": "diplomacy_alliance",
+          "id": "nightdale_protectorate",
+          "value": 1
+        },
+        {
+          "type": "diplomacy_alliance",
+          "id": "zultan_emirate",
+          "value": 1
+        },
+        {
+          "type": "diplomacy_alliance",
+          "id": "western_kingdom",
+          "value": 1
+        }
+      ]
     },
     {
       "id": "liturgical_rites",
@@ -12313,7 +12340,13 @@ window.THERESMORE_PACK = {
       "grantResources": {},
       "grantsTechs": [],
       "removesTechs": [],
-      "requires": []
+      "requires": [
+        {
+          "type": "cap",
+          "id": "gold",
+          "value": 70000
+        }
+      ]
     },
     {
       "id": "gold_domination_project",
@@ -12351,6 +12384,11 @@ window.THERESMORE_PACK = {
       "removesTechs": [],
       "requires": [
         {
+          "type": "cap",
+          "id": "gold",
+          "value": 150000
+        },
+        {
           "type": "prayer",
           "id": "gold_consecration",
           "value": 1
@@ -12372,6 +12410,11 @@ window.THERESMORE_PACK = {
       "grantsTechs": [],
       "removesTechs": [],
       "requires": [
+        {
+          "type": "cap",
+          "id": "gold",
+          "value": 200000
+        },
         {
           "type": "tech",
           "id": "exterminate_competition",
@@ -12458,7 +12501,13 @@ window.THERESMORE_PACK = {
       "grantResources": {},
       "grantsTechs": [],
       "removesTechs": [],
-      "requires": []
+      "requires": [
+        {
+          "type": "diplomacy_alliance",
+          "id": "theresmore_wanders",
+          "value": 1
+        }
+      ]
     },
     {
       "id": "scout_mission_east",
@@ -13009,7 +13058,13 @@ window.THERESMORE_PACK = {
       "grantResources": {},
       "grantsTechs": [],
       "removesTechs": [],
-      "requires": []
+      "requires": [
+        {
+          "type": "diplomacy_alliance",
+          "id": "enso_multitude",
+          "value": 1
+        }
+      ]
     },
     {
       "id": "peace_nobunaga",
@@ -15016,7 +15071,13 @@ window.THERESMORE_PACK = {
       "grantResources": {},
       "grantsTechs": [],
       "removesTechs": [],
-      "requires": []
+      "requires": [
+        {
+          "type": "diplomacy_alliance",
+          "id": "kobu_dominion_r",
+          "value": 1
+        }
+      ]
     },
     {
       "id": "loot_storehouse",
