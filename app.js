@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.8.7";
+const APP_VERSION = "0.8.8";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -47,6 +47,15 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.8.8",
+    date: "2026-07-09",
+    title: "导入入口补齐",
+    notes: [
+      "游戏内顶部增加导入入口，不再只能在未开局时导入存档。",
+      "导出和导入现在会同时显示，方便备份和迁移进度。",
+    ],
+  },
   {
     version: "0.8.7",
     date: "2026-07-09",
@@ -1475,7 +1484,8 @@ function renderTopbar() {
         <button class="secondary-btn" data-action="stealth">${icon("spark")}<span>${stealthLabel}</span></button>
         ${state.started ? `<button class="secondary-btn" data-action="save">${icon("spark")}<span>保存</span></button>` : ""}
         ${state.started ? `<button class="secondary-btn" data-action="export">${icon("knowledge")}<span>导出</span></button>` : ""}
-        ${state.started ? `<button class="danger-btn" data-action="reset">${icon("army")}<span>重置</span></button>` : `<button class="secondary-btn" data-action="import">${icon("knowledge")}<span>导入</span></button>`}
+        <button class="secondary-btn" data-action="import">${icon("knowledge")}<span>导入</span></button>
+        ${state.started ? `<button class="danger-btn" data-action="reset">${icon("army")}<span>重置</span></button>` : ""}
         <button class="icon-btn" data-action="theme" aria-label="切换主题">${icon(themeIcon)}</button>
       </div>
     </header>
