@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.8.8";
+const APP_VERSION = "0.8.9";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -47,6 +47,15 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.8.9",
+    date: "2026-07-09",
+    title: "卡片色系统一",
+    notes: [
+      "建筑和研究卡片主色现在统一跟随所属分组，避免同组项目出现不同主色造成误解。",
+      "资源成本、收益和扩容仍在悬停预览里使用资源色，便于区分具体数值来源。",
+    ],
+  },
   {
     version: "0.8.8",
     date: "2026-07-09",
@@ -2264,22 +2273,10 @@ function accentForEffects(effects = {}, fallback = "spark") {
 }
 
 function accentForBuilding(item) {
-  if (item.tab === "war") return accentVars.army;
-  if (item.id === "orepit" || item.effects?.oreRateFlat || item.effects?.cap_ore) return accentVars.ore;
-  if (item.effects?.faithRateFlat || item.effects?.cap_faith) return accentVars.faith;
-  if (item.effects?.knowledgeRateFlat || item.effects?.cap_knowledge) return accentVars.knowledge;
-  if (item.effects?.stoneRateFlat || item.effects?.cap_stone) return accentVars.stone;
-  if (item.effects?.woodRateFlat || item.effects?.cap_wood) return accentVars.wood;
-  if (item.effects?.population || item.effects?.foodRateFlat || item.effects?.cap_food) return accentVars.food;
   return accentForCategory(item.tab);
 }
 
 function accentForTech(item) {
-  if (item.tab === "war") return accentVars.army;
-  if (item.id === "watch" || item.id === "iron") return accentVars.army;
-  if (item.costs?.faith || item.effects?.faithRate) return accentVars.faith;
-  if (item.costs?.ore || item.effects?.oreRate) return accentVars.ore;
-  if (item.effects?.cap_stone) return accentVars.stone;
   return accentForCategory(item.tab || "culture");
 }
 
