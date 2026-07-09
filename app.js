@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.9.10";
+const APP_VERSION = "0.9.11";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -25,12 +25,12 @@ const icons = {
 
 const resources = [
   { id: "food", name: "粮食", icon: "food", cap: 300 },
-  { id: "gold", name: "金币", icon: "spark", cap: 600, unlocked: (s) => buildingCount(s, "quarry") >= 1 || buildingCount(s, "orepit") >= 1 || buildingCount(s, "market") >= 1 || (s.resources.gold || 0) > 0 },
+  { id: "gold", name: "金币", icon: "spark", cap: 400, unlocked: (s) => buildingCount(s, "quarry") >= 1 || buildingCount(s, "orepit") >= 1 || buildingCount(s, "market") >= 1 || (s.resources.gold || 0) > 0 },
   { id: "wood", name: "木材", icon: "wood", cap: 300 },
   { id: "stone", name: "石料", icon: "stone", cap: 300 },
-  { id: "tools", name: "工具", icon: "tools", cap: 180, unlocked: (s) => hasTech(s, "craftsmanship") || buildingCount(s, "workshop") >= 1 },
-  { id: "ore", name: "矿砂", icon: "ore", cap: 200, unlocked: (s) => buildingCount(s, "orepit") >= 1 },
-  { id: "knowledge", name: "学识", icon: "knowledge", cap: 500 },
+  { id: "tools", name: "工具", icon: "tools", cap: 250, unlocked: (s) => hasTech(s, "craftsmanship") || buildingCount(s, "workshop") >= 1 },
+  { id: "ore", name: "矿砂", icon: "ore", cap: 280, unlocked: (s) => buildingCount(s, "orepit") >= 1 },
+  { id: "knowledge", name: "学识", icon: "knowledge", cap: 350 },
   { id: "faith", name: "星辉", icon: "faith", cap: 500, unlocked: (s) => buildingCount(s, "shrine") >= 1 },
 ];
 
@@ -50,6 +50,17 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.9.11",
+    date: "2026-07-09",
+    title: "玩法节奏平衡",
+    notes: [
+      "提高采石场金币产出，降低矿坑和部分中期建筑门槛，减少前中期卡金币。",
+      "提高工具与矿砂基础上限，收窄金币与学识基础上限，让资源压力更集中也更可控。",
+      "缓和困难和地狱难度的粮食惩罚，并重新平衡三条先民道路。",
+      "采食者产粮提高，长屋过渡更平滑，并额外提供采食岗位。",
+    ],
+  },
   {
     version: "0.9.10",
     date: "2026-07-09",
@@ -384,8 +395,8 @@ const difficulties = [
     name: "困难",
     color: "#e8894a",
     icon: "stone",
-    desc: "扩张更贵，粮食压力更高，远征和事件收益会缩水。",
-    notes: ["建筑 +10%，研究 +8%", "粮食消耗 +15%，事件间隔 +10%", "远征成功率 -8%"],
+    desc: "扩张更贵，粮食压力更高，远征会更谨慎。",
+    notes: ["建筑 +10%，研究 +8%", "粮食消耗 +10%，事件间隔 +10%", "远征成功率 -8%"],
     mods: {
       manualGather: 1,
       buildCost: 1.1,
@@ -393,8 +404,8 @@ const difficulties = [
       trainCost: 1.08,
       expeditionCost: 1.1,
       eventCost: 1.05,
-      foodUse: 1.15,
-      eventReward: 0.9,
+      foodUse: 1.1,
+      eventReward: 1,
       expeditionReward: 0.92,
       expeditionChance: -0.08,
       expeditionMin: 0.35,
@@ -410,22 +421,22 @@ const difficulties = [
     color: "#d85d5d",
     icon: "army",
     desc: "给熟悉系统后的挑战。每次错误扩张都会留下明显代价。",
-    notes: ["建筑 +22%，研究 +18%", "粮食消耗 +30%，事件间隔 +25%", "远征成功率 -18%，失败损失更重"],
+    notes: ["建筑 +15%，研究 +15%", "粮食消耗 +20%，事件间隔 +20%", "远征成功率 -18%，失败损失更重"],
     mods: {
       manualGather: 1,
-      buildCost: 1.22,
-      techCost: 1.18,
-      trainCost: 1.18,
-      expeditionCost: 1.22,
+      buildCost: 1.15,
+      techCost: 1.15,
+      trainCost: 1.15,
+      expeditionCost: 1.15,
       eventCost: 1.15,
-      foodUse: 1.3,
-      eventReward: 0.78,
+      foodUse: 1.2,
+      eventReward: 0.9,
       expeditionReward: 0.82,
       expeditionChance: -0.18,
       expeditionMin: 0.28,
-      expeditionMax: 0.82,
+      expeditionMax: 0.88,
       expeditionLoss: 2,
-      eventInterval: 1.25,
+      eventInterval: 1.2,
       startResources: 0.85,
     },
   },
@@ -438,9 +449,9 @@ const paths = [
     color: "#43b883",
     icon: "food",
     desc: "你的先民修筑山腰水渠，让第一座村落在薄雾中稳定生长。",
-    bonuses: ["粮食产量 +12%", "粮食上限 +120", "人口口粮消耗 -8%"],
-    effects: { foodRate: 0.12, cap_food: 120 },
-    mods: { foodUse: 0.92 },
+    bonuses: ["粮食产量 +20%", "粮食上限 +120", "人口口粮消耗 -15%"],
+    effects: { foodRate: 0.2, cap_food: 120 },
+    mods: { foodUse: 0.85 },
     start: { food: 40 },
   },
   {
@@ -449,9 +460,9 @@ const paths = [
     color: "#e8894a",
     icon: "stone",
     desc: "你的先民熟悉峭壁与矿脉，懂得把坚硬山岩变成城邦的骨架。",
-    bonuses: ["石料产量 +12%", "建筑成本 -6%", "木材/石料上限 +80"],
+    bonuses: ["石料产量 +12%", "建筑成本 -4%", "木材/石料上限 +80"],
     effects: { stoneRate: 0.12, cap_wood: 80, cap_stone: 80 },
-    mods: { buildCost: 0.94 },
+    mods: { buildCost: 0.96 },
     start: { stone: 35, wood: 15 },
   },
   {
@@ -460,9 +471,9 @@ const paths = [
     color: "#5b8def",
     icon: "knowledge",
     desc: "你的先民用星图安排播种、祭仪和远征，最早的文字刻在铜镜背面。",
-    bonuses: ["学识产量 +14%", "研究成本 -6%", "学识上限 +100"],
+    bonuses: ["学识产量 +14%", "研究成本 -10%", "学识上限 +100"],
     effects: { knowledgeRate: 0.14, cap_knowledge: 100 },
-    mods: { techCost: 0.94 },
+    mods: { techCost: 0.9 },
     start: { knowledge: 20 },
   },
 ];
@@ -513,9 +524,9 @@ const buildings = [
     name: "长屋",
     tab: "settlement",
     desc: "把几户人家连成共享屋脊，提供更多人口容量。",
-    costs: { gold: 30, wood: 120, stone: 45, food: 80 },
-    costScale: 1.28,
-    effects: { population: 3, cap_food: 80, knowledgeRateFlat: 0.25 },
+    costs: { wood: 112, stone: 42, food: 72 },
+    costScale: 1.24,
+    effects: { population: 3, cap_food: 80, knowledgeRateFlat: 0.25, jobCap_forager: 1 },
     unlocked: (s) => hasTech(s, "villagePlanning"),
   },
   {
@@ -523,8 +534,8 @@ const buildings = [
     name: "山泉水渠",
     tab: "settlement",
     desc: "把山泉引入梯田和住处，提高粮食产出与储备。",
-    costs: { gold: 40, wood: 80, stone: 120, tools: 20 },
-    costScale: 1.28,
+    costs: { gold: 32, wood: 72, stone: 105, tools: 18 },
+    costScale: 1.24,
     effects: { foodRateFlat: 0.55, cap_food: 220, jobCap_forager: 1 },
     unlocked: (s) => hasTech(s, "irrigation"),
   },
@@ -533,9 +544,9 @@ const buildings = [
     name: "谷仓库房",
     tab: "settlement",
     desc: "集中保管粮食、木料、石料和工具，显著提高物资上限。",
-    costs: { gold: 70, wood: 140, stone: 95, tools: 30 },
+    costs: { gold: 55, wood: 125, stone: 85, tools: 26 },
     costScale: 1.24,
-    effects: { cap_food: 360, cap_wood: 220, cap_stone: 220, cap_tools: 90, cap_gold: 160 },
+    effects: { cap_food: 360, cap_wood: 220, cap_stone: 220, cap_tools: 130, cap_gold: 160 },
     unlocked: (s) => hasTech(s, "warehousing"),
   },
   {
@@ -563,8 +574,8 @@ const buildings = [
     name: "共用工坊",
     tab: "production",
     desc: "木匠和石匠共用的工棚，开始稳定产出工具。",
-    costs: { gold: 55, wood: 110, stone: 85 },
-    costScale: 1.28,
+    costs: { gold: 45, wood: 100, stone: 78 },
+    costScale: 1.24,
     effects: { toolsRateFlat: 0.35, cap_tools: 120, jobCap_artisan: 1 },
     unlocked: (s) => hasTech(s, "craftsmanship"),
   },
@@ -595,7 +606,7 @@ const buildings = [
     desc: "沿山壁开出稳定石源，提供 1 个采石岗位，提高石料上限，并筛出少量可用于交易的矿石。",
     costs: { wood: 24, stone: 8 },
     costScale: 1.4,
-    effects: { cap_stone: 100, cap_gold: 80, goldRateFlat: 0.18, jobCap_mason: 1 },
+    effects: { cap_stone: 100, cap_gold: 80, goldRateFlat: 0.35, jobCap_mason: 1 },
     unlocked: (s) => hasTech(s, "masonry"),
   },
   {
@@ -623,8 +634,8 @@ const buildings = [
     name: "赤砂矿坑",
     tab: "production",
     desc: "顺着赤砂岩脉向下开采，提供 1 个矿工岗位，提高矿砂上限，并带来稳定金币。",
-    costs: { gold: 90, wood: 140, stone: 80 },
-    costScale: 1.4,
+    costs: { gold: 60, wood: 125, stone: 72 },
+    costScale: 1.25,
     effects: { cap_ore: 100, cap_gold: 120, goldRateFlat: 0.45, jobCap_miner: 1 },
     unlocked: (s) => hasTech(s, "smelting"),
   },
@@ -633,9 +644,9 @@ const buildings = [
     name: "竖井矿架",
     tab: "production",
     desc: "支起木架深入赤砂矿脉，提高矿砂产出、金币收入与储量。",
-    costs: { gold: 120, wood: 170, stone: 140, tools: 70 },
-    costScale: 1.3,
-    effects: { oreRateFlat: 0.65, goldRateFlat: 0.75, cap_ore: 180, cap_gold: 160, jobCap_miner: 1 },
+    costs: { gold: 105, wood: 150, stone: 125, tools: 60 },
+    costScale: 1.25,
+    effects: { oreRateFlat: 0.65, goldRateFlat: 0.75, cap_ore: 220, cap_gold: 180, jobCap_miner: 1 },
     unlocked: (s) => hasTech(s, "deepMining"),
   },
   {
@@ -1235,9 +1246,9 @@ const jobs = [
   {
     id: "forager",
     name: "采食者",
-    desc: "照看农田和野生作物，每人生产 2 粮食/秒。",
+    desc: "照看农田和野生作物，每人生产 2.5 粮食/秒。",
     baseCap: 0,
-    effects: { foodRateFlat: 2 },
+    effects: { foodRateFlat: 2.5 },
   },
   {
     id: "woodcutter",
@@ -1936,7 +1947,7 @@ function renderGuide() {
       </article>
       <article class="guide-card" style="--accent:${accentVars.people}">
         <h3>3. 人口需要口粮</h3>
-        <p>每 1 人口消耗 1 粮食/秒；农田提供采食者岗位，采食者每人生产 2 粮食/秒。</p>
+        <p>每 1 人口消耗 1 粮食/秒；农田提供采食者岗位，采食者每人生产 2.5 粮食/秒。</p>
       </article>
       <article class="guide-card" style="--accent:${accentVars.knowledge}">
         <h3>4. 研究决定解锁</h3>
@@ -2866,7 +2877,7 @@ function renderPeople() {
       <div class="section-head">
         <div>
           <h2>人口</h2>
-          <p>每 1 人口消耗 1 粮食/秒；采食者 2 粮食/秒，伐木工 0.7 木材/秒，石匠 0.6 石料/秒。</p>
+          <p>每 1 人口消耗 1 粮食/秒；采食者 2.5 粮食/秒，伐木工 0.7 木材/秒，石匠 0.6 石料/秒。</p>
         </div>
       </div>
       <div class="stats-grid compact-stats">
