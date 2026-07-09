@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.9.9";
+const APP_VERSION = "0.9.10";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -50,6 +50,15 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.9.10",
+    date: "2026-07-09",
+    title: "缺口显示缓存修正",
+    notes: [
+      "成本不足时右侧只保留“缺多少”的数字，不再显示当前/需求数量。",
+      "页面资源增加版本标记，减少浏览器缓存导致旧格式继续显示的问题。",
+    ],
+  },
   {
     version: "0.9.9",
     date: "2026-07-09",
