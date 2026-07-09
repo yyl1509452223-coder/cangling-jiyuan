@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.8.3";
+const APP_VERSION = "0.8.4";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -47,6 +47,16 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.8.4",
+    date: "2026-07-09",
+    title: "色彩辨识增强",
+    notes: [
+      "提高资源、分类、标签和卡片状态的颜色强度，让信息分区更清楚。",
+      "保持工作面板的低调基调，不恢复重阴影和夸张装饰。",
+      "同时增强黑白主题与面板模式下的颜色可读性。",
+    ],
+  },
   {
     version: "0.8.3",
     date: "2026-07-09",

@@ -9,14 +9,14 @@
   --muted: #b6bec7;
   --dim: #89939f;
   --line: #38404a;
-  --gold: #d7b65f;
-  --wood: #b58b5e;
-  --stone: #a7b0bb;
-  --green: #63b889;
-  --red: #d76a6a;
-  --blue: #79a7e8;
-  --purple: #b694d0;
-  --orange: #d99866;
+  --gold: #f0c75e;
+  --wood: #d0a06a;
+  --stone: #bdc7d4;
+  --green: #6fd29c;
+  --red: #ef7777;
+  --blue: #8bb9ff;
+  --purple: #c99bea;
+  --orange: #f0a66e;
   --shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
   --shadow-subtle: 0 1px 0 rgba(255, 255, 255, 0.03);
   --focus: #98bdf4;
@@ -35,14 +35,14 @@
   --muted: #4f5966;
   --dim: #626d79;
   --line: #cfd6df;
-  --gold: #9a751f;
-  --wood: #8a653f;
-  --stone: #687481;
-  --green: #257a55;
-  --red: #b24646;
-  --blue: #315f9f;
-  --purple: #70518b;
-  --orange: #9b5b2f;
+  --gold: #8a6400;
+  --wood: #815326;
+  --stone: #4e5d6b;
+  --green: #126b45;
+  --red: #a93434;
+  --blue: #205aa8;
+  --purple: #6d3f94;
+  --orange: #94511d;
   --shadow: 0 8px 18px rgba(31, 41, 55, 0.09);
   --shadow-subtle: 0 1px 0 rgba(255, 255, 255, 0.7);
   --focus: #2563eb;
@@ -156,14 +156,14 @@ input {
   --muted: #aeb7c2;
   --dim: #7f8996;
   --line: #3a424d;
-  --gold: #b6a06b;
-  --wood: #a18667;
-  --stone: #9ca6b2;
-  --green: #78a98d;
-  --red: #bd7373;
-  --blue: #7fa3cf;
-  --purple: #a08bb5;
-  --orange: #b68a68;
+  --gold: #d0b56d;
+  --wood: #bb916b;
+  --stone: #b3bfcc;
+  --green: #80c79d;
+  --red: #d48383;
+  --blue: #8db6e5;
+  --purple: #b79ccd;
+  --orange: #d29a71;
   background: var(--bg);
 }
 
@@ -177,14 +177,14 @@ input {
   --muted: #55606d;
   --dim: #65707c;
   --line: #d3d9e2;
-  --gold: #8d7a4c;
-  --wood: #80684d;
-  --stone: #697581;
-  --green: #4d7b60;
-  --red: #9a5d5d;
-  --blue: #5579a5;
-  --purple: #766489;
-  --orange: #8a664f;
+  --gold: #776018;
+  --wood: #72512e;
+  --stone: #596675;
+  --green: #2e744d;
+  --red: #914b4b;
+  --blue: #386fa6;
+  --purple: #6d5286;
+  --orange: #7d562f;
 }
 
 :root[data-stealth="true"] .hero-media,
@@ -493,8 +493,8 @@ h1 {
 }
 
 .primary-btn {
-  border: 1px solid color-mix(in srgb, var(--gold) 70%, var(--line));
-  background: color-mix(in srgb, var(--gold) 18%, var(--panel-2));
+  border: 1px solid color-mix(in srgb, var(--gold) 82%, var(--line));
+  background: color-mix(in srgb, var(--gold) 26%, var(--panel-2));
   color: var(--text);
   font-weight: 700;
 }
@@ -512,8 +512,8 @@ h1 {
 }
 
 .danger-btn {
-  border: 1px solid color-mix(in srgb, var(--red) 60%, var(--line));
-  background: color-mix(in srgb, var(--red) 12%, var(--panel));
+  border: 1px solid color-mix(in srgb, var(--red) 70%, var(--line));
+  background: color-mix(in srgb, var(--red) 18%, var(--panel));
 }
 
 .ghost-btn {
@@ -592,7 +592,11 @@ h1 {
 }
 
 .resource-row:hover {
-  background: var(--panel-2);
+  background: color-mix(in srgb, currentColor 5%, var(--panel-2));
+}
+
+.resource-row > span:first-child {
+  filter: saturate(1.16);
 }
 
 .resource-name {
@@ -607,6 +611,7 @@ h1 {
 .resource-rate {
   color: var(--green);
   font-size: 0.76rem;
+  font-weight: 650;
   font-variant-numeric: tabular-nums;
 }
 
@@ -661,14 +666,14 @@ h1 {
 }
 
 .tab-btn.active {
-  border-color: color-mix(in srgb, var(--accent, var(--gold)) 58%, var(--line));
-  background: color-mix(in srgb, var(--accent, var(--gold)) 10%, var(--panel));
+  border-color: color-mix(in srgb, var(--accent, var(--gold)) 76%, var(--line));
+  background: color-mix(in srgb, var(--accent, var(--gold)) 18%, var(--panel));
   color: var(--text);
 }
 
 .tab-btn:hover {
-  border-color: color-mix(in srgb, var(--accent, var(--gold)) 42%, var(--line));
-  background: var(--panel-2);
+  border-color: color-mix(in srgb, var(--accent, var(--gold)) 62%, var(--line));
+  background: color-mix(in srgb, var(--accent, var(--gold)) 10%, var(--panel-2));
   color: var(--text);
 }
 
@@ -726,11 +731,11 @@ h1 {
   min-height: 30px;
   margin-top: 10px;
   padding: 0 0 7px;
-  border-bottom: 1px solid color-mix(in srgb, var(--accent, var(--gold)) 36%, var(--line));
+  border-bottom: 1px solid color-mix(in srgb, var(--accent, var(--gold)) 58%, var(--line));
 }
 
 .category-head h3 {
-  color: color-mix(in srgb, var(--accent, var(--gold)) 52%, var(--text));
+  color: color-mix(in srgb, var(--accent, var(--gold)) 74%, var(--text));
   font-size: 0.98rem;
   font-weight: 700;
 }
@@ -746,9 +751,9 @@ h1 {
   flex-direction: column;
   min-height: 220px;
   padding: 14px;
-  border-color: color-mix(in srgb, var(--accent, var(--gold)) 20%, var(--line));
+  border-color: color-mix(in srgb, var(--accent, var(--gold)) 34%, var(--line));
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--accent, var(--gold)) 4%, transparent), transparent 48%),
+    linear-gradient(180deg, color-mix(in srgb, var(--accent, var(--gold)) 8%, transparent), transparent 52%),
     color-mix(in srgb, var(--panel) var(--surface-alpha), transparent);
 }
 
@@ -761,9 +766,9 @@ h1 {
 
 .click-card:hover,
 .click-card:focus {
-  border-color: color-mix(in srgb, var(--accent, var(--gold)) 54%, var(--line));
+  border-color: color-mix(in srgb, var(--accent, var(--gold)) 72%, var(--line));
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--accent, var(--gold)) 7%, transparent), transparent 48%),
+    linear-gradient(180deg, color-mix(in srgb, var(--accent, var(--gold)) 14%, transparent), transparent 52%),
     color-mix(in srgb, var(--panel-2) var(--surface-alpha), transparent);
 }
 
@@ -837,8 +842,8 @@ h1 {
   margin-top: auto;
   padding-top: 0;
   border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--accent, var(--gold)) 35%, var(--line));
-  background: color-mix(in srgb, var(--accent, var(--gold)) 9%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent, var(--gold)) 56%, var(--line));
+  background: color-mix(in srgb, var(--accent, var(--gold)) 16%, transparent);
   color: var(--accent, var(--gold));
   font-size: 0.95rem;
   font-weight: 700;
@@ -909,21 +914,21 @@ h1 {
 }
 
 .tip-section.positive {
-  --tip-bg: color-mix(in srgb, var(--green) 12%, var(--panel-2));
-  --tip-border: color-mix(in srgb, var(--green) 44%, var(--line));
-  --tip-title: color-mix(in srgb, var(--green) 62%, var(--text));
+  --tip-bg: color-mix(in srgb, var(--green) 20%, var(--panel-2));
+  --tip-border: color-mix(in srgb, var(--green) 62%, var(--line));
+  --tip-title: color-mix(in srgb, var(--green) 82%, var(--text));
 }
 
 .tip-section.negative {
-  --tip-bg: color-mix(in srgb, var(--red) 12%, var(--panel-2));
-  --tip-border: color-mix(in srgb, var(--red) 44%, var(--line));
-  --tip-title: color-mix(in srgb, var(--red) 64%, var(--text));
+  --tip-bg: color-mix(in srgb, var(--red) 20%, var(--panel-2));
+  --tip-border: color-mix(in srgb, var(--red) 62%, var(--line));
+  --tip-title: color-mix(in srgb, var(--red) 84%, var(--text));
 }
 
 .tip-section.warning {
-  --tip-bg: color-mix(in srgb, var(--gold) 12%, var(--panel-2));
-  --tip-border: color-mix(in srgb, var(--gold) 48%, var(--line));
-  --tip-title: color-mix(in srgb, var(--gold) 68%, var(--text));
+  --tip-bg: color-mix(in srgb, var(--gold) 20%, var(--panel-2));
+  --tip-border: color-mix(in srgb, var(--gold) 66%, var(--line));
+  --tip-title: color-mix(in srgb, var(--gold) 86%, var(--text));
 }
 
 .tip-section-title {
@@ -958,15 +963,15 @@ h1 {
   flex: 0 0 auto;
   border-radius: 999px;
   background: var(--row-accent, var(--accent, var(--gold)));
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--row-accent, var(--accent, var(--gold))) 20%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--row-accent, var(--accent, var(--gold))) 34%, transparent);
 }
 
 .tip-value {
   min-width: 50px;
   padding: 3px 8px;
-  border: 1px solid color-mix(in srgb, var(--row-accent, var(--accent, var(--gold))) 46%, var(--line));
+  border: 1px solid color-mix(in srgb, var(--row-accent, var(--accent, var(--gold))) 64%, var(--line));
   border-radius: 999px;
-  background: color-mix(in srgb, var(--row-accent, var(--accent, var(--gold))) 16%, var(--panel));
+  background: color-mix(in srgb, var(--row-accent, var(--accent, var(--gold))) 24%, var(--panel));
   color: var(--text);
   font-weight: 800;
   text-align: right;
@@ -1070,12 +1075,12 @@ h1 {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background:
-    linear-gradient(90deg, color-mix(in srgb, var(--accent, var(--green)) 8%, transparent), transparent 38%),
+    linear-gradient(90deg, color-mix(in srgb, var(--accent, var(--green)) 15%, transparent), transparent 42%),
     var(--panel);
 }
 
 .job-row:hover {
-  border-color: color-mix(in srgb, var(--accent, var(--green)) 38%, var(--line));
+  border-color: color-mix(in srgb, var(--accent, var(--green)) 60%, var(--line));
 }
 
 .stepper {
@@ -1257,17 +1262,17 @@ h1 {
 
 .announcement-card {
   padding: 12px;
-  border: 1px solid color-mix(in srgb, var(--blue) 22%, var(--line));
+  border: 1px solid color-mix(in srgb, var(--blue) 38%, var(--line));
   border-radius: var(--radius);
   background:
-    linear-gradient(90deg, color-mix(in srgb, var(--blue) 7%, transparent), transparent 44%),
+    linear-gradient(90deg, color-mix(in srgb, var(--blue) 14%, transparent), transparent 48%),
     var(--panel-2);
 }
 
 .announcement-card.latest {
-  border-color: color-mix(in srgb, var(--gold) 38%, var(--line));
+  border-color: color-mix(in srgb, var(--gold) 62%, var(--line));
   background:
-    linear-gradient(90deg, color-mix(in srgb, var(--gold) 8%, transparent), transparent 44%),
+    linear-gradient(90deg, color-mix(in srgb, var(--gold) 16%, transparent), transparent 48%),
     var(--panel-2);
 }
 
@@ -1310,10 +1315,10 @@ h1 {
 
 .guide-card {
   padding: 12px;
-  border: 1px solid color-mix(in srgb, var(--accent, var(--gold)) 28%, var(--line));
+  border: 1px solid color-mix(in srgb, var(--accent, var(--gold)) 46%, var(--line));
   border-radius: var(--radius);
   background:
-    linear-gradient(90deg, color-mix(in srgb, var(--accent, var(--gold)) 7%, transparent), transparent 44%),
+    linear-gradient(90deg, color-mix(in srgb, var(--accent, var(--gold)) 14%, transparent), transparent 48%),
     var(--panel-2);
 }
 
@@ -1355,8 +1360,8 @@ h1 {
   padding: 5px 7px;
   border-radius: 7px;
   color: var(--muted);
-  border: 1px solid color-mix(in srgb, var(--accent, var(--gold)) 16%, transparent);
-  background: color-mix(in srgb, var(--accent, var(--gold)) 5%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent, var(--gold)) 34%, transparent);
+  background: color-mix(in srgb, var(--accent, var(--gold)) 12%, transparent);
 }
 
 .starter-goal span {
@@ -1391,6 +1396,12 @@ h1 {
   background: color-mix(in srgb, var(--panel-2) 84%, transparent);
   color: var(--muted);
   font-size: 0.82rem;
+}
+
+.pill.positive,
+.pill.negative {
+  border-color: color-mix(in srgb, currentColor 46%, var(--line));
+  background: color-mix(in srgb, currentColor 12%, var(--panel-2));
 }
 
 @media (prefers-reduced-motion: reduce) {
