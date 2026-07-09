@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.9.5";
+const APP_VERSION = "0.9.6";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -50,6 +50,16 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.9.6",
+    date: "2026-07-09",
+    title: "村落事件扩展",
+    notes: [
+      "随机事件改为约 1 到 3 分钟出现一次，困难难度会略偏慢但不会超过 3 分钟。",
+      "新增一批轻松的材料馈赠、材料交换和村落小插曲事件。",
+      "事件内容会按当前建筑和研究逐步出现，避免早期刷出过多陌生资源。",
+    ],
+  },
   {
     version: "0.9.5",
     date: "2026-07-09",
@@ -1392,6 +1402,17 @@ const randomEvents = [
     ],
   },
   {
+    id: "relaxedCaravan",
+    title: "松弛商队靠岸",
+    text: "一队商人说今日不赶路，愿意按心情把货匀给村里。",
+    options: [
+      { label: "买一批木料", costs: { gold: 18 }, rewards: { wood: 90 }, log: "松弛商队把多余木料卸在村口。" },
+      { label: "换些口粮", costs: { wood: 45 }, rewards: { food: 85 }, log: "村里的木料换成了耐放口粮。" },
+      { label: "只问价格", rewards: { knowledge: 10 }, log: "书记把商队的报价记进账册。" },
+    ],
+    unlocked: (s) => buildingCount(s, "hut") >= 1,
+  },
+  {
     id: "rain",
     title: "连夜山雨",
     text: "雨水冲毁一段围栏，也让梯田水渠充满清水。",
@@ -1401,6 +1422,58 @@ const randomEvents = [
     ],
   },
   {
+    id: "officeTaste",
+    title: "班味木匠路过",
+    text: "木匠说自己只是顺手巡查，结果把松掉的梁柱全标了号。",
+    options: [
+      { label: "请他修梁", costs: { food: 28 }, rewards: { wood: 58, knowledge: 8 }, log: "梁柱被重新编号，木料损耗也少了些。" },
+      { label: "递上账册", rewards: { knowledge: 18 }, log: "木匠留下了一套很会加班的排料法。" },
+      { label: "让他早点休息", rewards: { food: 22 }, log: "木匠终于坐下吃饭，还顺手指出一处漏风。" },
+    ],
+  },
+  {
+    id: "prebuiltSign",
+    title: "预制石碑送达",
+    text: "几名石匠抬来一块半成品石碑，说刻什么都行，只要别太长。",
+    options: [
+      { label: "刻仓储规矩", costs: { stone: 24 }, rewards: { knowledge: 26 }, log: "新的仓储规矩被刻在村口石碑上。" },
+      { label: "改成界桩", costs: { wood: 18 }, rewards: { stone: 54 }, log: "石碑被改成界桩，顺便清出一批碎石。" },
+      { label: "先放仓边", rewards: { stone: 18 }, log: "石碑暂时靠在仓边，大家路过都会看一眼。" },
+    ],
+    unlocked: (s) => hasTech(s, "storage") || buildingCount(s, "storehouse") >= 1,
+  },
+  {
+    id: "wateryForager",
+    title: "水灵灵的采食队",
+    text: "采食队从雾里回来，篮子很满，表情却像什么都没发生。",
+    options: [
+      { label: "立刻入仓", rewards: { food: 76 }, log: "新鲜野果被分拣入仓，粮食储备充实了不少。" },
+      { label: "留样记录", rewards: { food: 36, knowledge: 14 }, log: "书记记录了采食路线和可食植物。" },
+    ],
+  },
+  {
+    id: "hardControlMarket",
+    title: "集市被硬控片刻",
+    text: "一阵铜铃声让集市安静了几息，所有人突然都愿意认真报价。",
+    options: [
+      { label: "采购石料", costs: { gold: 24 }, rewards: { stone: 82 }, log: "村里用很稳的价格买到一批石料。" },
+      { label: "卖出余粮", costs: { food: 46 }, rewards: { gold: 38 }, log: "多余口粮换成了更灵活的金币。" },
+      { label: "旁听议价", rewards: { knowledge: 16 }, log: "书记学会了几句很有用的还价话术。" },
+    ],
+    unlocked: (s) => buildingCount(s, "hut") >= 1,
+  },
+  {
+    id: "workplaceFish",
+    title: "巡逻队整理杂物",
+    text: "巡逻队说只是换个地方站岗，结果把仓边杂物顺手理了一遍。",
+    options: [
+      { label: "清点木料", rewards: { wood: 44 }, log: "仓边散落的木料被重新收拢。" },
+      { label: "清点石料", rewards: { stone: 40 }, log: "几堆碎石被归入可用库存。" },
+      { label: "写成流程", rewards: { knowledge: 12 }, log: "这次整理被书记写成了新的仓边流程。" },
+    ],
+    unlocked: (s) => hasTech(s, "watch"),
+  },
+  {
     id: "omen",
     title: "夜空异光",
     text: "一道蓝白光划过岭顶，守灯人请求举行短祭。",
@@ -1408,7 +1481,138 @@ const randomEvents = [
       { label: "举行短祭", costs: { food: 25 }, rewards: { faith: 45 }, log: "村民在沉默中看见了同一颗星。" },
       { label: "派人记录", rewards: { knowledge: 22 }, log: "星象被刻在新木板上。" },
     ],
-    unlocked: (s) => hasTech(s, "omens"),
+    unlocked: (s) => buildingCount(s, "shrine") >= 1,
+  },
+  {
+    id: "closedDoorFriend",
+    title: "道友临时闭关",
+    text: "一位过路修行者借用旧棚闭关半夜，出关时留下几句含糊心得。",
+    options: [
+      { label: "供一顿热饭", costs: { food: 32 }, rewards: { knowledge: 34, faith: 12 }, log: "道友吃完热饭，留下了一段安神口诀。" },
+      { label: "请他看星火", costs: { faith: 14 }, rewards: { knowledge: 46 }, log: "星火被重新解释，书记写满了半块木板。" },
+      { label: "不打扰", rewards: { faith: 18 }, log: "闭关之处安静了一夜，守灯人说心里踏实些。" },
+    ],
+    unlocked: (s) => buildingCount(s, "shrine") >= 1,
+  },
+  {
+    id: "againstWindOldMan",
+    title: "逆风老者过岭",
+    text: "老者背着破竹箱逆风上岭，说世道不顺时更要把路走直。",
+    options: [
+      { label: "赠他干粮", costs: { food: 36 }, rewards: { tools: 24, knowledge: 18 }, log: "老者收下干粮，给村里留下几枚避雨竹签。" },
+      { label: "买下竹箱", costs: { wood: 34 }, rewards: { tools: 26, knowledge: 12 }, log: "竹箱里装着几件能修能改的小工具。" },
+      { label: "陪他看风", rewards: { knowledge: 16 }, log: "村民学会了顺着山风判断天气。" },
+    ],
+    unlocked: (s) => hasTech(s, "craftsmanship") || buildingCount(s, "workshop") >= 1,
+  },
+  {
+    id: "thunderPromise",
+    title: "小天劫绕村",
+    text: "远处云层滚动，声势很足，落到村边时只剩几道亮闪闪的碎光。",
+    options: [
+      { label: "收集碎光", costs: { stone: 24 }, rewards: { ore: 48, knowledge: 12 }, log: "守灯人收起碎光，矿工也捡到几块奇硬砂砾。" },
+      { label: "记录雷纹", rewards: { knowledge: 34 }, log: "雷纹被刻进档案，之后看云更准了。" },
+      { label: "稳住仓门", costs: { wood: 22 }, rewards: { food: 52 }, log: "仓门被加固，受潮口粮保住了。" },
+    ],
+    unlocked: (s) => buildingCount(s, "orepit") >= 1,
+  },
+  {
+    id: "beltPeddler",
+    title: "腰带摊主试货",
+    text: "摊主摆出一排会响的小机关，坚持说姿势够稳，木盾也能很有气势。",
+    options: [
+      { label: "买机关扣", costs: { wood: 30, stone: 18 }, rewards: { tools: 34, knowledge: 12 }, log: "机关扣声音很响，但结构确实巧妙。" },
+      { label: "借木盾试试", costs: { wood: 26 }, rewards: { stone: 34, knowledge: 20 }, log: "守卫试了一个姿势，全村安静了两息。" },
+      { label: "只看说明", rewards: { knowledge: 14 }, log: "说明书写得很热血，书记删掉三成后才入档。" },
+    ],
+    unlocked: (s) => hasTech(s, "craftsmanship") || buildingCount(s, "workshop") >= 1,
+  },
+  {
+    id: "poseTraining",
+    title: "守卫姿势训练",
+    text: "几名守卫练习统一举盾，动作越整齐，路过的孩子越想学。",
+    options: [
+      { label: "补发木盾", costs: { wood: 34 }, rewards: { knowledge: 24, gold: 18 }, log: "守卫的动作更整齐，村里士气微微上扬。" },
+      { label: "改进扣带", costs: { stone: 18 }, rewards: { knowledge: 34 }, log: "盾带被重新加固，训练记录也更可靠。" },
+      { label: "围观片刻", rewards: { knowledge: 10 }, log: "围观的人很克制，但大家都看得挺认真。" },
+    ],
+    unlocked: (s) => hasTech(s, "watch") && buildingCount(s, "barracks") >= 1,
+  },
+  {
+    id: "hotSearchGate",
+    title: "山门热议",
+    text: "一则山路传闻传得飞快，越传越离谱，最后变成了村里的临时公告。",
+    options: [
+      { label: "核对传闻", costs: { knowledge: 18 }, rewards: { gold: 44 }, log: "书记核掉了夸张部分，剩下的信息还能换钱。" },
+      { label: "借势募粮", costs: { gold: 18 }, rewards: { food: 86 }, log: "传闻被讲得很稳，村民愿意多交些粮。" },
+      { label: "写入简报", rewards: { knowledge: 18 }, log: "热闹被压缩成一条不显眼的简报。" },
+    ],
+    unlocked: (s) => buildingCount(s, "hut") >= 1 && (hasTech(s, "records") || buildingCount(s, "scribe") >= 1),
+  },
+  {
+    id: "clipMasterScribe",
+    title: "剪辑书记交稿",
+    text: "书记说只要把失败段落放进附录，远征记录就会显得很振奋。",
+    options: [
+      { label: "保留附录", costs: { knowledge: 20 }, rewards: { food: 45, gold: 22 }, log: "诚实的附录让记录更可信，也换来些赞助。" },
+      { label: "重排路线图", costs: { food: 30 }, rewards: { knowledge: 42 }, log: "路线图被重排，后续远行少走了些弯路。" },
+      { label: "收进档案", rewards: { knowledge: 15 }, log: "书记的剪辑手法被归档，标题被改得低调许多。" },
+    ],
+    unlocked: (s) => buildingCount(s, "hut") >= 1 && (hasTech(s, "trailMapping") || s.expeditionsDone.length >= 1),
+  },
+  {
+    id: "stubbornMiner",
+    title: "嘴硬矿工归来",
+    text: "矿工说这趟一点也不累，只是把矿镐靠在墙上时墙抖了一下。",
+    options: [
+      { label: "给他热饭", costs: { food: 40 }, rewards: { ore: 64, stone: 32 }, log: "矿工吃完热饭，终于承认背篓里还有矿砂。" },
+      { label: "修好矿镐", costs: { wood: 28 }, rewards: { ore: 72 }, log: "矿镐被修好，矿工顺手倒出更多赤砂。" },
+      { label: "听他说不累", rewards: { knowledge: 12 }, log: "书记认真记下：嘴硬不计入产量，但能计入故事。" },
+    ],
+    unlocked: (s) => buildingCount(s, "orepit") >= 1,
+  },
+  {
+    id: "warehouseComedy",
+    title: "仓库出现名场面",
+    text: "仓库管理员发现两张标签贴反，大家沉默片刻后决定当作演练。",
+    options: [
+      { label: "重新贴签", rewards: { food: 30, wood: 24, stone: 20 }, log: "标签归位后，仓库多出一小批被遗忘的物资。" },
+      { label: "写成制度", costs: { knowledge: 12 }, rewards: { tools: 18, gold: 22 }, log: "新制度写得很短，但大家终于看懂了。" },
+    ],
+    unlocked: (s) => buildingCount(s, "warehouse") >= 1,
+  },
+  {
+    id: "quietCelebration",
+    title: "低调庆功",
+    text: "村里有人提议庆祝一下，最后决定只加一道菜，不挂彩旗。",
+    options: [
+      { label: "加一道热汤", costs: { food: 35 }, rewards: { knowledge: 28 }, log: "热汤没有声势，但大家干活更稳了。" },
+      { label: "给工匠加餐", costs: { food: 48 }, rewards: { wood: 52, stone: 34 }, log: "工匠吃完加餐，连夜整理出一批可用材料。" },
+      { label: "安静散会", rewards: { gold: 16 }, log: "庆功预算被省下，账册看起来很健康。" },
+    ],
+    unlocked: (s) => totalBuildings(s) >= 6,
+  },
+  {
+    id: "starTea",
+    title: "守灯人煮茶",
+    text: "守灯人煮了一壶很淡的茶，说看星不能急，喝茶也不能急。",
+    options: [
+      { label: "陪他守夜", costs: { food: 26 }, rewards: { faith: 52, knowledge: 18 }, log: "守夜很安静，星图上的空白少了一角。" },
+      { label: "借火烘粮", costs: { faith: 12 }, rewards: { food: 70 }, log: "星火烘干了受潮粮食，仓管松了一口气。" },
+      { label: "带走茶渣", rewards: { knowledge: 10 }, log: "书记认真研究茶渣，结论是今晚确实该早点睡。" },
+    ],
+    unlocked: (s) => buildingCount(s, "shrine") >= 1,
+  },
+  {
+    id: "toolboxLuck",
+    title: "工具箱自己好了",
+    text: "工匠打开旧工具箱，发现昨晚卡住的铜扣突然能用了，没人敢问太细。",
+    options: [
+      { label: "全部归档", rewards: { tools: 42 }, log: "旧工具被重新归档，能用的比想象中多。" },
+      { label: "拆开研究", costs: { tools: 10 }, rewards: { knowledge: 38 }, log: "工匠拆开铜扣，书记记下了结构。" },
+      { label: "感谢一下", costs: { food: 24 }, rewards: { tools: 58 }, log: "工匠很认真地对工具箱点了点头。" },
+    ],
+    unlocked: (s) => hasTech(s, "craftsmanship") || buildingCount(s, "workshop") >= 1,
   },
 ];
 
@@ -1793,6 +1997,11 @@ function normalizeTribeName(name) {
   return (name || "").trim().replace(/\s+/g, " ").slice(0, 16) || "苍岭部落";
 }
 
+function nextEventDelay(s = state) {
+  const interval = getDifficulty(s).mods.eventInterval || 1;
+  return clamp((60 + Math.random() * 120) * interval, 60, 180);
+}
+
 function startPath(pathId) {
   const path = paths.find((item) => item.id === pathId);
   const difficultyId = state.difficulty || "normal";
@@ -1804,7 +2013,7 @@ function startPath(pathId) {
   state.difficulty = difficultyId;
   state.tribeName = tribeName;
   state.resources = { ...defaultResources(), ...scaleResourceMap(baseStartResources, difficulty.mods.startResources) };
-  state.nextEventAt = 150 * difficulty.mods.eventInterval;
+  state.nextEventAt = nextEventDelay(state);
   Object.entries(path.start || {}).forEach(([id, value]) => {
     state.resources[id] += Math.floor(value * difficulty.mods.startResources);
   });
@@ -2115,7 +2324,7 @@ function chooseEvent(index) {
   addResources(scaledRewards(option.rewards || {}, difficulty.mods.eventReward));
   addLog(option.log);
   state.event = null;
-  state.nextEventAt = state.playTime + (130 + Math.random() * 120) * difficulty.mods.eventInterval;
+  state.nextEventAt = state.playTime + nextEventDelay();
   afterMutation();
 }
 
@@ -2166,8 +2375,12 @@ function tick() {
   state.playTime += elapsed;
   if (!state.event && state.playTime >= state.nextEventAt) {
     const choices = randomEvents.filter((event) => !event.unlocked || event.unlocked(state));
-    state.event = { id: choices[Math.floor(Math.random() * choices.length)].id };
-    addLog("新的村落事件等待处理。");
+    if (choices.length) {
+      state.event = { id: choices[Math.floor(Math.random() * choices.length)].id };
+      addLog("新的村落事件等待处理。");
+    } else {
+      state.nextEventAt = state.playTime + nextEventDelay();
+    }
   }
 
   checkAchievements();
