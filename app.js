@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.9.6";
+const APP_VERSION = "0.9.7";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -50,6 +50,16 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.9.7",
+    date: "2026-07-09",
+    title: "先民道路分化",
+    notes: [
+      "三条先民道路现在拥有实际数值差异，不再只是叙事选择。",
+      "梯田氏族偏粮食与人口承压，燧石行会偏石料与建筑成本，观星修会偏学识与研究成本。",
+      "开局选择卡片会直接显示具体优势，方便判断适合自己的扩张节奏。",
+    ],
+  },
   {
     version: "0.9.6",
     date: "2026-07-09",
@@ -400,9 +410,10 @@ const paths = [
     color: "#43b883",
     icon: "food",
     desc: "你的先民修筑山腰水渠，让第一座村落在薄雾中稳定生长。",
-    bonuses: ["叙事分支", "保持基础数值", "适合稳粮扩张"],
-    mods: {},
-    start: {},
+    bonuses: ["粮食产量 +12%", "粮食上限 +120", "人口口粮消耗 -8%"],
+    effects: { foodRate: 0.12, cap_food: 120 },
+    mods: { foodUse: 0.92 },
+    start: { food: 40 },
   },
   {
     id: "flint",
@@ -410,9 +421,10 @@ const paths = [
     color: "#e8894a",
     icon: "stone",
     desc: "你的先民熟悉峭壁与矿脉，懂得把坚硬山岩变成城邦的骨架。",
-    bonuses: ["叙事分支", "保持基础数值", "适合工程扩张"],
-    mods: {},
-    start: {},
+    bonuses: ["石料产量 +12%", "建筑成本 -6%", "木材/石料上限 +80"],
+    effects: { stoneRate: 0.12, cap_wood: 80, cap_stone: 80 },
+    mods: { buildCost: 0.94 },
+    start: { stone: 35, wood: 15 },
   },
   {
     id: "astral",
@@ -420,9 +432,10 @@ const paths = [
     color: "#5b8def",
     icon: "knowledge",
     desc: "你的先民用星图安排播种、祭仪和远征，最早的文字刻在铜镜背面。",
-    bonuses: ["叙事分支", "保持基础数值", "适合研究推进"],
-    mods: {},
-    start: {},
+    bonuses: ["学识产量 +14%", "研究成本 -6%", "学识上限 +100"],
+    effects: { knowledgeRate: 0.14, cap_knowledge: 100 },
+    mods: { techCost: 0.94 },
+    start: { knowledge: 20 },
   },
 ];
 
@@ -2106,6 +2119,7 @@ function derive(s) {
     });
   };
 
+  applyEffects(path.effects, 1);
   negativeRates.food -= s.population || 0;
   buildings.forEach((building) => applyEffects(building.effects, buildingCount(s, building.id)));
   techs.filter((tech) => hasTech(s, tech.id)).forEach((tech) => applyEffects(tech.effects, 1));
@@ -2121,7 +2135,7 @@ function derive(s) {
 
   const rates = Object.fromEntries(resources.map((resource) => [resource.id, 0]));
   Object.keys(rates).forEach((id) => {
-    const upkeepMult = id === "food" ? difficulty.mods.foodUse : 1;
+    const upkeepMult = id === "food" ? difficulty.mods.foodUse * (mods.foodUse || 1) : 1;
     rates[id] = positiveRates[id] * multipliers[id] * (1 + allRate) * morale + negativeRates[id] * upkeepMult;
   });
   const starved = (s.resources.food || 0) <= 0;
