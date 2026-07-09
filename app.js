@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.8.5";
+const APP_VERSION = "0.8.6";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -47,6 +47,15 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.8.6",
+    date: "2026-07-09",
+    title: "研究分组整理",
+    notes: [
+      "研究页改为和建筑页一致的分组展示。",
+      "研究卡片会显示基础、生产、文化或防务分类，扫描路线更清楚。",
+    ],
+  },
   {
     version: "0.8.5",
     date: "2026-07-09",
@@ -427,6 +436,7 @@ const techs = [
   {
     id: "housing",
     name: "住房",
+    tab: "settlement",
     desc: "整理营地住处，解锁苔顶小屋。",
     costs: {},
     effects: {},
@@ -435,6 +445,7 @@ const techs = [
   {
     id: "agriculture",
     name: "农耕",
+    tab: "settlement",
     desc: "掌握山腰耕作，解锁山腰农田。",
     costs: { knowledge: 10 },
     effects: {},
@@ -443,6 +454,7 @@ const techs = [
   {
     id: "woodcutting",
     name: "木材切削",
+    tab: "production",
     desc: "学会切削和堆放木料，解锁山麓木场。",
     costs: { knowledge: 20 },
     effects: {},
@@ -451,6 +463,7 @@ const techs = [
   {
     id: "masonry",
     name: "干砌石墙",
+    tab: "production",
     desc: "学会干砌和取石，解锁露天采石场。",
     costs: { knowledge: 20 },
     effects: {},
@@ -459,6 +472,7 @@ const techs = [
   {
     id: "records",
     name: "结绳账簿",
+    tab: "culture",
     desc: "解锁书记棚，并让学识获取提高。",
     costs: { knowledge: 150 },
     effects: { knowledgeRate: 0.15 },
@@ -467,6 +481,7 @@ const techs = [
   {
     id: "watch",
     name: "夜哨制度",
+    tab: "war",
     desc: "解锁军队、远征、木栅营地和守卫训练。",
     costs: { knowledge: 48, wood: 55 },
     effects: { armyCap: 3 },
@@ -475,6 +490,7 @@ const techs = [
   {
     id: "smelting",
     name: "采矿",
+    tab: "production",
     desc: "辨认浅层矿脉，解锁矿砂采集和斧兵训练。",
     costs: { knowledge: 250 },
     effects: { oreRate: 0.1 },
@@ -483,6 +499,7 @@ const techs = [
   {
     id: "omens",
     name: "星象祭仪",
+    tab: "culture",
     desc: "解锁星火祭坛，星辉开始成为一种资源。",
     costs: { knowledge: 95, food: 90 },
     effects: { faithRate: 0.08 },
@@ -491,6 +508,7 @@ const techs = [
   {
     id: "trade",
     name: "谷路契约",
+    tab: "culture",
     desc: "解锁市集，所有基础产量提高。",
     costs: { knowledge: 140, wood: 120, stone: 90 },
     effects: { allRate: 0.05 },
@@ -499,6 +517,7 @@ const techs = [
   {
     id: "iron",
     name: "黑铁刃口",
+    tab: "war",
     desc: "士兵战力提高，解锁重装斧兵。",
     costs: { knowledge: 180, ore: 100, faith: 20 },
     effects: { armyPower: 0.2 },
@@ -507,6 +526,7 @@ const techs = [
   {
     id: "astrolabe",
     name: "铜制星盘",
+    tab: "culture",
     desc: "解锁观星台，推进苍岭进入星图时代。",
     costs: { knowledge: 260, ore: 150, faith: 90 },
     effects: { allRate: 0.08 },
@@ -1735,12 +1755,7 @@ function renderEvent() {
 }
 
 function renderBuildings() {
-  const categories = [
-    ["settlement", "定居"],
-    ["production", "生产"],
-    ["culture", "文化"],
-    ["war", "防务"],
-  ];
+  const categories = projectCategories();
   return `
     <section>
       <div class="section-head">
@@ -1796,7 +1811,11 @@ function renderResearch() {
           <p>研究会解锁更多建筑、职业、军队和远征路线。</p>
         </div>
       </div>
-      <div class="item-grid">${visible.map(renderTechCard).join("")}</div>
+      ${projectCategories().map(([id, title]) => {
+        const items = visible.filter((tech) => (tech.tab || "culture") === id);
+        if (!items.length) return "";
+        return `<div class="section-head category-head" style="--accent:${accentForCategory(id)}"><h3>${title}</h3></div><div class="item-grid">${items.map(renderTechCard).join("")}</div>`;
+      }).join("")}
     </section>
   `;
 }
@@ -1822,7 +1841,7 @@ function renderTechCard(item) {
         <h3>${item.name}</h3>
         <span class="badge">${badge}</span>
       </div>
-      <div class="compact-meta">研究项目</div>
+      <div class="compact-meta">${researchCategoryName(item.tab)}</div>
       <div class="card-hint" aria-hidden="true">${done ? "✓" : afford ? "+" : shortfalls.length ? "!" : "…"}</div>
       ${tip}
     </article>
@@ -2237,11 +2256,12 @@ function accentForBuilding(item) {
 }
 
 function accentForTech(item) {
+  if (item.tab === "war") return accentVars.army;
   if (item.id === "watch" || item.id === "iron") return accentVars.army;
   if (item.costs?.faith || item.effects?.faithRate) return accentVars.faith;
   if (item.costs?.ore || item.effects?.oreRate) return accentVars.ore;
   if (item.effects?.cap_stone) return accentVars.stone;
-  return accentVars.knowledge;
+  return accentForCategory(item.tab || "culture");
 }
 
 function accentForJob(job) {
@@ -2259,6 +2279,24 @@ function buildingCategoryName(tab) {
     culture: "文档项目",
     war: "安保项目",
   }[tab] || "项目";
+}
+
+function projectCategories() {
+  return [
+    ["settlement", "定居"],
+    ["production", "生产"],
+    ["culture", "文化"],
+    ["war", "防务"],
+  ];
+}
+
+function researchCategoryName(tab) {
+  return {
+    settlement: "基础研究",
+    production: "生产研究",
+    culture: "文档研究",
+    war: "安保研究",
+  }[tab] || "研究项目";
 }
 
 function bindEvents() {
