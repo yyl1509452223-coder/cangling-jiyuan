@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.9.15";
+const APP_VERSION = "0.10.0";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -23,7 +23,7 @@ const icons = {
   spark: "spark",
 };
 
-const resources = [
+let resources = [
   { id: "food", name: "粮食", icon: "food", cap: 300 },
   { id: "gold", name: "金币", icon: "spark", cap: 400, unlocked: (s) => buildingCount(s, "quarry") >= 1 || buildingCount(s, "orepit") >= 1 || buildingCount(s, "market") >= 1 || (s.resources.gold || 0) > 0 },
   { id: "wood", name: "木材", icon: "wood", cap: 300 },
@@ -40,9 +40,16 @@ const accentVars = {
   stone: "var(--stone)",
   tools: "var(--gold)",
   ore: "var(--orange)",
+  copper: "var(--orange)",
+  iron: "var(--stone)",
   knowledge: "var(--blue)",
+  research: "var(--blue)",
   faith: "var(--purple)",
+  mana: "var(--purple)",
   gold: "var(--gold)",
+  orange: "var(--orange)",
+  purple: "var(--purple)",
+  blue: "var(--blue)",
   people: "var(--green)",
   army: "var(--red)",
   build: "var(--gold)",
@@ -50,6 +57,16 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.10.0",
+    date: "2026-07-09",
+    title: "接入 Theresmore 数据骨架",
+    notes: [
+      "新增 Theresmore 数据包模式，导入 28 种资源、9 条祖先路线、20 个职业、218 个建筑、372 项科技、61 个单位和 123 个敌点远征。",
+      "新增通用 req/gen 适配层，支持资源成本、建筑/科技前置、职业岗位、资源产出、上限、军力加成和互斥科技分支。",
+      "保留原苍岭小表作为备用数据；若数据包未加载，页面仍可按旧模式运行。",
+    ],
+  },
   {
     version: "0.9.15",
     date: "2026-07-09",
@@ -478,7 +495,7 @@ const difficulties = [
   },
 ];
 
-const paths = [
+let paths = [
   {
     id: "terrace",
     name: "梯田氏族",
@@ -514,7 +531,7 @@ const paths = [
   },
 ];
 
-const buildings = [
+let buildings = [
   {
     id: "hut",
     name: "苔顶小屋",
@@ -807,7 +824,7 @@ const buildings = [
   },
 ];
 
-const techs = [
+let techs = [
   {
     id: "housing",
     name: "住房",
@@ -1278,7 +1295,7 @@ const techs = [
   },
 ];
 
-const jobs = [
+let jobs = [
   {
     id: "forager",
     name: "采食者",
@@ -1330,7 +1347,7 @@ const jobs = [
   },
 ];
 
-const units = [
+let units = [
   {
     id: "scout",
     name: "岭路斥候",
@@ -1387,7 +1404,7 @@ const units = [
   },
 ];
 
-const expeditions = [
+let expeditions = [
   {
     id: "mistwood",
     name: "雾杉林",
@@ -1704,10 +1721,7 @@ const randomEvents = [
   },
 ];
 
-const defaultResources = () =>
-  Object.fromEntries(resources.map((resource) => [resource.id, 0]));
-
-const baseStartResources = {
+let baseStartResources = {
   food: 90,
   wood: 35,
   stone: 35,
@@ -1715,8 +1729,64 @@ const baseStartResources = {
   knowledge: 6,
 };
 
+let activeDataPackMode = "cangling";
+let populationFoodUseBase = 1;
+
+function withRequirementUnlock(item) {
+  return {
+    ...item,
+    unlocked: (s) => {
+      const blockedByBranch = (item.removesTechs || item.branch?.removes || []).some((id) => hasTech(s, id));
+      return !blockedByBranch && meetsRequirements(s, item.requires || []);
+    },
+  };
+}
+
+function applyTheresmorePack() {
+  const pack = window.THERESMORE_PACK;
+  if (!pack || !Array.isArray(pack.resources)) return;
+  activeDataPackMode = "theresmore";
+  populationFoodUseBase = Number.isFinite(pack.populationFoodUse) ? pack.populationFoodUse : 0;
+  baseStartResources = { ...(pack.startResources || baseStartResources) };
+  resources = pack.resources.map((resource) => ({
+    ...resource,
+    unlocked: (s) => {
+      if (resource.hidden && (s.resources?.[resource.id] || 0) <= 0) return false;
+      return meetsRequirements(s, resource.requires || []);
+    },
+  }));
+  paths = pack.paths.map((path) => ({
+    ...path,
+    icon: path.icon || "spark",
+    bonuses: path.bonuses?.length ? path.bonuses : effectText(path.effects || {}),
+  }));
+  buildings = pack.buildings.map(withRequirementUnlock);
+  techs = pack.techs.map(withRequirementUnlock);
+  jobs = pack.jobs.map((job) => ({
+    ...job,
+    unlocked: (s) => meetsRequirements(s, job.requires || []),
+  }));
+  units = pack.units.map((unit) => ({
+    ...unit,
+    unlocked: (s) => meetsRequirements(s, unit.requires || []),
+  }));
+  expeditions = pack.expeditions.map((expedition) => ({
+    ...expedition,
+    unlocked: (s) => meetsRequirements(s, expedition.requires || []),
+  }));
+}
+
+applyTheresmorePack();
+
+const defaultResources = () =>
+  Object.fromEntries(resources.map((resource) => [resource.id, 0]));
+
+const defaultJobs = () =>
+  Object.fromEntries(jobs.map((job) => [job.id, 0]));
+
 const defaultState = () => ({
   started: false,
+  dataPackMode: activeDataPackMode,
   path: null,
   difficulty: null,
   tribeName: "",
@@ -1733,17 +1803,15 @@ const defaultState = () => ({
   popCapBase: 0,
   buildings: {},
   techs: [],
-  jobs: {
-    forager: 0,
-    woodcutter: 0,
-    mason: 0,
-    scribe: 0,
-    acolyte: 0,
-    miner: 0,
-    artisan: 0,
-  },
+  jobs: defaultJobs(),
   army: {},
   expeditionsDone: [],
+  flags: {
+    legacy: [],
+    prayer: [],
+    spell: [],
+    diplomacy_owned: [],
+  },
   currentExpedition: null,
   achievements: [],
   event: null,
@@ -1834,6 +1902,7 @@ function loadState() {
 }
 
 function migrate(save) {
+  save.dataPackMode = activeDataPackMode;
   if (save.started && !save.difficulty) save.difficulty = "normal";
   if (save.started && !save.tribeName) save.tribeName = "苍岭部落";
   save.resources = { ...defaultResources(), ...(save.resources || {}) };
@@ -1844,6 +1913,13 @@ function migrate(save) {
   save.army = save.army || {};
   save.techs = Array.isArray(save.techs) ? save.techs : [];
   save.expeditionsDone = Array.isArray(save.expeditionsDone) ? save.expeditionsDone : [];
+  save.flags = {
+    ...defaultState().flags,
+    ...(save.flags || {}),
+  };
+  Object.keys(save.flags).forEach((key) => {
+    save.flags[key] = Array.isArray(save.flags[key]) ? save.flags[key] : [];
+  });
   save.achievements = Array.isArray(save.achievements) ? save.achievements : [];
   save.log = Array.isArray(save.log) ? save.log : [];
   save.stats = { ...defaultState().stats, ...(save.stats || {}) };
@@ -2137,6 +2213,61 @@ function hasTech(s, id) {
   return s.techs.includes(id);
 }
 
+function hasFlag(s, type, id) {
+  return Array.isArray(s.flags?.[type]) && s.flags[type].includes(id);
+}
+
+function statValue(s, id) {
+  if (id === "reset") return s.stats?.resets || 0;
+  if (id === "ng_reset") return s.stats?.ngReset || 0;
+  return s.stats?.[id] || 0;
+}
+
+function requirementValue(s, requirement = {}) {
+  const id = requirement.id;
+  switch (requirement.type) {
+    case "resource":
+      return s.resources?.[id] || 0;
+    case "building":
+      return buildingCount(s, id);
+    case "tech":
+      return hasTech(s, id) ? 1 : 0;
+    case "enemy":
+      return s.expeditionsDone?.includes(id) || s.expeditionsDone?.includes(`enemy_${id}`) ? 1 : 0;
+    case "legacy":
+    case "prayer":
+    case "spell":
+    case "diplomacy_owned":
+      return hasFlag(s, requirement.type, id) ? 1 : 0;
+    case "stat":
+      return statValue(s, id);
+    default:
+      return 0;
+  }
+}
+
+function meetsRequirement(s, requirement = {}) {
+  const needed = Number.isFinite(Number(requirement.value)) ? Number(requirement.value) : 1;
+  const current = requirementValue(s, requirement);
+  return needed < 0 ? current < Math.abs(needed) : current >= needed;
+}
+
+function meetsRequirements(s, requirements = []) {
+  return (requirements || []).every((requirement) => meetsRequirement(s, requirement));
+}
+
+function hasAnyVisibleUnit(s = state) {
+  return units.some((unit) => !unit.unlocked || unit.unlocked(s)) || armySize(s) > 0;
+}
+
+function hasAnyVisibleExpedition(s = state) {
+  return expeditions.some((expedition) => !expedition.unlocked || expedition.unlocked(s) || s.expeditionsDone?.includes(expedition.id));
+}
+
+function isMilitaryUnlocked(s = state) {
+  return activeDataPackMode === "theresmore" ? hasAnyVisibleUnit(s) || hasAnyVisibleExpedition(s) || armyCap(s) > 0 : hasTech(s, "watch");
+}
+
 function totalAssignedJobs(s) {
   return Object.values(s.jobs).reduce((sum, value) => sum + value, 0);
 }
@@ -2195,7 +2326,7 @@ function derive(s) {
   };
 
   applyEffects(path.effects, 1);
-  negativeRates.food -= s.population || 0;
+  negativeRates.food -= (s.population || 0) * populationFoodUseBase;
   buildings.forEach((building) => applyEffects(building.effects, buildingCount(s, building.id)));
   techs.filter((tech) => hasTech(s, tech.id)).forEach((tech) => applyEffects(tech.effects, 1));
   jobs.filter((job) => !job.unlocked || job.unlocked(s)).forEach((job) => {
@@ -2281,6 +2412,20 @@ function scaledRewards(rewards, scale = 1) {
   );
 }
 
+function addTech(id) {
+  if (id && !state.techs.includes(id)) state.techs.push(id);
+}
+
+function removeTech(id) {
+  state.techs = state.techs.filter((techId) => techId !== id);
+}
+
+function applyOneShot(item = {}) {
+  addResources(item.grantResources || {});
+  (item.grantsTechs || []).forEach(addTech);
+  (item.removesTechs || item.branch?.removes || []).forEach(removeTech);
+}
+
 function manualGather(id) {
   const gains = { food: 1, wood: 1, stone: 1 };
   addResources({ [id]: (gains[id] || 1) * getDifficulty().mods.manualGather });
@@ -2293,6 +2438,7 @@ function buyBuilding(id) {
   const item = buildings.find((building) => building.id === id);
   if (!item || !item.unlocked(state)) return;
   const count = buildingCount(state, id);
+  if (Number.isFinite(item.cap) && count >= item.cap) return toast("已达到上限");
   const costs = scaledCost(item, count);
   const shortfalls = capShortfalls(costs);
   if (shortfalls.length) return toast(`需要扩容：${shortfalls[0]}`);
@@ -2301,6 +2447,7 @@ function buyBuilding(id) {
   if (item.effects?.population) {
     state.population += item.effects.population;
   }
+  applyOneShot(item);
   state.stats.built += 1;
   addLog(`建成了 ${item.name}。`);
   afterMutation();
@@ -2313,7 +2460,8 @@ function research(id) {
   const shortfalls = capShortfalls(costs);
   if (shortfalls.length) return toast(`需要扩容：${shortfalls[0]}`);
   if (!spend(costs)) return toast("资源不足");
-  state.techs.push(id);
+  addTech(id);
+  applyOneShot(item);
   state.stats.researched += 1;
   addLog(`完成研究：${item.name}。`);
   toast(`研究完成：${item.name}`);
@@ -2386,6 +2534,7 @@ function finishExpedition(expeditionState) {
   const success = Math.random() <= successChance;
   if (success) {
     addResources(scaledRewards(item.rewards, difficulty.mods.expeditionReward));
+    applyOneShot(item);
     if (!state.expeditionsDone.includes(item.id)) state.expeditionsDone.push(item.id);
     addLog(`${item.name}远征成功，带回了稀缺物资。`);
     toast(`${item.name}远征成功`);
@@ -2429,7 +2578,11 @@ function checkAchievements() {
   achievements.forEach((achievement) => {
     if (!state.achievements.includes(achievement.id) && achievement.done(state)) {
       state.achievements.push(achievement.id);
-      addResources({ knowledge: 10, faith: hasTech(state, "omens") ? 5 : 0 });
+      const rewardResource = resources.some((resource) => resource.id === "knowledge") ? "knowledge" : "research";
+      addResources({
+        [rewardResource]: resources.some((resource) => resource.id === rewardResource) ? 10 : 0,
+        faith: resources.some((resource) => resource.id === "faith") && hasTech(state, "omens") ? 5 : 0,
+      });
       toast(`成就：${achievement.name}`);
       addLog(`成就达成：${achievement.name}。`);
     }
@@ -2462,7 +2615,7 @@ function tick() {
   }
 
   state.playTime += elapsed;
-  if (!state.event && state.playTime >= state.nextEventAt) {
+  if (activeDataPackMode !== "theresmore" && !state.event && state.playTime >= state.nextEventAt) {
     const choices = randomEvents.filter((event) => !event.unlocked || event.unlocked(state));
     if (choices.length) {
       state.event = { id: choices[Math.floor(Math.random() * choices.length)].id };
@@ -2611,7 +2764,7 @@ function renderGame() {
 }
 
 function renderSidebar() {
-  const militaryUnlocked = hasTech(state, "watch");
+  const militaryUnlocked = isMilitaryUnlocked(state);
   const difficulty = getDifficulty();
   const foodRate = cached.rates.food || 0;
   const foodPressure = effectiveNegativeRate("food");
@@ -2706,8 +2859,8 @@ function tabDefinitions() {
     { id: "buildings", label: "建筑", icon: "build" },
     { id: "research", label: "研究", icon: "knowledge" },
     { id: "people", label: "人口", icon: "people" },
-    { id: "army", label: "军队", icon: "army", unlocked: (s) => hasTech(s, "watch") },
-    { id: "expedition", label: "远征", icon: "stone", unlocked: (s) => hasTech(s, "watch") },
+    { id: "army", label: "军队", icon: "army", unlocked: (s) => activeDataPackMode === "theresmore" ? hasAnyVisibleUnit(s) || armyCap(s) > 0 : hasTech(s, "watch") },
+    { id: "expedition", label: "远征", icon: "stone", unlocked: (s) => activeDataPackMode === "theresmore" ? hasAnyVisibleExpedition(s) : hasTech(s, "watch") },
     { id: "achievements", label: "成就", icon: "faith" },
   ];
 }
@@ -2722,7 +2875,7 @@ function visibleTabs(s = state) {
 }
 
 function renderOverview() {
-  const militaryUnlocked = hasTech(state, "watch");
+  const militaryUnlocked = isMilitaryUnlocked(state);
   return `
     <div class="overview-stack">
     <section>
@@ -2739,16 +2892,16 @@ function renderOverview() {
         <div class="stat"><div class="stat-label">${militaryUnlocked ? "军力" : "防务"}</div><div class="stat-value">${militaryUnlocked ? fmt(armyPower(), 1) : "未解锁"}</div></div>
       </div>
       ${cached.starved ? `<div class="status-note negative">${icon("food")}粮食为 0，除粮食外的自动生产暂时停摆。</div>` : ""}
-      ${renderStarterGoals()}
+      ${activeDataPackMode === "theresmore" ? "" : renderStarterGoals()}
     </section>
-    <section class="panel">
+    ${activeDataPackMode === "theresmore" ? "" : `<section class="panel">
       <div class="panel-head">
         <div class="panel-title">${icon("spark")}村落事件</div>
       </div>
       <div class="modal-body">
         ${state.event ? renderEvent() : `<div class="empty">目前没有待处理事件。下一次事件约在 ${fmt(Math.max(0, state.nextEventAt - state.playTime))} 秒后出现。</div>`}
       </div>
-    </section>
+    </section>`}
     <section class="panel">
       <div class="panel-head">
         <div class="panel-title">${icon("knowledge")}日志</div>
@@ -2825,18 +2978,20 @@ function renderBuildings() {
 
 function renderBuildingCard(item) {
   const count = buildingCount(state, item.id);
+  const capped = Number.isFinite(item.cap) && count >= item.cap;
   const costs = scaledCost(item, count);
   const shortfalls = capShortfalls(costs);
-  const afford = canAfford(costs) && !shortfalls.length;
-  const badge = shortfalls.length ? "需扩容" : afford ? "可建造" : `已有 ${count}`;
+  const afford = !capped && canAfford(costs) && !shortfalls.length;
+  const badge = capped ? `上限 ${count}/${item.cap}` : shortfalls.length ? "需扩容" : afford ? "可建造" : `已有 ${count}`;
   const effects = splitTipRows(effectRows(item.effects));
+  const capWarnings = capped ? [{ label: "建筑上限", value: `${fmt(count)} / ${fmt(item.cap)}`, color: "build", tone: "warning" }] : [];
   const tip = renderCardTooltip({
     desc: item.desc,
     positiveTitle: "效果",
     positiveRows: effects.positive,
     negativeTitle: "成本 / 消耗",
     negativeRows: [...costRows(costs), ...effects.negative],
-    warningRows: shortfallRows(costs),
+    warningRows: [...capWarnings, ...shortfallRows(costs)],
   });
   return `
     <article class="item-card compact-card click-card has-tip ${afford ? "" : "unavailable locked"}" style="--accent:${accentForBuilding(item)}" data-action="build" data-id="${item.id}" role="button" tabindex="0" aria-disabled="${afford ? "false" : "true"}">
@@ -3210,11 +3365,13 @@ function costRows(costs = {}) {
     const cap = cached.caps[id] || 0;
     const missing = Math.max(0, cost - current);
     const capBlocked = Number.isFinite(cap) && cost > cap;
+    const rate = cached.rates?.[id] || 0;
     const tone = capBlocked ? "warning" : missing > 0 ? "negative" : "positive";
     return {
       label: resourceName(id),
       requiredValue: formatCostRequired(cost),
       missingValue: formatCostMissing(missing),
+      waitValue: formatCostWait(missing, rate, capBlocked),
       color: id,
       tone,
       kind: "cost",
@@ -3231,6 +3388,27 @@ function formatCostRequired(cost) {
 function formatCostMissing(missing) {
   const shortfall = Math.max(0, missing);
   return shortfall > 0 ? `-${fmt(shortfall, 1)}` : "";
+}
+
+function formatCostWait(missing, rate, capBlocked = false) {
+  const shortfall = Math.max(0, missing);
+  const netRate = Number(rate) || 0;
+  if (capBlocked || shortfall <= 0 || netRate <= 0) return "";
+  return formatShortDuration(Math.ceil(shortfall / netRate));
+}
+
+function formatShortDuration(seconds) {
+  const total = Math.max(1, Math.ceil(seconds));
+  if (total < 60) return `${total}s`;
+  const minutes = Math.floor(total / 60);
+  const restSeconds = total % 60;
+  if (minutes < 60) return restSeconds ? `${minutes}m${restSeconds}s` : `${minutes}m`;
+  const hours = Math.floor(minutes / 60);
+  const restMinutes = minutes % 60;
+  if (hours < 24) return restMinutes ? `${hours}h${restMinutes}m` : `${hours}h`;
+  const days = Math.floor(hours / 24);
+  const restHours = hours % 24;
+  return restHours ? `${days}d${restHours}h` : `${days}d`;
 }
 
 function shortfallRows(costs = {}, caps = cached.caps) {
@@ -3282,8 +3460,9 @@ function renderTipRow(row) {
     Number.isFinite(row.cost) ? `data-cost="${row.cost}"` : "",
   ].filter(Boolean).join(" ");
   const hasMissing = Boolean(row.missingValue);
+  const hasWait = Boolean(row.waitValue);
   const valueHtml = row.kind === "cost"
-    ? `<span class="tip-cost-values${hasMissing ? " has-missing" : ""}" aria-label="资源需求和缺口"><span class="tip-cost-box tip-cost-required">${escapeHtml(row.requiredValue ?? formatCostRequired(row.cost))}</span><span class="tip-cost-box tip-cost-missing"${hasMissing ? "" : " hidden"}>${escapeHtml(row.missingValue ?? "")}</span></span>`
+    ? `<span class="tip-cost-stack"><span class="tip-cost-values${hasMissing ? " has-missing" : ""}" aria-label="资源需求和缺口"><span class="tip-cost-box tip-cost-required">${escapeHtml(row.requiredValue ?? formatCostRequired(row.cost))}</span><span class="tip-cost-box tip-cost-missing"${hasMissing ? "" : " hidden"}>${escapeHtml(row.missingValue ?? "")}</span></span><span class="tip-cost-wait"${hasWait ? "" : " hidden"}>${escapeHtml(row.waitValue ?? "")}</span></span>`
     : `<span class="tip-value">${escapeHtml(row.value)}</span>`;
   return `
     <div class="tip-row tip-row-${row.tone || "neutral"}" style="--row-accent:${color}" ${attrs}>
@@ -3480,6 +3659,7 @@ function refreshActiveCostPreview() {
     const cap = cached.caps[id] || 0;
     const missing = Math.max(0, cost - currentValue);
     const capBlocked = Number.isFinite(cap) && cost > cap;
+    const rate = cached.rates?.[id] || 0;
     const tone = capBlocked ? "warning" : missing > 0 ? "negative" : "positive";
     row.classList.toggle("tip-row-positive", tone === "positive");
     row.classList.toggle("tip-row-negative", tone === "negative");
@@ -3487,12 +3667,18 @@ function refreshActiveCostPreview() {
     const required = $(".tip-cost-required", row);
     const missingBox = $(".tip-cost-missing", row);
     const costValues = $(".tip-cost-values", row);
+    const waitBox = $(".tip-cost-wait", row);
     if (required) required.textContent = formatCostRequired(cost);
     if (missingBox) {
       const missingText = formatCostMissing(missing);
       missingBox.textContent = missingText;
       missingBox.hidden = !missingText;
       costValues?.classList.toggle("has-missing", Boolean(missingText));
+    }
+    if (waitBox) {
+      const waitText = formatCostWait(missing, rate, capBlocked);
+      waitBox.textContent = waitText;
+      waitBox.hidden = !waitText;
     }
   });
 }

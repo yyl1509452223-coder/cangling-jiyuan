@@ -1103,6 +1103,15 @@ h1 {
   white-space: nowrap;
 }
 
+.tip-cost-stack {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  min-width: 42px;
+}
+
 .tip-cost-values.has-missing {
   grid-template-columns: minmax(32px, auto) minmax(34px, auto);
   gap: 4px;
@@ -1130,6 +1139,21 @@ h1 {
   background: color-mix(in srgb, var(--red) 72%, var(--panel));
   color: #fff;
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--red) 28%, transparent) inset;
+}
+
+.tip-cost-wait {
+  min-width: 30px;
+  padding: 1px 6px 2px;
+  border: 1px solid color-mix(in srgb, var(--row-accent, var(--accent, var(--gold))) 48%, var(--line));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--row-accent, var(--accent, var(--gold))) 12%, var(--panel));
+  color: color-mix(in srgb, var(--row-accent, var(--accent, var(--gold))) 78%, var(--text));
+  font-size: 0.66rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.05;
+  text-align: center;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--row-accent, var(--accent, var(--gold))) 14%, transparent) inset;
 }
 
 .tip-section.negative .tip-row-positive {
