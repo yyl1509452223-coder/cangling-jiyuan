@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.9.4";
+const APP_VERSION = "0.9.5";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -50,6 +50,15 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.9.5",
+    date: "2026-07-09",
+    title: "成本预览强化",
+    notes: [
+      "悬停预览里的成本会按当前资源状态显示够用、缺少或上限不足。",
+      "资源不足时会显示缺口和预计等待时间，并随产量刷新逐秒减少。",
+    ],
+  },
   {
     version: "0.9.4",
     date: "2026-07-09",
@@ -2162,6 +2171,7 @@ function tick() {
   }
 
   checkAchievements();
+  refreshActiveCostPreview();
   renderSidebarAndCurrent({ deferCurrentOnPreview: true });
   scheduleSave();
 }
@@ -2893,7 +2903,33 @@ function resourceRows(values = {}, options = {}) {
 
 function costRows(costs = {}) {
   if (!Object.keys(costs || {}).length) return [];
-  return resourceRows(costs).map((row) => ({ ...row, tone: "negative" }));
+  return Object.entries(costs).map(([id, cost]) => {
+    const current = state.resources[id] || 0;
+    const cap = cached.caps[id] || 0;
+    const rate = cached.rates[id] || 0;
+    const missing = Math.max(0, cost - current);
+    const capBlocked = Number.isFinite(cap) && cost > cap;
+    const tone = capBlocked ? "warning" : missing > 0 ? "negative" : "positive";
+    const wait = missing > 0 && rate > 0 ? Math.ceil(missing / rate) : null;
+    return {
+      label: resourceName(id),
+      value: formatCostStatus(current, cost, missing, wait, capBlocked),
+      color: id,
+      tone,
+      kind: "cost",
+      resource: id,
+      cost,
+    };
+  });
+}
+
+function formatCostStatus(current, cost, missing, wait = null, capBlocked = false) {
+  if (capBlocked) return `${fmt(current, 1)} / ${fmt(cost)} · 需扩容`;
+  if (missing > 0) {
+    const waitText = wait ? ` · 约${wait}秒` : "";
+    return `${fmt(current, 1)} / ${fmt(cost)} · 缺${fmt(missing, 1)}${waitText}`;
+  }
+  return `${fmt(current, 1)} / ${fmt(cost)}`;
 }
 
 function shortfallRows(costs = {}, caps = cached.caps) {
@@ -2939,8 +2975,13 @@ function renderTipSection(title, rows = [], tone = "positive") {
 
 function renderTipRow(row) {
   const color = row.color ? accentForResource(row.color) : "var(--accent, var(--gold))";
+  const attrs = [
+    row.kind ? `data-kind="${escapeHtml(row.kind)}"` : "",
+    row.resource ? `data-resource="${escapeHtml(row.resource)}"` : "",
+    Number.isFinite(row.cost) ? `data-cost="${row.cost}"` : "",
+  ].filter(Boolean).join(" ");
   return `
-    <div class="tip-row" style="--row-accent:${color}">
+    <div class="tip-row tip-row-${row.tone || "neutral"}" style="--row-accent:${color}" ${attrs}>
       <span class="tip-label"><span class="tip-dot" aria-hidden="true"></span>${escapeHtml(row.label)}</span>
       <span class="tip-value">${escapeHtml(row.value)}</span>
     </div>
@@ -3122,6 +3163,27 @@ function escapeHtml(value) {
 function isCurrentViewPreviewActive() {
   const current = $("#current-view");
   return !!current?.querySelector(".has-tip:hover, .has-tip:focus-within");
+}
+
+function refreshActiveCostPreview() {
+  const current = $("#current-view");
+  current?.querySelectorAll('.tip-row[data-kind="cost"]').forEach((row) => {
+    const id = row.dataset.resource;
+    const cost = Number(row.dataset.cost);
+    if (!id || !Number.isFinite(cost)) return;
+    const currentValue = state.resources[id] || 0;
+    const cap = cached.caps[id] || 0;
+    const rate = cached.rates[id] || 0;
+    const missing = Math.max(0, cost - currentValue);
+    const capBlocked = Number.isFinite(cap) && cost > cap;
+    const wait = missing > 0 && rate > 0 ? Math.ceil(missing / rate) : null;
+    const tone = capBlocked ? "warning" : missing > 0 ? "negative" : "positive";
+    row.classList.toggle("tip-row-positive", tone === "positive");
+    row.classList.toggle("tip-row-negative", tone === "negative");
+    row.classList.toggle("tip-row-warning", tone === "warning");
+    const value = $(".tip-value", row);
+    if (value) value.textContent = formatCostStatus(currentValue, cost, missing, wait, capBlocked);
+  });
 }
 
 function renderSidebarAndCurrent(options = {}) {
