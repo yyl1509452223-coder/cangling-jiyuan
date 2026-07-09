@@ -1094,11 +1094,38 @@ h1 {
   white-space: nowrap;
 }
 
+.tip-cost-values {
+  display: inline-grid;
+  grid-template-columns: minmax(32px, auto) minmax(34px, auto);
+  gap: 4px;
+  justify-content: end;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.tip-cost-box {
+  min-width: 32px;
+  padding: 3px 6px;
+  border: 1px solid color-mix(in srgb, var(--row-accent, var(--accent, var(--gold))) 64%, var(--line));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--row-accent, var(--accent, var(--gold))) 24%, var(--panel));
+  color: var(--text);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  line-height: 1.15;
+}
+
+.tip-cost-missing {
+  min-width: 34px;
+}
+
 .tip-section.negative .tip-row-positive {
   background: color-mix(in srgb, var(--green) 10%, transparent);
 }
 
-.tip-section.negative .tip-row-positive .tip-value {
+.tip-section.negative .tip-row-positive .tip-value,
+.tip-section.negative .tip-row-positive .tip-cost-box {
   border-color: color-mix(in srgb, var(--green) 70%, var(--line));
   background: color-mix(in srgb, var(--green) 22%, var(--panel));
   color: color-mix(in srgb, var(--green) 82%, var(--text));
@@ -1108,7 +1135,8 @@ h1 {
   background: color-mix(in srgb, var(--red) 13%, transparent);
 }
 
-.tip-section.negative .tip-row-negative .tip-value {
+.tip-section.negative .tip-row-negative .tip-value,
+.tip-section.negative .tip-row-negative .tip-cost-box {
   border-color: color-mix(in srgb, var(--red) 72%, var(--line));
   background: color-mix(in srgb, var(--red) 26%, var(--panel));
   color: color-mix(in srgb, var(--red) 88%, var(--text));
@@ -1118,7 +1146,8 @@ h1 {
   background: color-mix(in srgb, var(--gold) 13%, transparent);
 }
 
-.tip-section.negative .tip-row-warning .tip-value {
+.tip-section.negative .tip-row-warning .tip-value,
+.tip-section.negative .tip-row-warning .tip-cost-box {
   border-color: color-mix(in srgb, var(--gold) 74%, var(--line));
   background: color-mix(in srgb, var(--gold) 26%, var(--panel));
   color: color-mix(in srgb, var(--gold) 88%, var(--text));

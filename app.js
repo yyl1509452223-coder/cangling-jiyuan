@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.9.11";
+const APP_VERSION = "0.9.13";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -50,6 +50,24 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.9.13",
+    date: "2026-07-09",
+    title: "成本缺口数字精简",
+    notes: [
+      "悬停预览的成本行保留双数字框，左侧显示需要数量，右侧改为负数缺口。",
+      "缺口框去掉“缺”字，显示更紧凑。",
+    ],
+  },
+  {
+    version: "0.9.12",
+    date: "2026-07-09",
+    title: "成本缺口双框显示",
+    notes: [
+      "悬停预览的成本行拆成两个数字框，左侧显示需要多少资源，右侧显示还差多少资源。",
+      "缺口数字继续随资源生产实时刷新，更容易对照建造和研究门槛。",
+    ],
+  },
   {
     version: "0.9.11",
     date: "2026-07-09",
@@ -3172,14 +3190,13 @@ function costRows(costs = {}) {
   return Object.entries(costs).map(([id, cost]) => {
     const current = state.resources[id] || 0;
     const cap = cached.caps[id] || 0;
-    const rate = cached.rates[id] || 0;
     const missing = Math.max(0, cost - current);
     const capBlocked = Number.isFinite(cap) && cost > cap;
     const tone = capBlocked ? "warning" : missing > 0 ? "negative" : "positive";
-    const wait = missing > 0 && rate > 0 ? Math.ceil(missing / rate) : null;
     return {
       label: resourceName(id),
-      value: formatCostStatus(current, cost, missing, wait, capBlocked),
+      requiredValue: formatCostRequired(cost),
+      missingValue: formatCostMissing(missing),
       color: id,
       tone,
       kind: "cost",
@@ -3189,10 +3206,13 @@ function costRows(costs = {}) {
   });
 }
 
-function formatCostStatus(current, cost, missing, wait = null, capBlocked = false) {
-  if (capBlocked) return `${fmt(current, 1)} / ${fmt(cost)} · 需扩容`;
-  if (missing > 0) return `缺${fmt(missing, 1)}`;
-  return `${fmt(current, 1)} / ${fmt(cost)}`;
+function formatCostRequired(cost) {
+  return fmt(cost);
+}
+
+function formatCostMissing(missing) {
+  const shortfall = Math.max(0, missing);
+  return shortfall > 0 ? `-${fmt(shortfall, 1)}` : "0";
 }
 
 function shortfallRows(costs = {}, caps = cached.caps) {
@@ -3243,10 +3263,13 @@ function renderTipRow(row) {
     row.resource ? `data-resource="${escapeHtml(row.resource)}"` : "",
     Number.isFinite(row.cost) ? `data-cost="${row.cost}"` : "",
   ].filter(Boolean).join(" ");
+  const valueHtml = row.kind === "cost"
+    ? `<span class="tip-cost-values" aria-label="资源需求和缺口"><span class="tip-cost-box tip-cost-required">${escapeHtml(row.requiredValue ?? formatCostRequired(row.cost))}</span><span class="tip-cost-box tip-cost-missing">${escapeHtml(row.missingValue ?? "0")}</span></span>`
+    : `<span class="tip-value">${escapeHtml(row.value)}</span>`;
   return `
     <div class="tip-row tip-row-${row.tone || "neutral"}" style="--row-accent:${color}" ${attrs}>
       <span class="tip-label"><span class="tip-dot" aria-hidden="true"></span>${escapeHtml(row.label)}</span>
-      <span class="tip-value">${escapeHtml(row.value)}</span>
+      ${valueHtml}
     </div>
   `;
 }
@@ -3436,16 +3459,16 @@ function refreshActiveCostPreview() {
     if (!id || !Number.isFinite(cost)) return;
     const currentValue = state.resources[id] || 0;
     const cap = cached.caps[id] || 0;
-    const rate = cached.rates[id] || 0;
     const missing = Math.max(0, cost - currentValue);
     const capBlocked = Number.isFinite(cap) && cost > cap;
-    const wait = missing > 0 && rate > 0 ? Math.ceil(missing / rate) : null;
     const tone = capBlocked ? "warning" : missing > 0 ? "negative" : "positive";
     row.classList.toggle("tip-row-positive", tone === "positive");
     row.classList.toggle("tip-row-negative", tone === "negative");
     row.classList.toggle("tip-row-warning", tone === "warning");
-    const value = $(".tip-value", row);
-    if (value) value.textContent = formatCostStatus(currentValue, cost, missing, wait, capBlocked);
+    const required = $(".tip-cost-required", row);
+    const missingBox = $(".tip-cost-missing", row);
+    if (required) required.textContent = formatCostRequired(cost);
+    if (missingBox) missingBox.textContent = formatCostMissing(missing);
   });
 }
 
