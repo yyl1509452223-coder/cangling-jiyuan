@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.8.9";
+const APP_VERSION = "0.9.0";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -47,6 +47,15 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.9.0",
+    date: "2026-07-09",
+    title: "预览层级修正",
+    notes: [
+      "修复建筑和研究卡片悬停预览被右侧面板遮挡的问题。",
+      "预览打开时会临时提升中间操作区层级，顶部栏和整体布局保持不变。",
+    ],
+  },
   {
     version: "0.8.9",
     date: "2026-07-09",

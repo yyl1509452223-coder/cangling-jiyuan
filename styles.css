@@ -535,6 +535,7 @@ h1 {
 .overview-column {
   position: sticky;
   top: 74px;
+  z-index: 1;
   align-self: start;
   min-width: 0;
 }
@@ -542,6 +543,7 @@ h1 {
 .sidebar {
   position: sticky;
   top: 74px;
+  z-index: 1;
   align-self: start;
   display: grid;
   gap: 12px;
@@ -678,9 +680,16 @@ h1 {
 }
 
 .main-panel {
+  position: relative;
+  z-index: 2;
   display: block;
   min-width: 0;
   align-self: start;
+}
+
+.main-panel:has(.has-tip:hover),
+.main-panel:has(.has-tip:focus-within) {
+  z-index: 20;
 }
 
 .overview-stack > * + * {
@@ -902,7 +911,7 @@ h1 {
 
 .has-tip:hover,
 .has-tip:focus-within {
-  z-index: 80;
+  z-index: 12;
 }
 
 .has-tip:hover .tip-panel,
