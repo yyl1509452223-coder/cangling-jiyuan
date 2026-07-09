@@ -1125,6 +1125,13 @@ h1 {
   min-width: 34px;
 }
 
+.tip-cost-values.has-missing .tip-cost-missing {
+  border-color: color-mix(in srgb, var(--red) 84%, var(--line));
+  background: color-mix(in srgb, var(--red) 72%, var(--panel));
+  color: #fff;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--red) 28%, transparent) inset;
+}
+
 .tip-section.negative .tip-row-positive {
   background: color-mix(in srgb, var(--green) 10%, transparent);
 }
@@ -1147,6 +1154,12 @@ h1 {
   color: color-mix(in srgb, var(--red) 88%, var(--text));
 }
 
+.tip-section.negative .tip-row-negative .tip-cost-values.has-missing .tip-cost-missing {
+  border-color: color-mix(in srgb, var(--red) 88%, var(--line));
+  background: color-mix(in srgb, var(--red) 72%, var(--panel));
+  color: #fff;
+}
+
 .tip-section.negative .tip-row-warning {
   background: color-mix(in srgb, var(--gold) 13%, transparent);
 }
@@ -1156,6 +1169,12 @@ h1 {
   border-color: color-mix(in srgb, var(--gold) 74%, var(--line));
   background: color-mix(in srgb, var(--gold) 26%, var(--panel));
   color: color-mix(in srgb, var(--gold) 88%, var(--text));
+}
+
+.tip-section.negative .tip-row .tip-cost-values.has-missing .tip-cost-missing {
+  border-color: color-mix(in srgb, var(--red) 88%, var(--line));
+  background: color-mix(in srgb, var(--red) 72%, var(--panel));
+  color: #fff;
 }
 
 .effects,

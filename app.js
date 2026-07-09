@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.9.14";
+const APP_VERSION = "0.9.15";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -50,6 +50,15 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.9.15",
+    date: "2026-07-09",
+    title: "缺口框红色强调",
+    notes: [
+      "材料不足时，右侧负数缺口框改为红色实心填充，更容易一眼看出还差多少。",
+      "左侧需要消耗数量保持原样，材料足够时仍只显示一个消耗框。",
+    ],
+  },
   {
     version: "0.9.14",
     date: "2026-07-09",
