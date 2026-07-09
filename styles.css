@@ -882,7 +882,6 @@ h1 {
   min-height: 92px;
   position: relative;
   padding: 16px 56px 18px 13px;
-  overflow: hidden;
 }
 
 .item-card.locked:not(.has-tip) {
@@ -955,6 +954,10 @@ h1 {
   font-weight: 600;
 }
 
+.scout-card {
+  margin-bottom: 10px;
+}
+
 .card-hint {
   position: absolute;
   right: 11px;
@@ -987,6 +990,7 @@ h1 {
   bottom: 0;
   height: 5px;
   overflow: hidden;
+  border-radius: 0 0 calc(var(--radius) - 1px) calc(var(--radius) - 1px);
   background: color-mix(in srgb, var(--accent, var(--gold)) 12%, transparent);
 }
 

@@ -368,6 +368,7 @@ function convertTechs() {
 function convertUnits() {
   return json.units.filter((item) => ["army", "recon", "spy"].includes(item.type)).map((item) => {
     const req = reqToParts(item.req || []);
+    const attackReq = reqToParts(item.reqAttack || []);
     const gen = genToParts(item.gen || []);
     return {
       id: item.id,
@@ -375,6 +376,7 @@ function convertUnits() {
       desc: `Theresmore 单位：${nameMaps.units.get(item.id) || item.id}`,
       sourceType: item.type,
       costs: req.costs,
+      attackCosts: attackReq.costs,
       power: Number(((item.attack || 0) + (item.defense || 0) * 0.75 + (item.splash || 0) * 2).toFixed(2)),
       cap: item.cap == null ? undefined : item.cap,
       upkeep: gen.effects,
@@ -393,17 +395,20 @@ function convertEnemiesToExpeditions() {
       if (key.startsWith("cap_")) add(rewards, key.slice(4), Math.max(1, Math.ceil(Math.abs(value) * 0.05)));
     }
     const enemyPower = (item.army || []).reduce((sum, unit) => sum + (enemyUnitPower.get(unit.id) || item.level || 1) * (unit.value || 1), 0);
-    const requires = reqToParts(item.reqFound || []).requires;
+    const discoverRequires = reqToParts(item.reqFound || []).requires;
     return {
       id: `enemy_${item.id}`,
+      sourceId: item.id,
       name: nameMaps.enemies.get(item.id) || item.id,
       desc: `Theresmore 敌点。等级 ${item.level || 1}，侦察 ${item.esp || 0}。`,
+      found: Array.isArray(item.found) ? item.found : [],
+      discoverRequires,
       power: Math.max(1, Math.ceil(enemyPower / 10 || item.level || 1)),
       duration: Math.max(30, Math.min(360, 30 + (item.level || 1) * 18)),
       costs: { food: Math.max(20, (item.level || 1) * 30) },
       rewards,
       unlocks: [],
-      requires,
+      requires: [],
     };
   });
 }

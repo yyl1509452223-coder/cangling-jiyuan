@@ -5,7 +5,7 @@ window.THERESMORE_PACK = {
   "source": {
     "rawBundle": "raw/main.480437b3.js",
     "analysisDir": "theresmore_analysis_2026-07-09/analysis",
-    "generatedAt": "2026-07-09T15:00:21.075Z"
+    "generatedAt": "2026-07-09T23:05:32.843Z"
   },
   "populationFoodUse": 0,
   "startResources": {
@@ -16241,6 +16241,10 @@ window.THERESMORE_PACK = {
         "gold": 400,
         "food": 200
       },
+      "attackCosts": {
+        "gold": 200,
+        "food": 100
+      },
       "power": 3.5,
       "upkeep": {
         "foodRateFlat": -0.1
@@ -16262,6 +16266,10 @@ window.THERESMORE_PACK = {
         "gold": 1000,
         "supplies": 100
       },
+      "attackCosts": {
+        "gold": 400,
+        "supplies": 20
+      },
       "power": 8.75,
       "upkeep": {
         "foodRateFlat": -0.2
@@ -16282,6 +16290,9 @@ window.THERESMORE_PACK = {
       "costs": {
         "natronite": 100
       },
+      "attackCosts": {
+        "natronite": 50
+      },
       "power": 17.5,
       "cap": 5,
       "upkeep": {
@@ -16301,6 +16312,10 @@ window.THERESMORE_PACK = {
       "desc": "Theresmore 单位：使魔",
       "sourceType": "recon",
       "costs": {
+        "food": 100,
+        "mana": 100
+      },
+      "attackCosts": {
         "food": 100,
         "mana": 100
       },
@@ -16325,6 +16340,9 @@ window.THERESMORE_PACK = {
       "costs": {
         "gold": 1000
       },
+      "attackCosts": {
+        "gold": 100
+      },
       "power": 9.25,
       "upkeep": {
         "foodRateFlat": -0.1
@@ -16346,6 +16364,10 @@ window.THERESMORE_PACK = {
         "gold": 200,
         "wood": 100
       },
+      "attackCosts": {
+        "gold": 20,
+        "food": 20
+      },
       "power": 4.5,
       "upkeep": {
         "foodRateFlat": -0.2
@@ -16366,6 +16388,10 @@ window.THERESMORE_PACK = {
       "costs": {
         "gold": 800,
         "wood": 1000
+      },
+      "attackCosts": {
+        "gold": 80,
+        "food": 50
       },
       "power": 19.5,
       "upkeep": {
@@ -16389,6 +16415,10 @@ window.THERESMORE_PACK = {
         "wood": 400,
         "supplies": 50
       },
+      "attackCosts": {
+        "gold": 40,
+        "food": 40
+      },
       "power": 15.5,
       "upkeep": {
         "foodRateFlat": -0.5
@@ -16410,6 +16440,10 @@ window.THERESMORE_PACK = {
         "gold": 1200,
         "wood": 2000
       },
+      "attackCosts": {
+        "gold": 100,
+        "food": 100
+      },
       "power": 36.25,
       "upkeep": {
         "goldRateFlat": -10
@@ -16429,6 +16463,9 @@ window.THERESMORE_PACK = {
       "sourceType": "army",
       "costs": {
         "gold": 2500
+      },
+      "attackCosts": {
+        "gold": 75
       },
       "power": 26.25,
       "upkeep": {
@@ -16450,6 +16487,10 @@ window.THERESMORE_PACK = {
       "costs": {
         "gold": 7500,
         "crystal": 400
+      },
+      "attackCosts": {
+        "gold": 1000,
+        "crystal": 300
       },
       "power": 89,
       "cap": 1,
@@ -16475,6 +16516,10 @@ window.THERESMORE_PACK = {
         "faith": 1250,
         "mana": 1000
       },
+      "attackCosts": {
+        "faith": 500,
+        "mana": 250
+      },
       "power": 54.75,
       "cap": 50,
       "upkeep": {
@@ -16498,6 +16543,10 @@ window.THERESMORE_PACK = {
         "gold": 1500,
         "saltpetre": 100
       },
+      "attackCosts": {
+        "gold": 80,
+        "food": 40
+      },
       "power": 21.25,
       "upkeep": {
         "foodRateFlat": -0.9
@@ -16520,6 +16569,9 @@ window.THERESMORE_PACK = {
         "steel": 200,
         "saltpetre": 200
       },
+      "attackCosts": {
+        "gold": 200
+      },
       "power": 53,
       "upkeep": {
         "goldRateFlat": -15
@@ -16541,6 +16593,9 @@ window.THERESMORE_PACK = {
         "gold": 5000,
         "saltpetre": 1000,
         "steel": 500
+      },
+      "attackCosts": {
+        "gold": 500
       },
       "power": 104,
       "upkeep": {
@@ -16565,6 +16620,10 @@ window.THERESMORE_PACK = {
         "steel": 5000,
         "natronite": 2500
       },
+      "attackCosts": {
+        "gold": 1000,
+        "natronite": 200
+      },
       "power": 183.25,
       "upkeep": {
         "goldRateFlat": -40
@@ -16585,6 +16644,10 @@ window.THERESMORE_PACK = {
       "costs": {
         "faith": 7000,
         "mana": 7000
+      },
+      "attackCosts": {
+        "faith": 1200,
+        "mana": 1200
       },
       "power": 364,
       "cap": 5,
@@ -16611,6 +16674,10 @@ window.THERESMORE_PACK = {
         "food": 1500,
         "supplies": 750
       },
+      "attackCosts": {
+        "gold": 200,
+        "food": 100
+      },
       "power": 39.25,
       "cap": 50,
       "upkeep": {
@@ -16632,6 +16699,10 @@ window.THERESMORE_PACK = {
       "costs": {
         "supplies": 2000,
         "crystal": 2000
+      },
+      "attackCosts": {
+        "supplies": 250,
+        "crystal": 150
       },
       "power": 109.25,
       "cap": 25,
@@ -16656,6 +16727,11 @@ window.THERESMORE_PACK = {
         "saltpetre": 500,
         "supplies": 500
       },
+      "attackCosts": {
+        "gold": 125,
+        "food": 75,
+        "supplies": 25
+      },
       "power": 46.25,
       "upkeep": {
         "foodRateFlat": -1.5
@@ -16676,6 +16752,10 @@ window.THERESMORE_PACK = {
       "costs": {
         "gold": 8000,
         "wood": 8000
+      },
+      "attackCosts": {
+        "gold": 450,
+        "food": 100
       },
       "power": 96.5,
       "upkeep": {
@@ -16698,6 +16778,10 @@ window.THERESMORE_PACK = {
         "gold": 7000,
         "natronite": 750,
         "lumix": 200
+      },
+      "attackCosts": {
+        "gold": 150,
+        "mana": 50
       },
       "power": 116.25,
       "upkeep": {
@@ -16722,6 +16806,10 @@ window.THERESMORE_PACK = {
         "wood": 150,
         "copper": 50
       },
+      "attackCosts": {
+        "gold": 30,
+        "food": 25
+      },
       "power": 7.25,
       "upkeep": {
         "foodRateFlat": -0.2
@@ -16744,6 +16832,10 @@ window.THERESMORE_PACK = {
         "wood": 150,
         "iron": 150
       },
+      "attackCosts": {
+        "gold": 30,
+        "food": 30
+      },
       "power": 21,
       "upkeep": {
         "foodRateFlat": -0.3
@@ -16765,6 +16857,9 @@ window.THERESMORE_PACK = {
         "faith": 800,
         "mana": 400
       },
+      "attackCosts": {
+        "food": 10
+      },
       "power": 12.75,
       "upkeep": {
         "foodRateFlat": -0.4
@@ -16785,6 +16880,10 @@ window.THERESMORE_PACK = {
       "costs": {
         "gold": 350,
         "wood": 350
+      },
+      "attackCosts": {
+        "gold": 30,
+        "food": 30
       },
       "power": 22.25,
       "upkeep": {
@@ -16811,6 +16910,9 @@ window.THERESMORE_PACK = {
       "costs": {
         "food": 800,
         "faith": 800
+      },
+      "attackCosts": {
+        "food": 80
       },
       "power": 28,
       "upkeep": {
@@ -16840,6 +16942,9 @@ window.THERESMORE_PACK = {
         "faith": 1000,
         "mana": 800
       },
+      "attackCosts": {
+        "mana": 100
+      },
       "power": 24.5,
       "upkeep": {
         "manaRateFlat": -1.5
@@ -16860,6 +16965,10 @@ window.THERESMORE_PACK = {
       "costs": {
         "wood": 10000,
         "steel": 2000
+      },
+      "attackCosts": {
+        "wood": 120,
+        "steel": 60
       },
       "power": 36,
       "cap": 50,
@@ -16883,6 +16992,9 @@ window.THERESMORE_PACK = {
         "faith": 1800,
         "crystal": 200
       },
+      "attackCosts": {
+        "food": 60
+      },
       "power": 26,
       "upkeep": {
         "foodRateFlat": -1
@@ -16904,6 +17016,10 @@ window.THERESMORE_PACK = {
         "food": 600,
         "cow": 600,
         "mana": 400
+      },
+      "attackCosts": {
+        "food": 150,
+        "mana": 150
       },
       "power": 52.5,
       "upkeep": {
@@ -16932,6 +17048,10 @@ window.THERESMORE_PACK = {
         "faith": 2500,
         "steel": 500
       },
+      "attackCosts": {
+        "faith": 200,
+        "food": 100
+      },
       "power": 70,
       "upkeep": {
         "crystalRateFlat": 0.1,
@@ -16955,6 +17075,10 @@ window.THERESMORE_PACK = {
         "saltpetre": 1500,
         "natronite": 1000
       },
+      "attackCosts": {
+        "saltpetre": 100,
+        "natronite": 100
+      },
       "power": 97.5,
       "cap": 20,
       "upkeep": {
@@ -16976,6 +17100,10 @@ window.THERESMORE_PACK = {
       "costs": {
         "food": 10000,
         "mana": 10000
+      },
+      "attackCosts": {
+        "food": 1000,
+        "mana": 1000
       },
       "power": 728.5,
       "cap": 1,
@@ -17002,6 +17130,10 @@ window.THERESMORE_PACK = {
         "gold": 250,
         "tools": 250
       },
+      "attackCosts": {
+        "gold": 25,
+        "tools": 15
+      },
       "power": 41,
       "upkeep": {
         "foodRateFlat": -0.2
@@ -17022,6 +17154,10 @@ window.THERESMORE_PACK = {
       "costs": {
         "stone": 25000,
         "mana": 20000
+      },
+      "attackCosts": {
+        "stone": 10000,
+        "mana": 10000
       },
       "power": 1731.5,
       "cap": 1,
@@ -17044,6 +17180,10 @@ window.THERESMORE_PACK = {
       "costs": {
         "faith": 25000,
         "mana": 25000
+      },
+      "attackCosts": {
+        "faith": 15000,
+        "mana": 15000
       },
       "power": 1089,
       "cap": 1,
@@ -17070,6 +17210,10 @@ window.THERESMORE_PACK = {
         "gold": 400,
         "copper": 200
       },
+      "attackCosts": {
+        "gold": 40,
+        "food": 40
+      },
       "power": 14,
       "upkeep": {
         "foodRateFlat": -0.4
@@ -17089,6 +17233,9 @@ window.THERESMORE_PACK = {
       "sourceType": "army",
       "costs": {
         "gold": 2500
+      },
+      "attackCosts": {
+        "gold": 150
       },
       "power": 18,
       "upkeep": {
@@ -17111,6 +17258,10 @@ window.THERESMORE_PACK = {
         "gold": 800,
         "iron": 300
       },
+      "attackCosts": {
+        "gold": 70,
+        "food": 70
+      },
       "power": 21,
       "upkeep": {
         "foodRateFlat": -0.6
@@ -17130,6 +17281,9 @@ window.THERESMORE_PACK = {
       "sourceType": "army",
       "costs": {
         "gold": 2000
+      },
+      "attackCosts": {
+        "gold": 50
       },
       "power": 26.25,
       "upkeep": {
@@ -17151,6 +17305,10 @@ window.THERESMORE_PACK = {
       "costs": {
         "gold": 1500,
         "steel": 250
+      },
+      "attackCosts": {
+        "gold": 120,
+        "food": 80
       },
       "power": 28.5,
       "upkeep": {
@@ -17174,6 +17332,10 @@ window.THERESMORE_PACK = {
         "saltpetre": 500,
         "supplies": 250
       },
+      "attackCosts": {
+        "gold": 250,
+        "food": 120
+      },
       "power": 50.5,
       "upkeep": {
         "foodRateFlat": -1.4
@@ -17195,6 +17357,10 @@ window.THERESMORE_PACK = {
         "gold": 2000,
         "saltpetre": 1000,
         "natronite": 500
+      },
+      "attackCosts": {
+        "gold": 200,
+        "natronite": 100
       },
       "power": 95.5,
       "cap": 100,
@@ -17218,6 +17384,10 @@ window.THERESMORE_PACK = {
         "gold": 100,
         "saltpetre": 10
       },
+      "attackCosts": {
+        "gold": 15,
+        "food": 5
+      },
       "power": 13,
       "upkeep": {
         "foodRateFlat": -0.1
@@ -17239,6 +17409,10 @@ window.THERESMORE_PACK = {
         "gold": 5000,
         "natronite": 750,
         "lumix": 100
+      },
+      "attackCosts": {
+        "food": 200,
+        "mana": 75
       },
       "power": 109.25,
       "upkeep": {
@@ -17262,6 +17436,10 @@ window.THERESMORE_PACK = {
         "faith": 2000,
         "mana": 600
       },
+      "attackCosts": {
+        "faith": 100,
+        "mana": 100
+      },
       "power": 65,
       "upkeep": {
         "manaRateFlat": -1
@@ -17281,6 +17459,10 @@ window.THERESMORE_PACK = {
       "sourceType": "army",
       "costs": {
         "gold": 2500
+      },
+      "attackCosts": {
+        "gold": 200,
+        "food": 120
       },
       "power": 49.5,
       "cap": 1,
@@ -17304,6 +17486,9 @@ window.THERESMORE_PACK = {
       "costs": {
         "mana": 1000
       },
+      "attackCosts": {
+        "mana": 100
+      },
       "power": 78,
       "cap": 1,
       "upkeep": {
@@ -17324,6 +17509,10 @@ window.THERESMORE_PACK = {
       "sourceType": "army",
       "costs": {
         "gold": 15000
+      },
+      "attackCosts": {
+        "gold": 1000,
+        "food": 500
       },
       "power": 135,
       "cap": 1,
@@ -17349,6 +17538,10 @@ window.THERESMORE_PACK = {
         "mana": 5000,
         "crystal": 2000
       },
+      "attackCosts": {
+        "faith": 1500,
+        "mana": 1500
+      },
       "power": 750,
       "cap": 1,
       "upkeep": {
@@ -17373,6 +17566,10 @@ window.THERESMORE_PACK = {
         "gold": 50000,
         "steel": 30000
       },
+      "attackCosts": {
+        "gold": 10000,
+        "steel": 1000
+      },
       "power": 1474.5,
       "cap": 1,
       "upkeep": {
@@ -17393,6 +17590,9 @@ window.THERESMORE_PACK = {
       "sourceType": "army",
       "costs": {
         "mana": 12500
+      },
+      "attackCosts": {
+        "mana": 6000
       },
       "power": 1328.5,
       "cap": 1,
@@ -17417,6 +17617,10 @@ window.THERESMORE_PACK = {
         "food": 300,
         "horse": 25
       },
+      "attackCosts": {
+        "gold": 60,
+        "food": 40
+      },
       "power": 13,
       "upkeep": {
         "foodRateFlat": -0.8
@@ -17439,6 +17643,10 @@ window.THERESMORE_PACK = {
         "steel": 250,
         "horse": 50
       },
+      "attackCosts": {
+        "gold": 120,
+        "food": 100
+      },
       "power": 42.5,
       "upkeep": {
         "foodRateFlat": -1.8
@@ -17460,6 +17668,10 @@ window.THERESMORE_PACK = {
         "gold": 2000,
         "steel": 500,
         "horse": 75
+      },
+      "attackCosts": {
+        "gold": 150,
+        "supplies": 50
       },
       "power": 54,
       "upkeep": {
@@ -17485,6 +17697,10 @@ window.THERESMORE_PACK = {
         "horse": 200,
         "saltpetre": 200
       },
+      "attackCosts": {
+        "gold": 200,
+        "food": 200
+      },
       "power": 57,
       "upkeep": {
         "foodRateFlat": -2.8
@@ -17508,6 +17724,10 @@ window.THERESMORE_PACK = {
         "horse": 500,
         "crystal": 500
       },
+      "attackCosts": {
+        "food": 250,
+        "crystal": 100
+      },
       "power": 85,
       "cap": 100,
       "upkeep": {
@@ -17529,6 +17749,10 @@ window.THERESMORE_PACK = {
       "costs": {
         "gold": 10000,
         "horse": 3000
+      },
+      "attackCosts": {
+        "gold": 1000,
+        "supplies": 1000
       },
       "power": 128.75,
       "cap": 1,
@@ -17552,6 +17776,10 @@ window.THERESMORE_PACK = {
         "faith": 90000,
         "mana": 90000
       },
+      "attackCosts": {
+        "faith": 9000,
+        "mana": 9000
+      },
       "power": 2010,
       "cap": 1,
       "upkeep": {
@@ -17574,6 +17802,9 @@ window.THERESMORE_PACK = {
       "costs": {
         "mana": 100000
       },
+      "attackCosts": {
+        "mana": 10000
+      },
       "power": 5930,
       "cap": 1,
       "upkeep": {
@@ -17592,8 +17823,13 @@ window.THERESMORE_PACK = {
   "expeditions": [
     {
       "id": "enemy_ancient_burial_place",
+      "sourceId": "ancient_burial_place",
       "name": "远古墓地",
       "desc": "Theresmore 敌点。等级 1，侦察 4。",
+      "found": [
+        1
+      ],
+      "discoverRequires": [],
       "power": 9,
       "duration": 48,
       "costs": {
@@ -17608,8 +17844,14 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_ancient_hideout",
+      "sourceId": "ancient_hideout",
       "name": "远古藏身处",
       "desc": "Theresmore 敌点。等级 1，侦察 5。",
+      "found": [
+        12,
+        13
+      ],
+      "discoverRequires": [],
       "power": 11,
       "duration": 48,
       "costs": {
@@ -17623,8 +17865,19 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_ancient_lighthouse",
+      "sourceId": "ancient_lighthouse",
       "name": "远古灯塔",
       "desc": "Theresmore 敌点。等级 5，侦察 45。",
+      "found": [
+        16
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "explore_sorrounding",
+          "value": 1
+        }
+      ],
       "power": 4046,
       "duration": 120,
       "costs": {
@@ -17635,18 +17888,23 @@ window.THERESMORE_PACK = {
         "gold": 240
       },
       "unlocks": [],
-      "requires": [
+      "requires": []
+    },
+    {
+      "id": "enemy_ancient_ruin",
+      "sourceId": "ancient_ruin",
+      "name": "远古遗迹",
+      "desc": "Theresmore 敌点。等级 5，侦察 45。",
+      "found": [
+        14
+      ],
+      "discoverRequires": [
         {
           "type": "tech",
           "id": "explore_sorrounding",
           "value": 1
         }
-      ]
-    },
-    {
-      "id": "enemy_ancient_ruin",
-      "name": "远古遗迹",
-      "desc": "Theresmore 敌点。等级 5，侦察 45。",
+      ],
       "power": 2979,
       "duration": 120,
       "costs": {
@@ -17657,18 +17915,23 @@ window.THERESMORE_PACK = {
         "light": 1
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "explore_sorrounding",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_dark_knight_patrol",
+      "sourceId": "dark_knight_patrol",
       "name": "黑暗骑士巡逻队",
       "desc": "Theresmore 敌点。等级 6，侦察 55。",
+      "found": [
+        32
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "dark_land",
+          "value": 1
+        }
+      ],
       "power": 8281,
       "duration": 138,
       "costs": {
@@ -17679,18 +17942,23 @@ window.THERESMORE_PACK = {
         "lumix": 12
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "dark_land",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_dark_village",
+      "sourceId": "dark_village",
       "name": "黑暗村庄",
       "desc": "Theresmore 敌点。等级 6，侦察 45。",
+      "found": [
+        35
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "explore_sorrounding",
+          "value": 1
+        }
+      ],
       "power": 3035,
       "duration": 138,
       "costs": {
@@ -17701,18 +17969,23 @@ window.THERESMORE_PACK = {
         "light": 1
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "explore_sorrounding",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_ball_lightning_field",
+      "sourceId": "ball_lightning_field",
       "name": "球形闪电场",
       "desc": "Theresmore 敌点。等级 2，侦察 32。",
+      "found": [
+        29
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "new_world_exploration",
+          "value": 1
+        }
+      ],
       "power": 193,
       "duration": 66,
       "costs": {
@@ -17723,18 +17996,18 @@ window.THERESMORE_PACK = {
         "mana": 120
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "new_world_exploration",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_bandit_camp",
+      "sourceId": "bandit_camp",
       "name": "强盗营地",
       "desc": "Theresmore 敌点。等级 1，侦察 2。",
+      "found": [
+        3,
+        4
+      ],
+      "discoverRequires": [],
       "power": 6,
       "duration": 48,
       "costs": {
@@ -17749,8 +18022,13 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_barbarian_camp",
+      "sourceId": "barbarian_camp",
       "name": "野蛮人营地",
       "desc": "Theresmore 敌点。等级 1，侦察 7。",
+      "found": [
+        2
+      ],
+      "discoverRequires": [],
       "power": 30,
       "duration": 48,
       "costs": {
@@ -17765,8 +18043,19 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_barbarian_village",
+      "sourceId": "barbarian_village",
       "name": "野蛮人村庄",
       "desc": "Theresmore 敌点。等级 2，侦察 16。",
+      "found": [
+        7
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "tamed_barbarian",
+          "value": 1
+        }
+      ],
       "power": 90,
       "duration": 66,
       "costs": {
@@ -17778,18 +18067,17 @@ window.THERESMORE_PACK = {
         "iron": 36
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "tamed_barbarian",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_barren_hills",
+      "sourceId": "barren_hills",
       "name": "荒山",
       "desc": "Theresmore 敌点。等级 2，侦察 13。",
+      "found": [
+        5
+      ],
+      "discoverRequires": [],
       "power": 57,
       "duration": 66,
       "costs": {
@@ -17805,8 +18093,13 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_basilisk_cave",
+      "sourceId": "basilisk_cave",
       "name": "蛇怪洞穴",
       "desc": "Theresmore 敌点。等级 2，侦察 12。",
+      "found": [
+        6
+      ],
+      "discoverRequires": [],
       "power": 33,
       "duration": 66,
       "costs": {
@@ -17822,8 +18115,13 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_burning_pit",
+      "sourceId": "burning_pit",
       "name": "燃烧深坑",
       "desc": "Theresmore 敌点。等级 2，侦察 8。",
+      "found": [
+        8
+      ],
+      "discoverRequires": [],
       "power": 16,
       "duration": 66,
       "costs": {
@@ -17838,8 +18136,13 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_black_mage_tower",
+      "sourceId": "black_mage_tower",
       "name": "黑魔法塔",
       "desc": "Theresmore 敌点。等级 2，侦察 20。",
+      "found": [
+        39
+      ],
+      "discoverRequires": [],
       "power": 44,
       "duration": 66,
       "costs": {
@@ -17855,8 +18158,13 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_bugbear_tribe",
+      "sourceId": "bugbear_tribe",
       "name": "熊地精部落",
       "desc": "Theresmore 敌点。等级 2，侦察 8。",
+      "found": [
+        9
+      ],
+      "discoverRequires": [],
       "power": 35,
       "duration": 66,
       "costs": {
@@ -17871,8 +18179,20 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_bugbear_war_party",
+      "sourceId": "bugbear_war_party",
       "name": "熊地精作战队",
       "desc": "Theresmore 敌点。等级 4，侦察 32。",
+      "found": [
+        9,
+        10
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "long_expedition",
+          "value": 1
+        }
+      ],
       "power": 235,
       "duration": 102,
       "costs": {
@@ -17883,18 +18203,23 @@ window.THERESMORE_PACK = {
         "wood": 240
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "long_expedition",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_church_abyss",
+      "sourceId": "church_abyss",
       "name": "深渊教堂",
       "desc": "Theresmore 敌点。等级 5，侦察 35。",
+      "found": [
+        24
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "explore_sorrounding",
+          "value": 1
+        }
+      ],
       "power": 4130,
       "duration": 120,
       "costs": {
@@ -17905,18 +18230,24 @@ window.THERESMORE_PACK = {
         "mana": 240
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "explore_sorrounding",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_citadel_dead",
+      "sourceId": "citadel_dead",
       "name": "亡者要塞",
       "desc": "Theresmore 敌点。等级 5，侦察 33。",
+      "found": [
+        20,
+        21
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "long_expedition",
+          "value": 1
+        }
+      ],
       "power": 444,
       "duration": 120,
       "costs": {
@@ -17928,18 +18259,23 @@ window.THERESMORE_PACK = {
         "saltpetre": 24
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "long_expedition",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_circle_necromancer",
+      "sourceId": "circle_necromancer",
       "name": "死灵法师之环",
       "desc": "Theresmore 敌点。等级 6，侦察 45。",
+      "found": [
+        31
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "explore_sorrounding",
+          "value": 1
+        }
+      ],
       "power": 4884,
       "duration": 138,
       "costs": {
@@ -17951,18 +18287,18 @@ window.THERESMORE_PACK = {
         "mana": 250
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "explore_sorrounding",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_construction_site",
+      "sourceId": "construction_site",
       "name": "建筑工地",
       "desc": "Theresmore 敌点。等级 2，侦察 12。",
+      "found": [
+        18,
+        19
+      ],
+      "discoverRequires": [],
       "power": 5,
       "duration": 66,
       "costs": {
@@ -17979,8 +18315,26 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_corrupted_lands",
+      "sourceId": "corrupted_lands",
       "name": "腐化之地",
       "desc": "Theresmore 敌点。等级 7，侦察 42。",
+      "found": [
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "black_artifact",
+          "value": 1
+        }
+      ],
       "power": 7298,
       "duration": 156,
       "costs": {
@@ -17991,18 +18345,23 @@ window.THERESMORE_PACK = {
         "food": 360
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "black_artifact",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_dark_pit",
+      "sourceId": "dark_pit",
       "name": "暗渊之阱",
       "desc": "Theresmore 敌点。等级 5，侦察 35。",
+      "found": [
+        18
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "explore_sorrounding",
+          "value": 1
+        }
+      ],
       "power": 1120,
       "duration": 120,
       "costs": {
@@ -18013,18 +18372,26 @@ window.THERESMORE_PACK = {
         "stone": 240
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "explore_sorrounding",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_desecrated_temple",
+      "sourceId": "desecrated_temple",
       "name": "亵渎神庙",
       "desc": "Theresmore 敌点。等级 4，侦察 45。",
+      "found": [
+        28,
+        29,
+        30,
+        31
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "temple_luna",
+          "value": 1
+        }
+      ],
       "power": 553,
       "duration": 102,
       "costs": {
@@ -18035,18 +18402,17 @@ window.THERESMORE_PACK = {
         "crystal": 24
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "temple_luna",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_deserters_den",
+      "sourceId": "deserters_den",
       "name": "逃兵巢穴",
       "desc": "Theresmore 敌点。等级 2，侦察 16。",
+      "found": [
+        10
+      ],
+      "discoverRequires": [],
       "power": 32,
       "duration": 66,
       "costs": {
@@ -18061,8 +18427,19 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_demoness_castle",
+      "sourceId": "demoness_castle",
       "name": "女恶魔城堡",
       "desc": "Theresmore 敌点。等级 5，侦察 40。",
+      "found": [
+        40
+      ],
+      "discoverRequires": [
+        {
+          "type": "prayer",
+          "id": "demoniac_tome",
+          "value": 1
+        }
+      ],
       "power": 200,
       "duration": 120,
       "costs": {
@@ -18073,18 +18450,17 @@ window.THERESMORE_PACK = {
         "mana": 240
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "prayer",
-          "id": "demoniac_tome",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_demonic_portal",
+      "sourceId": "demonic_portal",
       "name": "恶魔传送门",
       "desc": "Theresmore 敌点。等级 3，侦察 28。",
+      "found": [
+        11
+      ],
+      "discoverRequires": [],
       "power": 78,
       "duration": 84,
       "costs": {
@@ -18100,8 +18476,13 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_dense_oasis",
+      "sourceId": "dense_oasis",
       "name": "茂密的绿洲",
       "desc": "Theresmore 敌点。等级 5，侦察 48。",
+      "found": [
+        29
+      ],
+      "discoverRequires": [],
       "power": 2448,
       "duration": 120,
       "costs": {
@@ -18118,8 +18499,19 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_elder_dragon",
+      "sourceId": "elder_dragon",
       "name": "烬火灾主",
       "desc": "Theresmore 敌点。等级 9，侦察 99。",
+      "found": [
+        15
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "tyrant_ash",
+          "value": 1
+        }
+      ],
       "power": 258359,
       "duration": 192,
       "costs": {
@@ -18135,18 +18527,23 @@ window.THERESMORE_PACK = {
         "gem": 4
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "tyrant_ash",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_evil_abode",
+      "sourceId": "evil_abode",
       "name": "邪恶居所",
       "desc": "Theresmore 敌点。等级 5，侦察 35。",
+      "found": [
+        22
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "explore_sorrounding",
+          "value": 1
+        }
+      ],
       "power": 1194,
       "duration": 120,
       "costs": {
@@ -18157,18 +18554,23 @@ window.THERESMORE_PACK = {
         "faith": 240
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "explore_sorrounding",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_explore_desert",
+      "sourceId": "explore_desert",
       "name": "南火荒漠",
       "desc": "Theresmore 敌点。等级 6，侦察 55。",
+      "found": [
+        21
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "myth_south",
+          "value": 1
+        }
+      ],
       "power": 12040,
       "duration": 138,
       "costs": {
@@ -18181,18 +18583,23 @@ window.THERESMORE_PACK = {
         "wood": 240
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "myth_south",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_hell_hole",
+      "sourceId": "hell_hole",
       "name": "地狱之洞",
       "desc": "Theresmore 敌点。等级 4，侦察 42。",
+      "found": [
+        12
+      ],
+      "discoverRequires": [
+        {
+          "type": "prayer",
+          "id": "demonology",
+          "value": 1
+        }
+      ],
       "power": 323,
       "duration": 102,
       "costs": {
@@ -18205,18 +18612,23 @@ window.THERESMORE_PACK = {
         "crystal": 24
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "prayer",
-          "id": "demonology",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_gold_mine",
+      "sourceId": "gold_mine",
       "name": "金矿",
       "desc": "Theresmore 敌点。等级 5，侦察 55。",
+      "found": [
+        28
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "long_expedition",
+          "value": 1
+        }
+      ],
       "power": 1032,
       "duration": 120,
       "costs": {
@@ -18227,18 +18639,23 @@ window.THERESMORE_PACK = {
         "gold": 1800
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "long_expedition",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_king_reptiles",
+      "sourceId": "king_reptiles",
       "name": "爬行动物之王",
       "desc": "Theresmore 敌点。等级 4，侦察 22。",
+      "found": [
+        30
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "new_world_exploration",
+          "value": 1
+        }
+      ],
       "power": 624,
       "duration": 102,
       "costs": {
@@ -18250,18 +18667,23 @@ window.THERESMORE_PACK = {
         "stone": 240
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "new_world_exploration",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_fire_mage_domain",
+      "sourceId": "fire_mage_domain",
       "name": "火法师领域入口",
       "desc": "Theresmore 敌点。等级 7，侦察 70。",
+      "found": [
+        20
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "trail_fire",
+          "value": 1
+        }
+      ],
       "power": 26480,
       "duration": 156,
       "costs": {
@@ -18274,18 +18696,24 @@ window.THERESMORE_PACK = {
         "mana": 360
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "trail_fire",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_lost_valley",
+      "sourceId": "lost_valley",
       "name": "失落山谷",
       "desc": "Theresmore 敌点。等级 6，侦察 32。",
+      "found": [
+        33,
+        34
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "ancient_artifact",
+          "value": 1
+        }
+      ],
       "power": 6989,
       "duration": 138,
       "costs": {
@@ -18295,18 +18723,24 @@ window.THERESMORE_PACK = {
         "mana": 480
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "ancient_artifact",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_east_sacred_place",
+      "sourceId": "east_sacred_place",
       "name": "东部圣地",
       "desc": "Theresmore 敌点。等级 2，侦察 32。",
+      "found": [
+        13,
+        14
+      ],
+      "discoverRequires": [
+        {
+          "type": "prayer",
+          "id": "sacred_place",
+          "value": 1
+        }
+      ],
       "power": 167,
       "duration": 66,
       "costs": {
@@ -18317,18 +18751,23 @@ window.THERESMORE_PACK = {
         "mana": 120
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "prayer",
-          "id": "sacred_place",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_eternal_halls",
+      "sourceId": "eternal_halls",
       "name": "永恒大殿",
       "desc": "Theresmore 敌点。等级 3，侦察 30。",
+      "found": [
+        11
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "persuade_people",
+          "value": 1
+        }
+      ],
       "power": 680,
       "duration": 84,
       "costs": {
@@ -18339,18 +18778,42 @@ window.THERESMORE_PACK = {
         "crystal": 60
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "persuade_people",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_ettin_camp",
+      "sourceId": "ettin_camp",
       "name": "双头巨人营地",
       "desc": "Theresmore 敌点。等级 2，侦察 19。",
+      "found": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "aid_request",
+          "value": 1
+        }
+      ],
       "power": 108,
       "duration": 66,
       "costs": {
@@ -18361,18 +18824,23 @@ window.THERESMORE_PACK = {
         "food": 120
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "aid_request",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_ettin_enslaver",
+      "sourceId": "ettin_enslaver",
       "name": "双头巨人奴隶主",
       "desc": "Theresmore 敌点。等级 3，侦察 32。",
+      "found": [
+        22
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "new_world_exploration",
+          "value": 1
+        }
+      ],
       "power": 375,
       "duration": 84,
       "costs": {
@@ -18383,18 +18851,23 @@ window.THERESMORE_PACK = {
         "stone": 240
       },
       "unlocks": [],
-      "requires": [
+      "requires": []
+    },
+    {
+      "id": "enemy_earth_elemental_circle",
+      "sourceId": "earth_elemental_circle",
+      "name": "地之元素环",
+      "desc": "Theresmore 敌点。等级 3，侦察 32。",
+      "found": [
+        25
+      ],
+      "discoverRequires": [
         {
           "type": "tech",
           "id": "new_world_exploration",
           "value": 1
         }
-      ]
-    },
-    {
-      "id": "enemy_earth_elemental_circle",
-      "name": "地之元素环",
-      "desc": "Theresmore 敌点。等级 3，侦察 32。",
+      ],
       "power": 314,
       "duration": 84,
       "costs": {
@@ -18405,18 +18878,23 @@ window.THERESMORE_PACK = {
         "crystal": 60
       },
       "unlocks": [],
-      "requires": [
+      "requires": []
+    },
+    {
+      "id": "enemy_fire_elemental_circle",
+      "sourceId": "fire_elemental_circle",
+      "name": "火之元素环",
+      "desc": "Theresmore 敌点。等级 3，侦察 32。",
+      "found": [
+        23
+      ],
+      "discoverRequires": [
         {
           "type": "tech",
           "id": "new_world_exploration",
           "value": 1
         }
-      ]
-    },
-    {
-      "id": "enemy_fire_elemental_circle",
-      "name": "火之元素环",
-      "desc": "Theresmore 敌点。等级 3，侦察 32。",
+      ],
       "power": 297,
       "duration": 84,
       "costs": {
@@ -18427,18 +18905,23 @@ window.THERESMORE_PACK = {
         "crystal": 60
       },
       "unlocks": [],
-      "requires": [
+      "requires": []
+    },
+    {
+      "id": "enemy_frost_elemental_circle",
+      "sourceId": "frost_elemental_circle",
+      "name": "冰之元素环",
+      "desc": "Theresmore 敌点。等级 3，侦察 32。",
+      "found": [
+        24
+      ],
+      "discoverRequires": [
         {
           "type": "tech",
           "id": "new_world_exploration",
           "value": 1
         }
-      ]
-    },
-    {
-      "id": "enemy_frost_elemental_circle",
-      "name": "冰之元素环",
-      "desc": "Theresmore 敌点。等级 3，侦察 32。",
+      ],
       "power": 289,
       "duration": 84,
       "costs": {
@@ -18449,18 +18932,23 @@ window.THERESMORE_PACK = {
         "crystal": 60
       },
       "unlocks": [],
-      "requires": [
+      "requires": []
+    },
+    {
+      "id": "enemy_wind_elemental_circle",
+      "sourceId": "wind_elemental_circle",
+      "name": "风之元素环",
+      "desc": "Theresmore 敌点。等级 3，侦察 32。",
+      "found": [
+        23
+      ],
+      "discoverRequires": [
         {
           "type": "tech",
           "id": "new_world_exploration",
           "value": 1
         }
-      ]
-    },
-    {
-      "id": "enemy_wind_elemental_circle",
-      "name": "风之元素环",
-      "desc": "Theresmore 敌点。等级 3，侦察 32。",
+      ],
       "power": 334,
       "duration": 84,
       "costs": {
@@ -18471,18 +18959,23 @@ window.THERESMORE_PACK = {
         "crystal": 60
       },
       "unlocks": [],
-      "requires": [
+      "requires": []
+    },
+    {
+      "id": "enemy_fire_salamander_nest",
+      "sourceId": "fire_salamander_nest",
+      "name": "火蜥蜴巢穴",
+      "desc": "Theresmore 敌点。等级 4，侦察 11。",
+      "found": [
+        23
+      ],
+      "discoverRequires": [
         {
           "type": "tech",
           "id": "new_world_exploration",
           "value": 1
         }
-      ]
-    },
-    {
-      "id": "enemy_fire_salamander_nest",
-      "name": "火蜥蜴巢穴",
-      "desc": "Theresmore 敌点。等级 4，侦察 11。",
+      ],
       "power": 292,
       "duration": 102,
       "costs": {
@@ -18493,18 +18986,23 @@ window.THERESMORE_PACK = {
         "natronite": 60
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "new_world_exploration",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_galliard_mercenary_camp",
+      "sourceId": "galliard_mercenary_camp",
       "name": "加里亚德佣兵营地",
       "desc": "Theresmore 敌点。等级 4，侦察 27。",
+      "found": [
+        35
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "mercenary_bands",
+          "value": 1
+        }
+      ],
       "power": 44,
       "duration": 102,
       "costs": {
@@ -18515,18 +19013,23 @@ window.THERESMORE_PACK = {
         "iron": 72
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "mercenary_bands",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_giant_temple",
+      "sourceId": "giant_temple",
       "name": "巨型寺庙",
       "desc": "Theresmore 敌点。等级 3，侦察 27。",
+      "found": [
+        23
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "new_world_exploration",
+          "value": 1
+        }
+      ],
       "power": 125,
       "duration": 84,
       "costs": {
@@ -18537,18 +19040,23 @@ window.THERESMORE_PACK = {
         "mana": 120
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "new_world_exploration",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_gloomy_werewolf_forest",
+      "sourceId": "gloomy_werewolf_forest",
       "name": "阴暗狼人之森",
       "desc": "Theresmore 敌点。等级 4，侦察 5。",
+      "found": [
+        19
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "monster_hunting",
+          "value": 1
+        }
+      ],
       "power": 251,
       "duration": 102,
       "costs": {
@@ -18560,18 +19068,18 @@ window.THERESMORE_PACK = {
         "supplies": 36
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "monster_hunting",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_goblin_lair",
+      "sourceId": "goblin_lair",
       "name": "地精巢穴",
       "desc": "Theresmore 敌点。等级 1，侦察 2。",
+      "found": [
+        15,
+        16
+      ],
+      "discoverRequires": [],
       "power": 9,
       "duration": 48,
       "costs": {
@@ -18586,8 +19094,19 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_goblin_workshop",
+      "sourceId": "goblin_workshop",
       "name": "地精工坊",
       "desc": "Theresmore 敌点。等级 2，侦察 8。",
+      "found": [
+        14
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "supervisor",
+          "value": 1
+        }
+      ],
       "power": 25,
       "duration": 66,
       "costs": {
@@ -18597,18 +19116,23 @@ window.THERESMORE_PACK = {
         "queue_slot": 1
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "supervisor",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_gorgon_cave",
+      "sourceId": "gorgon_cave",
       "name": "蛇发女妖巢穴",
       "desc": "Theresmore 敌点。等级 3，侦察 5。",
+      "found": [
+        17
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "monster_hunting",
+          "value": 1
+        }
+      ],
       "power": 287,
       "duration": 84,
       "costs": {
@@ -18621,18 +19145,17 @@ window.THERESMORE_PACK = {
         "mana": 120
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "monster_hunting",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_gnoll_raiding_party",
+      "sourceId": "gnoll_raiding_party",
       "name": "豺狼人突袭队",
       "desc": "Theresmore 敌点。等级 2，侦察 8。",
+      "found": [
+        17
+      ],
+      "discoverRequires": [],
       "power": 25,
       "duration": 66,
       "costs": {
@@ -18647,8 +19170,20 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_gnoll_camp",
+      "sourceId": "gnoll_camp",
       "name": "豺狼人营地",
       "desc": "Theresmore 敌点。等级 4，侦察 37。",
+      "found": [
+        17,
+        18
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "long_expedition",
+          "value": 1
+        }
+      ],
       "power": 180,
       "duration": 102,
       "costs": {
@@ -18659,18 +19194,17 @@ window.THERESMORE_PACK = {
         "tools": 120
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "long_expedition",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_golem_cave",
+      "sourceId": "golem_cave",
       "name": "魔像洞穴",
       "desc": "Theresmore 敌点。等级 2，侦察 15。",
+      "found": [
+        21
+      ],
+      "discoverRequires": [],
       "power": 64,
       "duration": 66,
       "costs": {
@@ -18686,8 +19220,19 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_gulud_ugdun",
+      "sourceId": "gulud_ugdun",
       "name": "古鲁德·乌格顿城堡",
       "desc": "Theresmore 敌点。等级 5，侦察 25。",
+      "found": [
+        37
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "path_children",
+          "value": 1
+        }
+      ],
       "power": 1895,
       "duration": 120,
       "costs": {
@@ -18699,18 +19244,17 @@ window.THERESMORE_PACK = {
         "crystal": 60
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "path_children",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_harpy_nest",
+      "sourceId": "harpy_nest",
       "name": "鹰身女妖巢穴",
       "desc": "Theresmore 敌点。等级 2，侦察 8。",
+      "found": [
+        18
+      ],
+      "discoverRequires": [],
       "power": 28,
       "duration": 66,
       "costs": {
@@ -18726,8 +19270,13 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_haunted_library",
+      "sourceId": "haunted_library",
       "name": "闹鬼图书馆",
       "desc": "Theresmore 敌点。等级 1，侦察 4。",
+      "found": [
+        5
+      ],
+      "discoverRequires": [],
       "power": 8,
       "duration": 48,
       "costs": {
@@ -18741,8 +19290,13 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_hobgoblin_encampment",
+      "sourceId": "hobgoblin_encampment",
       "name": "淘气鬼营地",
       "desc": "Theresmore 敌点。等级 2，侦察 7。",
+      "found": [
+        19
+      ],
+      "discoverRequires": [],
       "power": 32,
       "duration": 66,
       "costs": {
@@ -18757,8 +19311,19 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_hobgoblin_chieftain",
+      "sourceId": "hobgoblin_chieftain",
       "name": "淘气鬼酋长",
       "desc": "Theresmore 敌点。等级 3，侦察 21。",
+      "found": [
+        32
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "guild",
+          "value": 1
+        }
+      ],
       "power": 164,
       "duration": 84,
       "costs": {
@@ -18770,18 +19335,23 @@ window.THERESMORE_PACK = {
         "steel": 60
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "guild",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_hobgoblin_forge",
+      "sourceId": "hobgoblin_forge",
       "name": "淘气鬼锻炉",
       "desc": "Theresmore 敌点。等级 4，侦察 22。",
+      "found": [
+        16
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "efficient_bureaucrats",
+          "value": 1
+        }
+      ],
       "power": 267,
       "duration": 102,
       "costs": {
@@ -18791,18 +19361,23 @@ window.THERESMORE_PACK = {
         "queue_slot": 1
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "efficient_bureaucrats",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_hydra_pit",
+      "sourceId": "hydra_pit",
       "name": "多头蛇之坑",
       "desc": "Theresmore 敌点。等级 4，侦察 5。",
+      "found": [
+        18
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "monster_hunting",
+          "value": 1
+        }
+      ],
       "power": 406,
       "duration": 102,
       "costs": {
@@ -18815,18 +19390,23 @@ window.THERESMORE_PACK = {
         "crystal": 36
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "monster_hunting",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_immense_door_e",
+      "sourceId": "immense_door_e",
       "name": "巨门",
       "desc": "Theresmore 敌点。等级 4，侦察 5。",
+      "found": [
+        19
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "kobu_dominion",
+          "value": 1
+        }
+      ],
       "power": 6012,
       "duration": 102,
       "costs": {
@@ -18836,18 +19416,23 @@ window.THERESMORE_PACK = {
         "fame": 50
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "kobu_dominion",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_lead_golem_mine",
+      "sourceId": "lead_golem_mine",
       "name": "铅魔像矿井",
       "desc": "Theresmore 敌点。等级 3，侦察 28。",
+      "found": [
+        31
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "new_world_exploration",
+          "value": 1
+        }
+      ],
       "power": 320,
       "duration": 84,
       "costs": {
@@ -18858,18 +19443,19 @@ window.THERESMORE_PACK = {
         "iron": 120
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "new_world_exploration",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_leprechaun_den",
+      "sourceId": "leprechaun_den",
       "name": "小矮妖巢穴",
       "desc": "Theresmore 敌点。等级 2，侦察 11。",
+      "found": [
+        37,
+        38,
+        39
+      ],
+      "discoverRequires": [],
       "power": 140,
       "duration": 66,
       "costs": {
@@ -18884,8 +19470,19 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_lich_temple",
+      "sourceId": "lich_temple",
       "name": "巫妖寺庙",
       "desc": "Theresmore 敌点。等级 4，侦察 31。",
+      "found": [
+        19
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "necromancy",
+          "value": 1
+        }
+      ],
       "power": 115,
       "duration": 102,
       "costs": {
@@ -18897,18 +19494,23 @@ window.THERESMORE_PACK = {
         "mana": 120
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "necromancy",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_lonely_ent_e",
+      "sourceId": "lonely_ent_e",
       "name": "沼泽树人",
       "desc": "Theresmore 敌点。等级 5，侦察 5。",
+      "found": [
+        29
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "drive_away_ent",
+          "value": 1
+        }
+      ],
       "power": 700,
       "duration": 120,
       "costs": {
@@ -18920,18 +19522,23 @@ window.THERESMORE_PACK = {
         "wood": 1800
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "drive_away_ent",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_kobold_city",
+      "sourceId": "kobold_city",
       "name": "狗头人之城",
       "desc": "Theresmore 敌点。等级 3，侦察 18。",
+      "found": [
+        14
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "underground_kobold_mission",
+          "value": 1
+        }
+      ],
       "power": 45,
       "duration": 84,
       "costs": {
@@ -18943,18 +19550,17 @@ window.THERESMORE_PACK = {
         "food": 120
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "underground_kobold_mission",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_kobold_underground_tunnels",
+      "sourceId": "kobold_underground_tunnels",
       "name": "狗头人隧道",
       "desc": "Theresmore 敌点。等级 2，侦察 9。",
+      "found": [
+        20
+      ],
+      "discoverRequires": [],
       "power": 17,
       "duration": 66,
       "costs": {
@@ -18970,8 +19576,13 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_kobold_stash",
+      "sourceId": "kobold_stash",
       "name": "狗头人藏匿处",
       "desc": "Theresmore 敌点。等级 2，侦察 9。",
+      "found": [
+        11
+      ],
+      "discoverRequires": [],
       "power": 12,
       "duration": 66,
       "costs": {
@@ -18985,8 +19596,13 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_korrigan_dolmen",
+      "sourceId": "korrigan_dolmen",
       "name": "科里根矮妖石屋",
       "desc": "Theresmore 敌点。等级 1，侦察 3。",
+      "found": [
+        7
+      ],
+      "discoverRequires": [],
       "power": 10,
       "duration": 48,
       "costs": {
@@ -19001,8 +19617,19 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_markanat_forest",
+      "sourceId": "markanat_forest",
       "name": "玛卡纳特森林",
       "desc": "Theresmore 敌点。等级 4，侦察 12。",
+      "found": [
+        22
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "long_expedition",
+          "value": 1
+        }
+      ],
       "power": 359,
       "duration": 102,
       "costs": {
@@ -19013,18 +19640,23 @@ window.THERESMORE_PACK = {
         "wood": 240
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "long_expedition",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_minotaur_maze",
+      "sourceId": "minotaur_maze",
       "name": "牛头怪迷宫",
       "desc": "Theresmore 敌点。等级 4，侦察 5。",
+      "found": [
+        20
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "monster_hunting",
+          "value": 1
+        }
+      ],
       "power": 330,
       "duration": 102,
       "costs": {
@@ -19037,18 +19669,17 @@ window.THERESMORE_PACK = {
         "steel": 60
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "monster_hunting",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_mountain_cave",
+      "sourceId": "mountain_cave",
       "name": "山岭洞穴",
       "desc": "Theresmore 敌点。等级 3，侦察 17。",
+      "found": [
+        22
+      ],
+      "discoverRequires": [],
       "power": 51,
       "duration": 84,
       "costs": {
@@ -19064,8 +19695,19 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_mountain_valley",
+      "sourceId": "mountain_valley",
       "name": "山中之谷",
       "desc": "Theresmore 敌点。等级 4，侦察 50。",
+      "found": [
+        29
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "long_expedition",
+          "value": 1
+        }
+      ],
       "power": 586,
       "duration": 102,
       "costs": {
@@ -19077,18 +19719,17 @@ window.THERESMORE_PACK = {
         "wood": 240
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "long_expedition",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_naga_nest",
+      "sourceId": "naga_nest",
       "name": "娜迦老巢",
       "desc": "Theresmore 敌点。等级 2，侦察 8。",
+      "found": [
+        23
+      ],
+      "discoverRequires": [],
       "power": 26,
       "duration": 66,
       "costs": {
@@ -19103,8 +19744,19 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_djinn_palace",
+      "sourceId": "djinn_palace",
       "name": "灯神宫殿",
       "desc": "Theresmore 敌点。等级 4，侦察 32。",
+      "found": [
+        25
+      ],
+      "discoverRequires": [
+        {
+          "type": "prayer",
+          "id": "strange_lamp",
+          "value": 1
+        }
+      ],
       "power": 125,
       "duration": 102,
       "costs": {
@@ -19115,18 +19767,17 @@ window.THERESMORE_PACK = {
         "mana": 120
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "prayer",
-          "id": "strange_lamp",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_necromancer_crypt",
+      "sourceId": "necromancer_crypt",
       "name": "死灵法师地穴",
       "desc": "Theresmore 敌点。等级 3，侦察 14。",
+      "found": [
+        26
+      ],
+      "discoverRequires": [],
       "power": 45,
       "duration": 84,
       "costs": {
@@ -19142,8 +19793,19 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_north_sacred_place",
+      "sourceId": "north_sacred_place",
       "name": "北部圣地",
       "desc": "Theresmore 敌点。等级 3，侦察 32。",
+      "found": [
+        27
+      ],
+      "discoverRequires": [
+        {
+          "type": "prayer",
+          "id": "sacred_place",
+          "value": 1
+        }
+      ],
       "power": 145,
       "duration": 84,
       "costs": {
@@ -19154,18 +19816,17 @@ window.THERESMORE_PACK = {
         "mana": 120
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "prayer",
-          "id": "sacred_place",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_mercenary_camp",
+      "sourceId": "mercenary_camp",
       "name": "佣兵营地",
       "desc": "Theresmore 敌点。等级 2，侦察 32。",
+      "found": [
+        28
+      ],
+      "discoverRequires": [],
       "power": 6,
       "duration": 66,
       "costs": {
@@ -19180,8 +19841,19 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_mercenary_village",
+      "sourceId": "mercenary_village",
       "name": "佣兵村庄",
       "desc": "Theresmore 敌点。等级 5，侦察 34。",
+      "found": [
+        23
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "logistics_office",
+          "value": 1
+        }
+      ],
       "power": 120,
       "duration": 120,
       "costs": {
@@ -19191,18 +19863,17 @@ window.THERESMORE_PACK = {
         "queue_slot": 1
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "logistics_office",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_myconid_cavern",
+      "sourceId": "myconid_cavern",
       "name": "蕈人洞穴",
       "desc": "Theresmore 敌点。等级 2，侦察 14。",
+      "found": [
+        29
+      ],
+      "discoverRequires": [],
       "power": 45,
       "duration": 66,
       "costs": {
@@ -19217,8 +19888,14 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_old_herd",
+      "sourceId": "old_herd",
       "name": "老草场",
       "desc": "Theresmore 敌点。等级 1，侦察 4。",
+      "found": [
+        28,
+        29
+      ],
+      "discoverRequires": [],
       "power": 4,
       "duration": 48,
       "costs": {
@@ -19233,8 +19910,15 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_old_storage_room",
+      "sourceId": "old_storage_room",
       "name": "旧贮藏室",
       "desc": "Theresmore 敌点。等级 1，侦察 4。",
+      "found": [
+        29,
+        30,
+        31
+      ],
+      "discoverRequires": [],
       "power": 3,
       "duration": 48,
       "costs": {
@@ -19249,8 +19933,21 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_orc_gormiak_citadel",
+      "sourceId": "orc_gormiak_citadel",
       "name": "兽人戈米亚克堡垒",
       "desc": "Theresmore 敌点。等级 5，侦察 45。",
+      "found": [
+        7,
+        8,
+        9
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "orcish_citadel",
+          "value": 1
+        }
+      ],
       "power": 2800,
       "duration": 120,
       "costs": {
@@ -19261,18 +19958,24 @@ window.THERESMORE_PACK = {
         "steel": 120
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "orcish_citadel",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_orc_horith_citadel",
+      "sourceId": "orc_horith_citadel",
       "name": "兽人霍里斯堡垒",
       "desc": "Theresmore 敌点。等级 5，侦察 50。",
+      "found": [
+        10,
+        11
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "mankind_darkest",
+          "value": 1
+        }
+      ],
       "power": 5243,
       "duration": 120,
       "costs": {
@@ -19283,18 +19986,24 @@ window.THERESMORE_PACK = {
         "crystal": 60
       },
       "unlocks": [],
-      "requires": [
+      "requires": []
+    },
+    {
+      "id": "enemy_orc_ogsog_citadel",
+      "sourceId": "orc_ogsog_citadel",
+      "name": "兽人奥索格堡垒",
+      "desc": "Theresmore 敌点。等级 5，侦察 50。",
+      "found": [
+        12,
+        13
+      ],
+      "discoverRequires": [
         {
           "type": "tech",
           "id": "mankind_darkest",
           "value": 1
         }
-      ]
-    },
-    {
-      "id": "enemy_orc_ogsog_citadel",
-      "name": "兽人奥索格堡垒",
-      "desc": "Theresmore 敌点。等级 5，侦察 50。",
+      ],
       "power": 3018,
       "duration": 120,
       "costs": {
@@ -19305,18 +20014,24 @@ window.THERESMORE_PACK = {
         "supplies": 120
       },
       "unlocks": [],
-      "requires": [
+      "requires": []
+    },
+    {
+      "id": "enemy_orc_turgon_citadel",
+      "sourceId": "orc_turgon_citadel",
+      "name": "兽人图尔冈堡垒",
+      "desc": "Theresmore 敌点。等级 5，侦察 50。",
+      "found": [
+        14,
+        15
+      ],
+      "discoverRequires": [
         {
           "type": "tech",
           "id": "mankind_darkest",
           "value": 1
         }
-      ]
-    },
-    {
-      "id": "enemy_orc_turgon_citadel",
-      "name": "兽人图尔冈堡垒",
-      "desc": "Theresmore 敌点。等级 5，侦察 50。",
+      ],
       "power": 2854,
       "duration": 120,
       "costs": {
@@ -19327,18 +20042,25 @@ window.THERESMORE_PACK = {
         "stone": 360
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "mankind_darkest",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_orc_raiding_party",
+      "sourceId": "orc_raiding_party",
       "name": "兽人突袭队",
       "desc": "Theresmore 敌点。等级 5，侦察 34。",
+      "found": [
+        4,
+        5,
+        6
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "orcish_threat",
+          "value": 1
+        }
+      ],
       "power": 1464,
       "duration": 120,
       "costs": {
@@ -19348,18 +20070,25 @@ window.THERESMORE_PACK = {
         "gold": 240
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "orcish_threat",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_orcish_prison_camp",
+      "sourceId": "orcish_prison_camp",
       "name": "兽人集中营",
       "desc": "Theresmore 敌点。等级 5，侦察 34。",
+      "found": [
+        1,
+        2,
+        3
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "burned_farms",
+          "value": 1
+        }
+      ],
       "power": 1800,
       "duration": 120,
       "costs": {
@@ -19367,18 +20096,17 @@ window.THERESMORE_PACK = {
       },
       "rewards": {},
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "burned_farms",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_raider_hideout",
+      "sourceId": "raider_hideout",
       "name": "掠夺者藏身处",
       "desc": "Theresmore 敌点。等级 2，侦察 11。",
+      "found": [
+        22
+      ],
+      "discoverRequires": [],
       "power": 118,
       "duration": 66,
       "costs": {
@@ -19393,8 +20121,14 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_rusted_warehouse",
+      "sourceId": "rusted_warehouse",
       "name": "生锈仓库",
       "desc": "Theresmore 敌点。等级 2，侦察 8。",
+      "found": [
+        31,
+        32
+      ],
+      "discoverRequires": [],
       "power": 14,
       "duration": 66,
       "costs": {
@@ -19412,8 +20146,19 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_save_damned",
+      "sourceId": "save_damned",
       "name": "拯救受诅者",
       "desc": "Theresmore 敌点。等级 4，侦察 45。",
+      "found": [
+        31
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "explore_sorrounding",
+          "value": 1
+        }
+      ],
       "power": 1413,
       "duration": 102,
       "costs": {
@@ -19424,18 +20169,23 @@ window.THERESMORE_PACK = {
         "light": 1
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "explore_sorrounding",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_sleeping_titan",
+      "sourceId": "sleeping_titan",
       "name": "沉眠的泰坦",
       "desc": "Theresmore 敌点。等级 7，侦察 1。",
+      "found": [
+        38
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "titan_mosaic",
+          "value": 1
+        }
+      ],
       "power": 7096,
       "duration": 156,
       "costs": {
@@ -19445,18 +20195,24 @@ window.THERESMORE_PACK = {
         "fame": 150
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "titan_mosaic",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_skullface_encampment",
+      "sourceId": "skullface_encampment",
       "name": "骷髅脸营地",
       "desc": "Theresmore 敌点。等级 3，侦察 13。",
+      "found": [
+        1,
+        2
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "bandit_chief",
+          "value": 1
+        }
+      ],
       "power": 58,
       "duration": 84,
       "costs": {
@@ -19468,18 +20224,19 @@ window.THERESMORE_PACK = {
         "food": 120
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "bandit_chief",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_smuggler_warehouse",
+      "sourceId": "smuggler_warehouse",
       "name": "走私者仓库",
       "desc": "Theresmore 敌点。等级 4，侦察 31。",
+      "found": [
+        35,
+        36,
+        37
+      ],
+      "discoverRequires": [],
       "power": 80,
       "duration": 102,
       "costs": {
@@ -19495,8 +20252,13 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_snakes_nest",
+      "sourceId": "snakes_nest",
       "name": "蛇穴",
       "desc": "Theresmore 敌点。等级 2，侦察 8。",
+      "found": [
+        30
+      ],
+      "discoverRequires": [],
       "power": 16,
       "duration": 66,
       "costs": {
@@ -19511,8 +20273,13 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_spider_forest",
+      "sourceId": "spider_forest",
       "name": "蜘蛛森林",
       "desc": "Theresmore 敌点。等级 2，侦察 13。",
+      "found": [
+        31
+      ],
+      "discoverRequires": [],
       "power": 28,
       "duration": 66,
       "costs": {
@@ -19527,8 +20294,19 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_son_atamar",
+      "sourceId": "son_atamar",
       "name": "阿塔玛之子",
       "desc": "Theresmore 敌点。等级 3，侦察 32。",
+      "found": [
+        21
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "deserter_origin",
+          "value": 1
+        }
+      ],
       "power": 180,
       "duration": 84,
       "costs": {
@@ -19540,18 +20318,17 @@ window.THERESMORE_PACK = {
         "supplies": 24
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "deserter_origin",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_strange_village",
+      "sourceId": "strange_village",
       "name": "奇怪的村庄",
       "desc": "Theresmore 敌点。等级 2，侦察 17。",
+      "found": [
+        32
+      ],
+      "discoverRequires": [],
       "power": 33,
       "duration": 66,
       "costs": {
@@ -19563,8 +20340,20 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_south_sacred_place",
+      "sourceId": "south_sacred_place",
       "name": "南部圣地",
       "desc": "Theresmore 敌点。等级 3，侦察 32。",
+      "found": [
+        33,
+        34
+      ],
+      "discoverRequires": [
+        {
+          "type": "prayer",
+          "id": "sacred_place",
+          "value": 1
+        }
+      ],
       "power": 149,
       "duration": 84,
       "costs": {
@@ -19575,18 +20364,23 @@ window.THERESMORE_PACK = {
         "mana": 120
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "prayer",
-          "id": "sacred_place",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_succubus_library",
+      "sourceId": "succubus_library",
       "name": "魅魔黑暗图书馆",
       "desc": "Theresmore 敌点。等级 4，侦察 29。",
+      "found": [
+        33
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "new_world_exploration",
+          "value": 1
+        }
+      ],
       "power": 489,
       "duration": 102,
       "costs": {
@@ -19597,18 +20391,23 @@ window.THERESMORE_PACK = {
         "crystal": 50
       },
       "unlocks": [],
-      "requires": [
+      "requires": []
+    },
+    {
+      "id": "enemy_swarm_wasp",
+      "sourceId": "swarm_wasp",
+      "name": "巨黄蜂群落",
+      "desc": "Theresmore 敌点。等级 4，侦察 10。",
+      "found": [
+        29
+      ],
+      "discoverRequires": [
         {
           "type": "tech",
           "id": "new_world_exploration",
           "value": 1
         }
-      ]
-    },
-    {
-      "id": "enemy_swarm_wasp",
-      "name": "巨黄蜂群落",
-      "desc": "Theresmore 敌点。等级 4，侦察 10。",
+      ],
       "power": 594,
       "duration": 102,
       "costs": {
@@ -19618,18 +20417,17 @@ window.THERESMORE_PACK = {
         "supplies": 24
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "new_world_exploration",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_temple_gargoyle",
+      "sourceId": "temple_gargoyle",
       "name": "石像鬼寺庙",
       "desc": "Theresmore 敌点。等级 2，侦察 7。",
+      "found": [
+        32
+      ],
+      "discoverRequires": [],
       "power": 41,
       "duration": 66,
       "costs": {
@@ -19644,8 +20442,13 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_troll_cave",
+      "sourceId": "troll_cave",
       "name": "巨魔洞穴",
       "desc": "Theresmore 敌点。等级 2，侦察 8。",
+      "found": [
+        35
+      ],
+      "discoverRequires": [],
       "power": 34,
       "duration": 66,
       "costs": {
@@ -19660,8 +20463,20 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_west_sacred_place",
+      "sourceId": "west_sacred_place",
       "name": "西部圣地",
       "desc": "Theresmore 敌点。等级 3，侦察 32。",
+      "found": [
+        37,
+        38
+      ],
+      "discoverRequires": [
+        {
+          "type": "prayer",
+          "id": "sacred_place",
+          "value": 1
+        }
+      ],
       "power": 157,
       "duration": 84,
       "costs": {
@@ -19672,18 +20487,17 @@ window.THERESMORE_PACK = {
         "mana": 120
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "prayer",
-          "id": "sacred_place",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_wolf_pack",
+      "sourceId": "wolf_pack",
       "name": "狼群",
       "desc": "Theresmore 敌点。等级 1，侦察 2。",
+      "found": [
+        24
+      ],
+      "discoverRequires": [],
       "power": 7,
       "duration": 48,
       "costs": {
@@ -19697,8 +20511,19 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_worn_down_crypt",
+      "sourceId": "worn_down_crypt",
       "name": "破旧的地穴",
       "desc": "Theresmore 敌点。等级 3，侦察 14。",
+      "found": [
+        37
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "guild",
+          "value": 1
+        }
+      ],
       "power": 232,
       "duration": 84,
       "costs": {
@@ -19708,18 +20533,23 @@ window.THERESMORE_PACK = {
         "research": 120
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "guild",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_huge_cave",
+      "sourceId": "huge_cave",
       "name": "巨大洞穴",
       "desc": "Theresmore 敌点。等级 5，侦察 26。",
+      "found": [
+        11
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "underground_library",
+          "value": 1
+        }
+      ],
       "power": 435,
       "duration": 120,
       "costs": {
@@ -19729,18 +20559,17 @@ window.THERESMORE_PACK = {
         "research": 180
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "underground_library",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_wyvern_nest",
+      "sourceId": "wyvern_nest",
       "name": "双足飞龙巢穴",
       "desc": "Theresmore 敌点。等级 2，侦察 12。",
+      "found": [
+        36
+      ],
+      "discoverRequires": [],
       "power": 64,
       "duration": 66,
       "costs": {
@@ -19755,8 +20584,40 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_cave_bats",
+      "sourceId": "cave_bats",
       "name": "蝙蝠洞穴",
       "desc": "Theresmore 敌点。等级 1，侦察 1。",
+      "found": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+      ],
+      "discoverRequires": [],
       "power": 1,
       "duration": 48,
       "costs": {
@@ -19771,8 +20632,44 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_kobold_looters",
+      "sourceId": "kobold_looters",
       "name": "狗头人掠夺者",
       "desc": "Theresmore 敌点。等级 1，侦察 1。",
+      "found": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32
+      ],
+      "discoverRequires": [],
       "power": 1,
       "duration": 48,
       "costs": {
@@ -19786,8 +20683,40 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_nasty_pillagers",
+      "sourceId": "nasty_pillagers",
       "name": "肮脏的掠夺者",
       "desc": "Theresmore 敌点。等级 1，侦察 1。",
+      "found": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32
+      ],
+      "discoverRequires": [],
       "power": 2,
       "duration": 48,
       "costs": {
@@ -19801,8 +20730,40 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_prisoner_wagon",
+      "sourceId": "prisoner_wagon",
       "name": "囚车",
       "desc": "Theresmore 敌点。等级 1，侦察 1。",
+      "found": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32
+      ],
+      "discoverRequires": [],
       "power": 2,
       "duration": 48,
       "costs": {
@@ -19814,8 +20775,40 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_rat_cellar",
+      "sourceId": "rat_cellar",
       "name": "老鼠地窖",
       "desc": "Theresmore 敌点。等级 1，侦察 1。",
+      "found": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32
+      ],
+      "discoverRequires": [],
       "power": 1,
       "duration": 48,
       "costs": {
@@ -19829,8 +20822,19 @@ window.THERESMORE_PACK = {
     },
     {
       "id": "enemy_necropolis",
+      "sourceId": "necropolis",
       "name": "大墓地",
       "desc": "Theresmore 敌点。等级 6，侦察 35。",
+      "found": [
+        33
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "explore_sorrounding",
+          "value": 1
+        }
+      ],
       "power": 2195,
       "duration": 138,
       "costs": {
@@ -19842,18 +20846,24 @@ window.THERESMORE_PACK = {
         "mana": 500
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "explore_sorrounding",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_vampire_crypt",
+      "sourceId": "vampire_crypt",
       "name": "吸血鬼地穴",
       "desc": "Theresmore 敌点。等级 4，侦察 35。",
+      "found": [
+        35,
+        36
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "long_expedition",
+          "value": 1
+        }
+      ],
       "power": 267,
       "duration": 102,
       "costs": {
@@ -19864,18 +20874,23 @@ window.THERESMORE_PACK = {
         "building_material": 24
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "long_expedition",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_vampire_lair",
+      "sourceId": "vampire_lair",
       "name": "吸血鬼老巢",
       "desc": "Theresmore 敌点。等级 4，侦察 32。",
+      "found": [
+        37
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "trail_blood",
+          "value": 1
+        }
+      ],
       "power": 561,
       "duration": 102,
       "costs": {
@@ -19887,18 +20902,33 @@ window.THERESMORE_PACK = {
         "supplies": 36
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "trail_blood",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_far_west_island",
+      "sourceId": "far_west_island",
       "name": "远西岛",
       "desc": "Theresmore 敌点。等级 1，侦察 10。",
+      "found": [
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        35,
+        36
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "seafaring",
+          "value": 1
+        }
+      ],
       "power": 5,
       "duration": 48,
       "costs": {
@@ -19908,18 +20938,23 @@ window.THERESMORE_PACK = {
         "fame": 10
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "seafaring",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_old_outpost",
+      "sourceId": "old_outpost",
       "name": "旧前哨",
       "desc": "Theresmore 敌点。等级 4，侦察 12。",
+      "found": [
+        34
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "free_old_outpost",
+          "value": 1
+        }
+      ],
       "power": 166,
       "duration": 102,
       "costs": {
@@ -19930,18 +20965,23 @@ window.THERESMORE_PACK = {
         "gold": 120
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "free_old_outpost",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_forgotten_shelter",
+      "sourceId": "forgotten_shelter",
       "name": "加里亚德的遗忘避难所",
       "desc": "Theresmore 敌点。等级 4，侦察 22。",
+      "found": [
+        36
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "galliard_secret",
+          "value": 1
+        }
+      ],
       "power": 275,
       "duration": 102,
       "costs": {
@@ -19952,18 +20992,23 @@ window.THERESMORE_PACK = {
         "research": 240
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "galliard_secret",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_ancient_giant",
+      "sourceId": "ancient_giant",
       "name": "远古巨人",
       "desc": "Theresmore 敌点。等级 5，侦察 31。",
+      "found": [
+        38
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "wings_freedom",
+          "value": 1
+        }
+      ],
       "power": 1883,
       "duration": 120,
       "costs": {
@@ -19974,18 +21019,27 @@ window.THERESMORE_PACK = {
         "saltpetre": 120
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "wings_freedom",
-          "value": 1
-        }
-      ]
+      "requires": []
     },
     {
       "id": "enemy_zombie_horde_small",
+      "sourceId": "zombie_horde_small",
       "name": "小型尸潮",
       "desc": "Theresmore 敌点。等级 4，侦察 35。",
+      "found": [
+        23,
+        24,
+        25,
+        26,
+        27
+      ],
+      "discoverRequires": [
+        {
+          "type": "tech",
+          "id": "explore_sorrounding",
+          "value": 1
+        }
+      ],
       "power": 483,
       "duration": 102,
       "costs": {
@@ -19995,18 +21049,23 @@ window.THERESMORE_PACK = {
         "light": 1
       },
       "unlocks": [],
-      "requires": [
+      "requires": []
+    },
+    {
+      "id": "enemy_zombie_horde_large",
+      "sourceId": "zombie_horde_large",
+      "name": "大型尸潮",
+      "desc": "Theresmore 敌点。等级 5，侦察 35。",
+      "found": [
+        24
+      ],
+      "discoverRequires": [
         {
           "type": "tech",
           "id": "explore_sorrounding",
           "value": 1
         }
-      ]
-    },
-    {
-      "id": "enemy_zombie_horde_large",
-      "name": "大型尸潮",
-      "desc": "Theresmore 敌点。等级 5，侦察 35。",
+      ],
       "power": 1533,
       "duration": 120,
       "costs": {
@@ -20017,18 +21076,23 @@ window.THERESMORE_PACK = {
         "light": 2
       },
       "unlocks": [],
-      "requires": [
+      "requires": []
+    },
+    {
+      "id": "enemy_zombie_horde_huge",
+      "sourceId": "zombie_horde_huge",
+      "name": "巨型尸潮",
+      "desc": "Theresmore 敌点。等级 6，侦察 35。",
+      "found": [
+        25
+      ],
+      "discoverRequires": [
         {
           "type": "tech",
           "id": "explore_sorrounding",
           "value": 1
         }
-      ]
-    },
-    {
-      "id": "enemy_zombie_horde_huge",
-      "name": "巨型尸潮",
-      "desc": "Theresmore 敌点。等级 6，侦察 35。",
+      ],
       "power": 3108,
       "duration": 138,
       "costs": {
@@ -20039,13 +21103,7 @@ window.THERESMORE_PACK = {
         "light": 3
       },
       "unlocks": [],
-      "requires": [
-        {
-          "type": "tech",
-          "id": "explore_sorrounding",
-          "value": 1
-        }
-      ]
+      "requires": []
     }
   ],
   "meta": {

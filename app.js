@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.10.2";
+const APP_VERSION = "0.10.4";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -57,6 +57,24 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.10.4",
+    date: "2026-07-10",
+    title: "远征发现逻辑",
+    notes: [
+      "远征敌点改为按 Theresmore 原版探索发现逻辑解锁，不再开局直接铺满全部敌点。",
+      "新增探索行动：侦察单位会消耗原版探索成本，按敌点 found 区间和 reqFound 前置发现可远征目标。",
+    ],
+  },
+  {
+    version: "0.10.3",
+    date: "2026-07-10",
+    title: "材料预览修复",
+    notes: [
+      "修复进度条改版后，鼠标悬停卡片时材料预览被卡片边界裁掉的问题。",
+      "进度条仍保持底部裁剪，预览卡片可以正常浮在卡片外层显示。",
+    ],
+  },
   {
     version: "0.10.2",
     date: "2026-07-09",
@@ -1823,6 +1841,7 @@ const defaultState = () => ({
   techs: [],
   jobs: defaultJobs(),
   army: {},
+  expeditionsFound: [],
   expeditionsDone: [],
   flags: {
     legacy: [],
@@ -1839,6 +1858,7 @@ const defaultState = () => ({
     built: 0,
     researched: 0,
     trained: 0,
+    scouted: 0,
     expeditions: 0,
     resourcesGained: 0,
   },
@@ -1955,6 +1975,7 @@ function completePendingAction() {
   if (action.action === "build") buyBuilding(action.id);
   if (action.action === "research") research(action.id);
   if (action.action === "train") trainUnit(action.id);
+  if (action.action === "scout") scoutExpedition();
   if (action.action === "expedition") startExpedition(action.id);
 }
 
@@ -1998,7 +2019,11 @@ function migrate(save) {
   save.jobs = { ...defaultState().jobs, ...(save.jobs || {}) };
   save.army = save.army || {};
   save.techs = Array.isArray(save.techs) ? save.techs : [];
+  save.expeditionsFound = Array.isArray(save.expeditionsFound) ? save.expeditionsFound : [];
   save.expeditionsDone = Array.isArray(save.expeditionsDone) ? save.expeditionsDone : [];
+  save.expeditionsDone.forEach((id) => {
+    if (!save.expeditionsFound.includes(id)) save.expeditionsFound.push(id);
+  });
   save.flags = {
     ...defaultState().flags,
     ...(save.flags || {}),
@@ -2347,11 +2372,48 @@ function hasAnyVisibleUnit(s = state) {
 }
 
 function hasAnyVisibleExpedition(s = state) {
-  return expeditions.some((expedition) => !expedition.unlocked || expedition.unlocked(s) || s.expeditionsDone?.includes(expedition.id));
+  return expeditionScoutUnits(s).length > 0 || expeditions.some((expedition) => isExpeditionVisible(expedition, s));
 }
 
 function isMilitaryUnlocked(s = state) {
   return activeDataPackMode === "theresmore" ? hasAnyVisibleUnit(s) || hasAnyVisibleExpedition(s) || armyCap(s) > 0 : hasTech(s, "watch");
+}
+
+function isExpeditionFound(item, s = state) {
+  return s.expeditionsFound?.includes(item.id) || s.expeditionsDone?.includes(item.id);
+}
+
+function isExpeditionDiscoverable(item, s = state) {
+  return (!item.discoverRequires || meetsRequirements(s, item.discoverRequires)) && (!item.unlocked || item.unlocked(s));
+}
+
+function isExpeditionVisible(item, s = state) {
+  if (activeDataPackMode !== "theresmore") return !item.unlocked || item.unlocked(s) || s.expeditionsDone?.includes(item.id);
+  return isExpeditionFound(item, s);
+}
+
+function expeditionScoutUnits(s = state) {
+  return units.filter((unit) => unit.sourceType === "recon" && (s.army?.[unit.id] || 0) > 0);
+}
+
+function expeditionScoutCost(s = state) {
+  const costs = {};
+  expeditionScoutUnits(s).forEach((unit) => {
+    const count = Math.max(0, Math.floor(s.army?.[unit.id] || 0));
+    Object.entries(unit.attackCosts || {}).forEach(([id, value]) => {
+      costs[id] = (costs[id] || 0) + value * count;
+    });
+  });
+  return adjustedCost(costs, "expedition");
+}
+
+function expeditionDiscoveryCandidates(area, s = state) {
+  return expeditions.filter((item) =>
+    !isExpeditionFound(item, s) &&
+    Array.isArray(item.found) &&
+    item.found.includes(area) &&
+    isExpeditionDiscoverable(item, s)
+  );
 }
 
 function totalAssignedJobs(s) {
@@ -2588,9 +2650,46 @@ function disbandUnit(id) {
   afterMutation();
 }
 
+function scoutExpedition() {
+  const scouts = expeditionScoutUnits();
+  if (!scouts.length) return toast("需要侦察单位");
+  const costs = expeditionScoutCost();
+  const shortfalls = capShortfalls(costs);
+  if (shortfalls.length) return toast(`需要扩容：${shortfalls[0]}`);
+  if (!spend(costs)) return toast("资源不足");
+
+  let found = [];
+  let emptySearches = 0;
+  const scoutCount = scouts.reduce((sum, unit) => sum + Math.max(0, Math.floor(state.army?.[unit.id] || 0)), 0);
+  const attempts = Math.max(1, Math.min(2, scoutCount));
+  for (let i = 0; i < attempts; i += 1) {
+    const area = 1 + Math.floor(Math.random() * 40);
+    const candidates = expeditionDiscoveryCandidates(area);
+    if (!candidates.length) {
+      emptySearches += 1;
+      continue;
+    }
+    const item = candidates[Math.floor(Math.random() * candidates.length)];
+    if (!state.expeditionsFound.includes(item.id)) state.expeditionsFound.push(item.id);
+    found.push(item);
+  }
+
+  if (found.length) {
+    const names = found.map((item) => item.name).join("、");
+    addLog(`侦察队发现了新的远征目标：${names}。`);
+    toast(`发现远征：${found[0].name}`);
+  } else {
+    addLog(emptySearches > 1 ? "侦察队搜索了几处区域，没有发现新的目标。" : "侦察队没有发现新的目标。");
+    toast("没有发现新的远征");
+  }
+  state.stats.scouted += 1;
+  afterMutation();
+}
+
 function startExpedition(id) {
   const item = expeditions.find((expedition) => expedition.id === id);
   if (!item || state.currentExpedition) return;
+  if (!isExpeditionVisible(item)) return;
   if (item.unlocked && !item.unlocked(state)) return;
   if (armyPower() < item.power) return toast("军力不足");
   const costs = adjustedCost(item.costs, "expedition");
@@ -3259,18 +3358,61 @@ function renderUnitCard(unit) {
 }
 
 function renderExpeditions() {
-  const visible = expeditions.filter((item) => !item.unlocked || item.unlocked(state) || state.expeditionsDone.includes(item.id));
+  const visible = expeditions.filter((item) => isExpeditionVisible(item));
   return `
     <section>
       <div class="section-head">
         <div>
           <h2>远征</h2>
-          <p>远征完成后会带回大量资源，也可能损失士兵。</p>
+          <p>先派侦察队探索，发现目标后再组织远征。</p>
         </div>
       </div>
+      ${renderExpeditionScoutCard()}
       ${state.currentExpedition ? renderCurrentExpedition() : ""}
       <div class="item-grid">${visible.map(renderExpeditionCard).join("") || `<div class="empty">暂无可执行远征。</div>`}</div>
     </section>
+  `;
+}
+
+function renderExpeditionScoutCard() {
+  if (activeDataPackMode !== "theresmore") return "";
+  const pending = isPendingAction("scout", "expedition");
+  const scoutUnits = expeditionScoutUnits();
+  const scoutCount = scoutUnits.reduce((sum, unit) => sum + Math.max(0, Math.floor(state.army?.[unit.id] || 0)), 0);
+  const costs = expeditionScoutCost();
+  const shortfalls = capShortfalls(costs);
+  const discoverable = expeditions.filter((item) => !isExpeditionFound(item) && isExpeditionDiscoverable(item)).length;
+  const canScout = !pending && scoutCount > 0 && discoverable > 0 && canAfford(costs) && !shortfalls.length;
+  const tip = renderCardTooltip({
+    desc: "按 Theresmore 原版探索池抽取 1-40 区域，命中后才会把敌点加入远征列表。",
+    positiveTitle: "探索池",
+    positiveRows: [
+      { label: "侦察单位", value: fmt(scoutCount), color: "army", tone: scoutCount > 0 ? "positive" : "warning" },
+      { label: "可发现目标", value: fmt(discoverable), color: "stone", tone: discoverable > 0 ? "positive" : "warning" },
+    ],
+    negativeTitle: "本次消耗",
+    negativeRows: costRows(costs),
+    warningTitle: "限制",
+    warningRows: [
+      ...(scoutCount <= 0 ? [{ label: "侦察单位", value: "0", color: "army", tone: "warning" }] : []),
+      ...(discoverable <= 0 ? [{ label: "探索池", value: "暂无目标", color: "stone", tone: "warning" }] : []),
+      ...shortfallRows(costs),
+    ],
+  });
+  return `
+    <article class="item-card compact-card has-tip scout-card ${pending ? "is-processing" : ""}" style="--accent:${accentVars.stone}">
+      <div class="item-title">
+        <h3>探索周边</h3>
+        <span class="badge">${pending ? "探索中" : `${scoutCount} 侦察`}</span>
+      </div>
+      <div class="compact-meta">原版 found / reqFound 发现池</div>
+      <div class="spacer"></div>
+      <div class="card-actions">
+        <button class="${canScout ? "primary-btn" : "secondary-btn"}" data-action="scout" data-id="expedition" ${canScout ? "" : "disabled"}>${icon("stone")}探索</button>
+      </div>
+      ${pendingProgressHtml("scout", "expedition")}
+      ${tip}
+    </article>
   `;
 }
 
@@ -3724,6 +3866,7 @@ function bindEvents() {
       if (action === "job") assignJob(id, Number(delta));
       if (action === "train") queueAction(action, id, button);
       if (action === "disband") disbandUnit(id);
+      if (action === "scout") queueAction(action, id, button);
       if (action === "expedition") queueAction(action, id, button);
       if (action === "event") chooseEvent(Number(id));
     };
