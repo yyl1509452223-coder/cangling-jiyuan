@@ -881,7 +881,8 @@ h1 {
 .compact-card {
   min-height: 92px;
   position: relative;
-  padding: 11px 40px 11px 13px;
+  padding: 16px 56px 18px 13px;
+  overflow: hidden;
 }
 
 .item-card.locked:not(.has-tip) {
@@ -904,27 +905,39 @@ h1 {
 .item-title {
   display: flex;
   align-items: start;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 10px;
+  padding-right: 16px;
 }
 
 .item-title h3 {
   font-size: 0.98rem;
   font-weight: 800;
   color: var(--text);
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .badge {
+  position: absolute;
+  top: 13px;
+  right: 13px;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   min-height: 24px;
+  max-width: min(44%, 128px);
   padding: 3px 8px;
   border-radius: 999px;
   border: 1px solid var(--line);
   background: color-mix(in srgb, var(--panel-2) 86%, transparent);
   color: var(--muted);
   font-size: 0.74rem;
+  line-height: 1.1;
+  text-align: center;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .item-desc {
@@ -936,6 +949,7 @@ h1 {
 
 .compact-meta {
   margin-top: 8px;
+  max-width: calc(100% - 8px);
   color: var(--muted);
   font-size: 0.78rem;
   font-weight: 600;
@@ -964,6 +978,32 @@ h1 {
 .unavailable .card-hint {
   background: var(--panel-2);
   color: var(--dim);
+}
+
+.card-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 5px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--accent, var(--gold)) 12%, transparent);
+}
+
+.card-progress span {
+  display: block;
+  width: var(--progress, 0%);
+  height: 100%;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent, var(--gold)) 88%, #fff), var(--accent, var(--gold)));
+  box-shadow: 0 0 14px color-mix(in srgb, var(--accent, var(--gold)) 42%, transparent);
+}
+
+.is-processing {
+  border-color: color-mix(in srgb, var(--accent, var(--gold)) 74%, var(--line));
+}
+
+.is-processing .card-hint {
+  opacity: 0.45;
 }
 
 .has-tip {

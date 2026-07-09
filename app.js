@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.10.1";
+const APP_VERSION = "0.10.2";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -57,6 +57,15 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.10.2",
+    date: "2026-07-09",
+    title: "卡片状态与短读条",
+    notes: [
+      "建筑、研究、训练和远征卡片的状态标记固定到右上角显示。",
+      "点击可执行动作后会先显示不超过 2 秒的从左到右进度条，再完成对应操作。",
+    ],
+  },
   {
     version: "0.10.1",
     date: "2026-07-09",
@@ -1842,6 +1851,9 @@ let autosaveTimer = null;
 let announcementCheckQueued = false;
 let guideCheckQueued = false;
 let currentViewRefreshPending = false;
+let pendingAction = null;
+let pendingActionTimer = null;
+let pendingActionFrame = null;
 
 function icon(id, className = "icon") {
   return `<svg class="${className}" aria-hidden="true"><use href="#icon-${icons[id] || id}"></use></svg>`;
@@ -1897,6 +1909,71 @@ function toast(message) {
   el.textContent = message;
   toastRoot.appendChild(el);
   setTimeout(() => el.remove(), 2800);
+}
+
+function pendingKey(action, id) {
+  return `${action}:${id || ""}`;
+}
+
+function isPendingAction(action, id) {
+  return pendingAction?.key === pendingKey(action, id);
+}
+
+function pendingProgressStyle(action, id) {
+  if (!isPendingAction(action, id)) return "";
+  const progress = clamp(((Date.now() - pendingAction.startedAt) / pendingAction.duration) * 100, 0, 100);
+  return ` style="--progress:${progress.toFixed(1)}%"`;
+}
+
+function pendingProgressHtml(action, id) {
+  if (!isPendingAction(action, id)) return "";
+  return `<div class="card-progress" aria-label="处理中"${pendingProgressStyle(action, id)}><span></span></div>`;
+}
+
+function refreshPendingActionProgress() {
+  if (!pendingAction) {
+    pendingActionFrame = null;
+    return;
+  }
+  const progress = clamp(((Date.now() - pendingAction.startedAt) / pendingAction.duration) * 100, 0, 100);
+  document.querySelectorAll(".card-progress").forEach((bar) => {
+    bar.style.setProperty("--progress", `${progress.toFixed(1)}%`);
+  });
+  pendingActionFrame = window.requestAnimationFrame ? requestAnimationFrame(refreshPendingActionProgress) : setTimeout(refreshPendingActionProgress, 50);
+}
+
+function completePendingAction() {
+  const action = pendingAction;
+  pendingAction = null;
+  pendingActionTimer = null;
+  if (pendingActionFrame) {
+    if (window.cancelAnimationFrame) cancelAnimationFrame(pendingActionFrame);
+    else clearTimeout(pendingActionFrame);
+    pendingActionFrame = null;
+  }
+  if (!action) return;
+  if (action.action === "build") buyBuilding(action.id);
+  if (action.action === "research") research(action.id);
+  if (action.action === "train") trainUnit(action.id);
+  if (action.action === "expedition") startExpedition(action.id);
+}
+
+function queueAction(action, id, button) {
+  if (pendingAction) return;
+  if (button?.getAttribute("aria-disabled") === "true" || button?.disabled) return;
+  pendingAction = {
+    key: pendingKey(action, id),
+    action,
+    id,
+    startedAt: Date.now(),
+    duration: 450 + Math.random() * 1550,
+  };
+  clearTimeout(pendingActionTimer);
+  pendingActionTimer = setTimeout(completePendingAction, pendingAction.duration);
+  renderSidebarAndCurrent();
+  if (!pendingActionFrame) {
+    pendingActionFrame = window.requestAnimationFrame ? requestAnimationFrame(refreshPendingActionProgress) : setTimeout(refreshPendingActionProgress, 50);
+  }
 }
 
 function loadState() {
@@ -2988,10 +3065,11 @@ function renderBuildings() {
 function renderBuildingCard(item) {
   const count = buildingCount(state, item.id);
   const capped = Number.isFinite(item.cap) && count >= item.cap;
+  const pending = isPendingAction("build", item.id);
   const costs = scaledCost(item, count);
   const shortfalls = capShortfalls(costs);
-  const afford = !capped && canAfford(costs) && !shortfalls.length;
-  const badge = capped ? `上限 ${count}/${item.cap}` : shortfalls.length ? "需扩容" : afford ? "可建造" : `已有 ${count}`;
+  const afford = !pending && !capped && canAfford(costs) && !shortfalls.length;
+  const badge = pending ? "建造中" : capped ? `上限 ${count}/${item.cap}` : shortfalls.length ? "需扩容" : afford ? "可建造" : `已有 ${count}`;
   const effects = splitTipRows(effectRows(item.effects));
   const capWarnings = capped ? [{ label: "建筑上限", value: `${fmt(count)} / ${fmt(item.cap)}`, color: "build", tone: "warning" }] : [];
   const tip = renderCardTooltip({
@@ -3003,13 +3081,14 @@ function renderBuildingCard(item) {
     warningRows: [...capWarnings, ...shortfallRows(costs)],
   });
   return `
-    <article class="item-card compact-card click-card has-tip ${afford ? "" : "unavailable locked"}" style="--accent:${accentForBuilding(item)}" data-action="build" data-id="${item.id}" role="button" tabindex="0" aria-disabled="${afford ? "false" : "true"}">
+    <article class="item-card compact-card click-card has-tip ${afford ? "" : "unavailable locked"} ${pending ? "is-processing" : ""}" style="--accent:${accentForBuilding(item)}" data-action="build" data-id="${item.id}" role="button" tabindex="0" aria-disabled="${afford ? "false" : "true"}">
       <div class="item-title">
         <h3>${item.name}</h3>
         <span class="badge">${badge}</span>
       </div>
       <div class="compact-meta">${buildingCategoryName(item.tab)}</div>
       <div class="card-hint" aria-hidden="true">${afford ? "+" : shortfalls.length ? "!" : "…"}</div>
+      ${pendingProgressHtml("build", item.id)}
       ${tip}
     </article>
   `;
@@ -3044,10 +3123,11 @@ function renderResearch() {
 
 function renderTechCard(item) {
   const done = hasTech(state, item.id);
+  const pending = isPendingAction("research", item.id);
   const costs = adjustedCost(item.costs, "tech");
   const shortfalls = capShortfalls(costs);
-  const afford = canAfford(costs) && !shortfalls.length;
-  const badge = done ? "已完成" : shortfalls.length ? "需扩容" : afford ? "可研究" : "待资源";
+  const afford = !pending && canAfford(costs) && !shortfalls.length;
+  const badge = pending ? "研究中" : done ? "已完成" : shortfalls.length ? "需扩容" : afford ? "可研究" : "待资源";
   const effects = splitTipRows(effectRows(item.effects));
   const tip = renderCardTooltip({
     desc: item.desc,
@@ -3058,13 +3138,14 @@ function renderTechCard(item) {
     warningRows: done ? [] : shortfallRows(costs),
   });
   return `
-    <article class="item-card compact-card click-card has-tip ${done || !afford ? "unavailable locked" : ""}" style="--accent:${accentForTech(item)}" data-action="research" data-id="${item.id}" role="button" tabindex="0" aria-disabled="${done || !afford ? "true" : "false"}">
+    <article class="item-card compact-card click-card has-tip ${done || !afford ? "unavailable locked" : ""} ${pending ? "is-processing" : ""}" style="--accent:${accentForTech(item)}" data-action="research" data-id="${item.id}" role="button" tabindex="0" aria-disabled="${done || !afford ? "true" : "false"}">
       <div class="item-title">
         <h3>${item.name}</h3>
         <span class="badge">${badge}</span>
       </div>
       <div class="compact-meta">${researchCategoryName(item.tab)}</div>
       <div class="card-hint" aria-hidden="true">${done ? "✓" : afford ? "+" : shortfalls.length ? "!" : "…"}</div>
+      ${pendingProgressHtml("research", item.id)}
       ${tip}
     </article>
   `;
@@ -3141,9 +3222,10 @@ function renderArmy() {
 
 function renderUnitCard(unit) {
   const count = state.army[unit.id] || 0;
+  const pending = isPendingAction("train", unit.id);
   const costs = adjustedCost(unit.costs, "train");
   const shortfalls = capShortfalls(costs);
-  const afford = canAfford(costs) && !shortfalls.length && armySize() < cached.armyCap && idlePopulation() > 0;
+  const afford = !pending && canAfford(costs) && !shortfalls.length && armySize() < cached.armyCap && idlePopulation() > 0;
   const upkeep = splitTipRows(effectRows(unit.upkeep || {}));
   const warnings = [
     ...shortfallRows(costs),
@@ -3159,10 +3241,10 @@ function renderUnitCard(unit) {
     warningRows: warnings,
   });
   return `
-    <article class="item-card compact-card has-tip" style="--accent:${accentForUnit(unit)}">
+    <article class="item-card compact-card has-tip ${pending ? "is-processing" : ""}" style="--accent:${accentForUnit(unit)}">
       <div class="item-title">
         <h3>${unit.name}</h3>
-        <span class="badge">${count} 名</span>
+        <span class="badge">${pending ? "训练中" : `${count} 名`}</span>
       </div>
       <div class="compact-meta">人员配置</div>
       <div class="spacer"></div>
@@ -3170,6 +3252,7 @@ function renderUnitCard(unit) {
         <button class="${afford ? "primary-btn" : "secondary-btn"}" data-action="train" data-id="${unit.id}" ${afford ? "" : "disabled"}>${icon("army")}训练</button>
         <button class="secondary-btn" data-action="disband" data-id="${unit.id}" ${count ? "" : "disabled"}>遣散</button>
       </div>
+      ${pendingProgressHtml("train", unit.id)}
       ${tip}
     </article>
   `;
@@ -3210,6 +3293,7 @@ function renderCurrentExpedition() {
 
 function renderExpeditionCard(item) {
   const done = state.expeditionsDone.includes(item.id);
+  const pending = isPendingAction("expedition", item.id);
   const difficulty = getDifficulty();
   const costs = adjustedCost(item.costs, "expedition");
   const shortfalls = capShortfalls(costs);
@@ -3219,7 +3303,7 @@ function renderExpeditionCard(item) {
     difficulty.mods.expeditionMin,
     difficulty.mods.expeditionMax,
   );
-  const afford = canAfford(costs) && !shortfalls.length && armyPower() >= item.power && !state.currentExpedition;
+  const afford = !pending && canAfford(costs) && !shortfalls.length && armyPower() >= item.power && !state.currentExpedition;
   const tip = renderCardTooltip({
     desc: item.desc,
     positiveTitle: "奖励",
@@ -3237,16 +3321,17 @@ function renderExpeditionCard(item) {
     ],
   });
   return `
-    <article class="item-card compact-card has-tip" style="--accent:${accentVars.stone}">
+    <article class="item-card compact-card has-tip ${pending ? "is-processing" : ""}" style="--accent:${accentVars.stone}">
       <div class="item-title">
         <h3>${item.name}</h3>
-        <span class="badge">${done ? "已探索" : `军力 ${item.power}`}</span>
+        <span class="badge">${pending ? "准备中" : done ? "已探索" : `军力 ${item.power}`}</span>
       </div>
       <div class="compact-meta">外勤任务</div>
       <div class="spacer"></div>
       <div class="card-actions">
         <button class="${afford ? "primary-btn" : "secondary-btn"}" data-action="expedition" data-id="${item.id}" ${afford ? "" : "disabled"}>${icon("army")}出发</button>
       </div>
+      ${pendingProgressHtml("expedition", item.id)}
       ${tip}
     </article>
   `;
@@ -3630,16 +3715,16 @@ function bindEvents() {
       if (action === "gather") manualGather(id);
       if (action === "build") {
         if (button.getAttribute("aria-disabled") === "true") return;
-        buyBuilding(id);
+        queueAction(action, id, button);
       }
       if (action === "research") {
         if (button.getAttribute("aria-disabled") === "true") return;
-        research(id);
+        queueAction(action, id, button);
       }
       if (action === "job") assignJob(id, Number(delta));
-      if (action === "train") trainUnit(id);
+      if (action === "train") queueAction(action, id, button);
       if (action === "disband") disbandUnit(id);
-      if (action === "expedition") startExpedition(id);
+      if (action === "expedition") queueAction(action, id, button);
       if (action === "event") chooseEvent(Number(id));
     };
   });
