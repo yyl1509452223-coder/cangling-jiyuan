@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.9.1";
+const APP_VERSION = "0.9.2";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -47,6 +47,15 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.9.2",
+    date: "2026-07-09",
+    title: "资源状态强化",
+    notes: [
+      "右侧资源列表在资源已满或为空时会显示更明确的状态标记。",
+      "满仓和空仓资源会使用不同底色、边框和数值颜色，方便快速扫一眼判断。",
+    ],
+  },
   {
     version: "0.9.1",
     date: "2026-07-09",
@@ -1665,11 +1674,15 @@ function renderResourceRow(resource) {
   const cap = cached.caps[resource.id] || resource.cap;
   const rate = cached.rates[resource.id] || 0;
   const halted = cached.starved && resource.id !== "food";
+  const isFull = cap > 0 && value >= cap - 0.005;
+  const isEmpty = value <= 0.005;
+  const statusClass = isFull ? "full" : isEmpty ? "empty" : "";
+  const statusLabel = isFull ? "已满" : isEmpty ? "为空" : "";
   return `
-    <div class="resource-row ${halted ? "halted" : ""}">
+    <div class="resource-row ${halted ? "halted" : ""} ${statusClass}">
       <span style="color:${accentForResource(resource.id)}">${icon(resource.icon, "resource-icon")}</span>
       <div>
-        <div class="resource-name">${resource.name}</div>
+        <div class="resource-name">${resource.name}${statusLabel ? `<span class="resource-status">${statusLabel}</span>` : ""}</div>
         <div class="resource-rate ${rateClass(rate)}">${halted ? "停摆" : `${signed(rate)}/秒`}</div>
       </div>
       <div class="resource-value">

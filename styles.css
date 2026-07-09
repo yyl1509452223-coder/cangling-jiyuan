@@ -590,6 +590,7 @@ h1 {
   align-items: center;
   min-height: 34px;
   padding: 6px 8px;
+  border: 1px solid transparent;
   border-radius: 7px;
   background: transparent;
 }
@@ -603,12 +604,28 @@ h1 {
 }
 
 .resource-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-weight: 650;
 }
 
 .resource-value {
   justify-self: end;
   font-variant-numeric: tabular-nums;
+}
+
+.resource-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 18px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  color: var(--dim);
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1;
 }
 
 .resource-rate {
@@ -634,6 +651,28 @@ h1 {
 
 .resource-row.halted {
   opacity: 0.68;
+}
+
+.resource-row.full {
+  border-color: color-mix(in srgb, var(--gold) 58%, var(--line));
+  background: color-mix(in srgb, var(--gold) 13%, transparent);
+}
+
+.resource-row.full .resource-status,
+.resource-row.full .resource-value,
+.resource-row.full .cap {
+  color: color-mix(in srgb, var(--gold) 88%, var(--text));
+}
+
+.resource-row.empty {
+  border-color: color-mix(in srgb, var(--red) 56%, var(--line));
+  background: color-mix(in srgb, var(--red) 12%, transparent);
+}
+
+.resource-row.empty .resource-status,
+.resource-row.empty .resource-value,
+.resource-row.empty .cap {
+  color: color-mix(in srgb, var(--red) 84%, var(--text));
 }
 
 .cap {
