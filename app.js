@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.10.0";
+const APP_VERSION = "0.10.1";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -57,6 +57,15 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.10.1",
+    date: "2026-07-09",
+    title: "祖先路线效果中文化",
+    notes: [
+      "修正开局祖先路线卡片显示 foodRate、armyCap 等内部字段的问题。",
+      "路线效果现在显示为食物产量、军队容量、研究点产量等中文说明。",
+    ],
+  },
   {
     version: "0.10.0",
     date: "2026-07-09",
@@ -1758,7 +1767,7 @@ function applyTheresmorePack() {
   paths = pack.paths.map((path) => ({
     ...path,
     icon: path.icon || "spark",
-    bonuses: path.bonuses?.length ? path.bonuses : effectText(path.effects || {}),
+    bonuses: effectText(path.effects || {}),
   }));
   buildings = pack.buildings.map(withRequirementUnlock);
   techs = pack.techs.map(withRequirementUnlock);

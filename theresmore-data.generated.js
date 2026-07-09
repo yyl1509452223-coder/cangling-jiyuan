@@ -5,7 +5,7 @@ window.THERESMORE_PACK = {
   "source": {
     "rawBundle": "raw/main.480437b3.js",
     "analysisDir": "theresmore_analysis_2026-07-09/analysis",
-    "generatedAt": "2026-07-09T14:16:52.171Z"
+    "generatedAt": "2026-07-09T15:00:21.075Z"
   },
   "populationFoodUse": 0,
   "startResources": {
@@ -394,7 +394,7 @@ window.THERESMORE_PACK = {
       "icon": "spark",
       "desc": "来自 Theresmore 的祖先路线：农业",
       "bonuses": [
-        "foodRate:0.1"
+        "食物产量 +10%"
       ],
       "effects": {
         "foodRate": 0.1
@@ -410,8 +410,8 @@ window.THERESMORE_PACK = {
       "icon": "spark",
       "desc": "来自 Theresmore 的祖先路线：采集",
       "bonuses": [
-        "stoneRate:0.1",
-        "woodRate:0.1"
+        "石头产量 +10%",
+        "木材产量 +10%"
       ],
       "effects": {
         "stoneRate": 0.1,
@@ -428,9 +428,9 @@ window.THERESMORE_PACK = {
       "icon": "spark",
       "desc": "来自 Theresmore 的祖先路线：采矿",
       "bonuses": [
-        "copperRate:0.1",
-        "ironRate:0.1",
-        "toolsRate:0.1"
+        "铜产量 +10%",
+        "铁产量 +10%",
+        "工具产量 +10%"
       ],
       "effects": {
         "copperRate": 0.1,
@@ -448,7 +448,7 @@ window.THERESMORE_PACK = {
       "icon": "spark",
       "desc": "来自 Theresmore 的祖先路线：贸易",
       "bonuses": [
-        "goldRate:0.15"
+        "黄金产量 +15%"
       ],
       "effects": {
         "goldRate": 0.15
@@ -470,7 +470,7 @@ window.THERESMORE_PACK = {
       "icon": "spark",
       "desc": "来自 Theresmore 的祖先路线：作战",
       "bonuses": [
-        "armyCap:25"
+        "军队容量 +25"
       ],
       "effects": {
         "armyCap": 25
@@ -492,7 +492,7 @@ window.THERESMORE_PACK = {
       "icon": "spark",
       "desc": "来自 Theresmore 的祖先路线：研究",
       "bonuses": [
-        "researchRate:0.25"
+        "研究点产量 +25%"
       ],
       "effects": {
         "researchRate": 0.25
@@ -514,7 +514,7 @@ window.THERESMORE_PACK = {
       "icon": "spark",
       "desc": "来自 Theresmore 的祖先路线：施法",
       "bonuses": [
-        "manaRate:0.5"
+        "法力产量 +50%"
       ],
       "effects": {
         "manaRate": 0.5
@@ -536,8 +536,8 @@ window.THERESMORE_PACK = {
       "icon": "spark",
       "desc": "来自 Theresmore 的祖先路线：饲育",
       "bonuses": [
-        "cowRate:0.5",
-        "suppliesRate:0.25"
+        "奶牛产量 +50%",
+        "补给产量 +25%"
       ],
       "effects": {
         "cowRate": 0.5,
@@ -560,7 +560,7 @@ window.THERESMORE_PACK = {
       "icon": "spark",
       "desc": "来自 Theresmore 的祖先路线：信奉",
       "bonuses": [
-        "faithRate:0.5"
+        "信念产量 +50%"
       ],
       "effects": {
         "faithRate": 0.5

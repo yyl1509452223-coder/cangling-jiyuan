@@ -235,7 +235,24 @@ function categoryForTech(item) {
 }
 
 function effectSummary(effects = {}) {
-  return Object.entries(effects).slice(0, 3).map(([key, value]) => `${key}:${value}`);
+  const labelForResource = (id) => nameMaps.resources.get(id) || id;
+  const labels = {
+    popCap: "人口上限",
+    population: "人口",
+    armyCap: "军队容量",
+    morale: "民心",
+    allRate: "全部产量",
+    armyPower: "军队战力",
+  };
+  const signed = (value, digits = 0) => `${value >= 0 ? "+" : ""}${Number(value).toFixed(digits).replace(/\.0+$/, "")}`;
+  return Object.entries(effects).slice(0, 3).map(([key, value]) => {
+    if (key.startsWith("cap_")) return `${labelForResource(key.slice(4))}上限 ${signed(value)}`;
+    if (key.startsWith("jobCap_")) return `${key.slice(7)}岗位 ${signed(value)}`;
+    if (key.endsWith("RateFlat")) return `${labelForResource(key.replace("RateFlat", ""))} ${signed(value, Math.abs(value) < 1 ? 2 : 1)}/秒`;
+    if (key.endsWith("Rate")) return `${labelForResource(key.replace("Rate", ""))}产量 ${signed(value * 100)}%`;
+    if (key === "morale" || key === "allRate" || key === "armyPower") return `${labels[key]} ${signed(value * 100)}%`;
+    return `${labels[key] || key} ${signed(value)}`;
+  });
 }
 
 function convertResources() {
