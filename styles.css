@@ -787,7 +787,11 @@ h1 {
   padding: 11px 40px 11px 13px;
 }
 
-.item-card.locked {
+.item-card.locked:not(.has-tip) {
+  opacity: 0.62;
+}
+
+.item-card.locked.has-tip > :not(.tip-panel) {
   opacity: 0.62;
 }
 
@@ -862,16 +866,18 @@ h1 {
   position: absolute;
   left: 14px;
   top: calc(100% - 6px);
-  z-index: 90;
+  z-index: 120;
   display: grid;
   gap: 8px;
   width: min(360px, calc(100vw - 42px));
   max-width: 360px;
   padding: 10px;
-  border: 1px solid color-mix(in srgb, var(--accent, var(--gold)) 38%, var(--line));
+  border: 1px solid color-mix(in srgb, var(--accent, var(--gold)) 58%, var(--line));
   border-radius: var(--radius);
-  background: color-mix(in srgb, var(--panel) 99%, black);
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+  background: var(--panel);
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.36),
+    0 0 0 1px color-mix(in srgb, var(--bg) 74%, transparent);
   color: var(--text);
   font-size: 0.84rem;
   line-height: 1.35;
@@ -885,7 +891,7 @@ h1 {
 
 .has-tip:hover,
 .has-tip:focus-within {
-  z-index: 40;
+  z-index: 80;
 }
 
 .has-tip:hover .tip-panel,

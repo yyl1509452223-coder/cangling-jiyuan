@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.8.4";
+const APP_VERSION = "0.8.5";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -47,6 +47,15 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.8.5",
+    date: "2026-07-09",
+    title: "悬停预览清晰度修复",
+    notes: [
+      "修复不可用卡片悬停预览被卡片透明度一起压淡的问题。",
+      "增强悬停预览背景遮挡和层级，避免和后方卡片文字混在一起。",
+    ],
+  },
   {
     version: "0.8.4",
     date: "2026-07-09",
