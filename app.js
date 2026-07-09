@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.9.2";
+const APP_VERSION = "0.9.3";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -47,6 +47,17 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.9.3",
+    date: "2026-07-09",
+    title: "早期研究与数值校准",
+    notes: [
+      "补充早期研究链和对应建筑，让定居、生产、文化、防务路线更完整。",
+      "采食者产粮调整为 2/秒，并下调困难和地狱难度的成本与口粮压力。",
+      "新开局会获得少量粮食、木材、石料和学识，减少纯手动采集时间。",
+      "修复军队战力加成只显示不生效的问题。",
+    ],
+  },
   {
     version: "0.9.2",
     date: "2026-07-09",
@@ -304,22 +315,22 @@ const difficulties = [
     color: "#e8894a",
     icon: "stone",
     desc: "扩张更贵，粮食压力更高，远征和事件收益会缩水。",
-    notes: ["建筑 +15%，研究 +12%", "粮食消耗 +25%，事件间隔 +15%", "远征成功率 -12%"],
+    notes: ["建筑 +10%，研究 +8%", "粮食消耗 +15%，事件间隔 +10%", "远征成功率 -8%"],
     mods: {
       manualGather: 1,
-      buildCost: 1.15,
-      techCost: 1.12,
-      trainCost: 1.12,
-      expeditionCost: 1.15,
-      eventCost: 1.1,
-      foodUse: 1.25,
-      eventReward: 0.85,
-      expeditionReward: 0.9,
-      expeditionChance: -0.12,
-      expeditionMin: 0.3,
-      expeditionMax: 0.85,
+      buildCost: 1.1,
+      techCost: 1.08,
+      trainCost: 1.08,
+      expeditionCost: 1.1,
+      eventCost: 1.05,
+      foodUse: 1.15,
+      eventReward: 0.9,
+      expeditionReward: 0.92,
+      expeditionChance: -0.08,
+      expeditionMin: 0.35,
+      expeditionMax: 0.88,
       expeditionLoss: 1,
-      eventInterval: 1.15,
+      eventInterval: 1.1,
       startResources: 0.9,
     },
   },
@@ -329,23 +340,23 @@ const difficulties = [
     color: "#d85d5d",
     icon: "army",
     desc: "给熟悉系统后的挑战。每次错误扩张都会留下明显代价。",
-    notes: ["建筑 +35%，研究 +30%", "粮食消耗 +55%，事件间隔 +35%", "远征成功率 -25%，失败损失更重"],
+    notes: ["建筑 +22%，研究 +18%", "粮食消耗 +30%，事件间隔 +25%", "远征成功率 -18%，失败损失更重"],
     mods: {
       manualGather: 1,
-      buildCost: 1.35,
-      techCost: 1.3,
-      trainCost: 1.25,
-      expeditionCost: 1.35,
-      eventCost: 1.25,
-      foodUse: 1.55,
-      eventReward: 0.65,
-      expeditionReward: 0.75,
-      expeditionChance: -0.25,
-      expeditionMin: 0.2,
-      expeditionMax: 0.75,
+      buildCost: 1.22,
+      techCost: 1.18,
+      trainCost: 1.18,
+      expeditionCost: 1.22,
+      eventCost: 1.15,
+      foodUse: 1.3,
+      eventReward: 0.78,
+      expeditionReward: 0.82,
+      expeditionChance: -0.18,
+      expeditionMin: 0.28,
+      expeditionMax: 0.82,
       expeditionLoss: 2,
-      eventInterval: 1.35,
-      startResources: 0.75,
+      eventInterval: 1.25,
+      startResources: 0.85,
     },
   },
 ];
@@ -405,6 +416,26 @@ const buildings = [
     unlocked: (s) => hasTech(s, "agriculture"),
   },
   {
+    id: "storehouse",
+    name: "储粮坑",
+    tab: "settlement",
+    desc: "用石板和干草隔出储藏空间，提高基础物资上限。",
+    costs: { wood: 28, stone: 18 },
+    costScale: 1.25,
+    effects: { cap_food: 120, cap_wood: 80, cap_stone: 80 },
+    unlocked: (s) => hasTech(s, "storage"),
+  },
+  {
+    id: "potter",
+    name: "陶工棚",
+    tab: "settlement",
+    desc: "烧制陶罐和粮瓮，让粮食储备更稳。",
+    costs: { gold: 18, wood: 36, stone: 30 },
+    costScale: 1.28,
+    effects: { cap_food: 180, foodRateFlat: 0.25, jobCap_forager: 1 },
+    unlocked: (s) => hasTech(s, "pottery"),
+  },
+  {
     id: "lumberyard",
     name: "山麓木场",
     tab: "production",
@@ -415,6 +446,16 @@ const buildings = [
     unlocked: (s) => hasTech(s, "woodcutting"),
   },
   {
+    id: "carpenter",
+    name: "木工棚",
+    tab: "production",
+    desc: "把木料切成可复用构件，提高木材处理效率。",
+    costs: { gold: 42, wood: 70, stone: 20 },
+    costScale: 1.3,
+    effects: { woodRateFlat: 0.35, cap_wood: 160, jobCap_woodcutter: 1 },
+    unlocked: (s) => hasTech(s, "carpentry"),
+  },
+  {
     id: "quarry",
     name: "露天采石场",
     tab: "production",
@@ -423,6 +464,16 @@ const buildings = [
     costScale: 1.4,
     effects: { cap_stone: 100, jobCap_mason: 1 },
     unlocked: (s) => hasTech(s, "masonry"),
+  },
+  {
+    id: "stonemason",
+    name: "石匠棚",
+    tab: "production",
+    desc: "集中存放石锤和楔子，提高石料处理效率。",
+    costs: { gold: 45, wood: 48, stone: 64 },
+    costScale: 1.3,
+    effects: { stoneRateFlat: 0.3, cap_stone: 160, jobCap_mason: 1 },
+    unlocked: (s) => hasTech(s, "stoneTools"),
   },
   {
     id: "orepit",
@@ -463,6 +514,16 @@ const buildings = [
     costScale: 1.22,
     effects: { armyCap: 4 },
     unlocked: (s) => hasTech(s, "watch"),
+  },
+  {
+    id: "range",
+    name: "简易靶场",
+    tab: "war",
+    desc: "用木桩和草靶训练守卫，扩大早期队伍容量。",
+    costs: { wood: 95, stone: 36, food: 70 },
+    costScale: 1.24,
+    effects: { armyCap: 3 },
+    unlocked: (s) => hasTech(s, "archery"),
   },
   {
     id: "market",
@@ -506,6 +567,33 @@ const techs = [
     unlocked: (s) => hasTech(s, "housing"),
   },
   {
+    id: "storage",
+    name: "储藏",
+    tab: "settlement",
+    desc: "整理粮坑和木石堆场，解锁储粮坑。",
+    costs: { knowledge: 12, wood: 18 },
+    effects: { cap_food: 80, cap_wood: 40, cap_stone: 40 },
+    unlocked: (s) => hasTech(s, "housing"),
+  },
+  {
+    id: "pottery",
+    name: "陶器",
+    tab: "settlement",
+    desc: "烧制陶罐保存粮食，解锁陶工棚。",
+    costs: { knowledge: 35, food: 45, stone: 30 },
+    effects: { cap_food: 120 },
+    unlocked: (s) => hasTech(s, "storage") && hasTech(s, "agriculture"),
+  },
+  {
+    id: "cropRotation",
+    name: "轮作",
+    tab: "settlement",
+    desc: "安排山腰薄田轮换休耕，提高粮食产出。",
+    costs: { knowledge: 70, food: 110 },
+    effects: { foodRate: 0.12 },
+    unlocked: (s) => hasTech(s, "pottery") && buildingCount(s, "granary") >= 1,
+  },
+  {
     id: "woodcutting",
     name: "木材切削",
     tab: "production",
@@ -513,6 +601,15 @@ const techs = [
     costs: { knowledge: 20 },
     effects: {},
     unlocked: (s) => hasTech(s, "housing"),
+  },
+  {
+    id: "carpentry",
+    name: "木工",
+    tab: "production",
+    desc: "制作榫卯和木架，解锁木工棚并提高木材产出。",
+    costs: { knowledge: 60, wood: 90 },
+    effects: { woodRate: 0.1 },
+    unlocked: (s) => hasTech(s, "woodcutting") && buildingCount(s, "lumberyard") >= 1,
   },
   {
     id: "masonry",
@@ -524,13 +621,40 @@ const techs = [
     unlocked: (s) => hasTech(s, "housing"),
   },
   {
+    id: "stoneTools",
+    name: "采石工具",
+    tab: "production",
+    desc: "改良石锤和楔子，解锁石匠棚并提高石料产出。",
+    costs: { knowledge: 65, wood: 55, stone: 80 },
+    effects: { stoneRate: 0.1 },
+    unlocked: (s) => hasTech(s, "masonry") && buildingCount(s, "quarry") >= 1,
+  },
+  {
     id: "records",
     name: "结绳账簿",
     tab: "culture",
     desc: "解锁书记棚，并让学识获取提高。",
     costs: { knowledge: 150 },
     effects: { knowledgeRate: 0.15 },
-    unlocked: (s) => hasTech(s, "housing"),
+    unlocked: (s) => hasTech(s, "storage"),
+  },
+  {
+    id: "writing",
+    name: "书写",
+    tab: "culture",
+    desc: "把结绳记录改为成体系的符号，进一步提高学识产出。",
+    costs: { knowledge: 95, wood: 80, food: 60 },
+    effects: { knowledgeRate: 0.12, cap_knowledge: 80 },
+    unlocked: (s) => hasTech(s, "records") && buildingCount(s, "scribe") >= 1,
+  },
+  {
+    id: "mathematics",
+    name: "算筹",
+    tab: "culture",
+    desc: "用算筹记录分配和星象，所有基础产量小幅提高。",
+    costs: { knowledge: 150, wood: 120, stone: 90 },
+    effects: { allRate: 0.04, cap_knowledge: 100 },
+    unlocked: (s) => hasTech(s, "writing") && hasTech(s, "carpentry"),
   },
   {
     id: "watch",
@@ -542,13 +666,22 @@ const techs = [
     unlocked: (s) => buildingCount(s, "hut") >= 2,
   },
   {
+    id: "archery",
+    name: "弓术",
+    tab: "war",
+    desc: "训练猎手使用弓弦与草靶，解锁简易靶场并提高战力。",
+    costs: { knowledge: 110, wood: 130, food: 90 },
+    effects: { armyPower: 0.08 },
+    unlocked: (s) => hasTech(s, "watch") && hasTech(s, "carpentry"),
+  },
+  {
     id: "smelting",
     name: "采矿",
     tab: "production",
     desc: "辨认浅层矿脉，解锁矿砂采集和斧兵训练。",
-    costs: { knowledge: 250 },
+    costs: { knowledge: 220, stone: 130 },
     effects: { oreRate: 0.1 },
-    unlocked: (s) => hasTech(s, "masonry") && buildingCount(s, "quarry") >= 3,
+    unlocked: (s) => hasTech(s, "stoneTools") && buildingCount(s, "quarry") >= 2,
   },
   {
     id: "omens",
@@ -557,7 +690,7 @@ const techs = [
     desc: "解锁星火祭坛，星辉开始成为一种资源。",
     costs: { knowledge: 95, food: 90 },
     effects: { faithRate: 0.08 },
-    unlocked: (s) => hasTech(s, "records"),
+    unlocked: (s) => hasTech(s, "writing"),
   },
   {
     id: "trade",
@@ -566,7 +699,7 @@ const techs = [
     desc: "解锁市集，所有基础产量提高。",
     costs: { knowledge: 140, wood: 120, stone: 90 },
     effects: { allRate: 0.05 },
-    unlocked: (s) => hasTech(s, "records") && buildingCount(s, "granary") >= 2,
+    unlocked: (s) => hasTech(s, "mathematics") && buildingCount(s, "granary") >= 2,
   },
   {
     id: "iron",
@@ -575,7 +708,7 @@ const techs = [
     desc: "士兵战力提高，解锁重装斧兵。",
     costs: { knowledge: 180, ore: 100, faith: 20 },
     effects: { armyPower: 0.2 },
-    unlocked: (s) => hasTech(s, "smelting") && buildingCount(s, "orepit") >= 2,
+    unlocked: (s) => hasTech(s, "smelting") && hasTech(s, "archery") && buildingCount(s, "orepit") >= 2,
   },
   {
     id: "astrolabe",
@@ -592,9 +725,9 @@ const jobs = [
   {
     id: "forager",
     name: "采食者",
-    desc: "照看农田和野生作物，每人生产 1.6 粮食/秒。",
+    desc: "照看农田和野生作物，每人生产 2 粮食/秒。",
     baseCap: 0,
-    effects: { foodRateFlat: 1.6 },
+    effects: { foodRateFlat: 2 },
   },
   {
     id: "woodcutter",
@@ -738,6 +871,13 @@ const randomEvents = [
 
 const defaultResources = () =>
   Object.fromEntries(resources.map((resource) => [resource.id, 0]));
+
+const baseStartResources = {
+  food: 90,
+  wood: 35,
+  stone: 35,
+  knowledge: 6,
+};
 
 const defaultState = () => ({
   started: false,
@@ -1006,7 +1146,7 @@ function renderGuide() {
       </article>
       <article class="guide-card" style="--accent:${accentVars.people}">
         <h3>3. 人口需要口粮</h3>
-        <p>每 1 人口消耗 1 粮食/秒；农田提供采食者岗位，采食者每人生产 1.6 粮食/秒。</p>
+        <p>每 1 人口消耗 1 粮食/秒；农田提供采食者岗位，采食者每人生产 2 粮食/秒。</p>
       </article>
       <article class="guide-card" style="--accent:${accentVars.knowledge}">
         <h3>4. 研究决定解锁</h3>
@@ -1118,7 +1258,7 @@ function startPath(pathId) {
   state.path = pathId;
   state.difficulty = difficultyId;
   state.tribeName = tribeName;
-  state.resources = scaleResourceMap(defaultResources(), difficulty.mods.startResources);
+  state.resources = { ...defaultResources(), ...scaleResourceMap(baseStartResources, difficulty.mods.startResources) };
   state.nextEventAt = 150 * difficulty.mods.eventInterval;
   Object.entries(path.start || {}).forEach(([id, value]) => {
     state.resources[id] += Math.floor(value * difficulty.mods.startResources);
@@ -1172,7 +1312,7 @@ function armyCap(s = state) {
 }
 
 function armyPower(s = state) {
-  const mult = 1 + (hasTech(s, "iron") ? 0.2 : 0);
+  const mult = techs.reduce((sum, tech) => sum + (hasTech(s, tech.id) ? tech.effects?.armyPower || 0 : 0), 1);
   return Object.entries(s.army).reduce((sum, [id, count]) => {
     const unit = units.find((item) => item.id === id);
     return sum + (unit ? unit.power * count * mult : 0);
@@ -1924,7 +2064,7 @@ function renderPeople() {
       <div class="section-head">
         <div>
           <h2>人口</h2>
-          <p>每 1 人口消耗 1 粮食/秒；采食者 1.6 粮食/秒，伐木工 0.7 木材/秒，石匠 0.6 石料/秒。</p>
+          <p>每 1 人口消耗 1 粮食/秒；采食者 2 粮食/秒，伐木工 0.7 木材/秒，石匠 0.6 石料/秒。</p>
         </div>
       </div>
       <div class="stats-grid compact-stats">
