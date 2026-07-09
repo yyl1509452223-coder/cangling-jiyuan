@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.9.3";
+const APP_VERSION = "0.9.4";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -13,6 +13,7 @@ const icons = {
   wood: "wood",
   stone: "stone",
   ore: "ore",
+  tools: "build",
   knowledge: "knowledge",
   faith: "faith",
   gold: "spark",
@@ -27,6 +28,7 @@ const resources = [
   { id: "gold", name: "金币", icon: "spark", cap: 600, unlocked: (s) => buildingCount(s, "hut") >= 1 },
   { id: "wood", name: "木材", icon: "wood", cap: 300 },
   { id: "stone", name: "石料", icon: "stone", cap: 300 },
+  { id: "tools", name: "工具", icon: "tools", cap: 180, unlocked: (s) => hasTech(s, "craftsmanship") || buildingCount(s, "workshop") >= 1 },
   { id: "ore", name: "矿砂", icon: "ore", cap: 200, unlocked: (s) => buildingCount(s, "orepit") >= 1 },
   { id: "knowledge", name: "学识", icon: "knowledge", cap: 500 },
   { id: "faith", name: "星辉", icon: "faith", cap: 500, unlocked: (s) => buildingCount(s, "shrine") >= 1 },
@@ -36,6 +38,7 @@ const accentVars = {
   food: "var(--green)",
   wood: "var(--wood)",
   stone: "var(--stone)",
+  tools: "var(--gold)",
   ore: "var(--orange)",
   knowledge: "var(--blue)",
   faith: "var(--purple)",
@@ -47,6 +50,16 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.9.4",
+    date: "2026-07-09",
+    title: "研究树完整度扩展",
+    notes: [
+      "研究树扩展为多阶段结构，新增定居、生产、文化、信仰、防务和远征相关研究。",
+      "新增工具资源、工匠岗位和一批中期建筑，让生产升级与军备升级有更完整承接。",
+      "新增兵种、远征与事件内容，整体节奏保持轻量，不提高前期门槛。",
+    ],
+  },
   {
     version: "0.9.3",
     date: "2026-07-09",
@@ -436,6 +449,36 @@ const buildings = [
     unlocked: (s) => hasTech(s, "pottery"),
   },
   {
+    id: "longhouse",
+    name: "长屋",
+    tab: "settlement",
+    desc: "把几户人家连成共享屋脊，提供更多人口容量。",
+    costs: { gold: 60, wood: 120, stone: 45, food: 80 },
+    costScale: 1.28,
+    effects: { population: 3, cap_food: 80, knowledgeRateFlat: 0.25 },
+    unlocked: (s) => hasTech(s, "villagePlanning"),
+  },
+  {
+    id: "well",
+    name: "山泉水渠",
+    tab: "settlement",
+    desc: "把山泉引入梯田和住处，提高粮食产出与储备。",
+    costs: { gold: 70, wood: 80, stone: 120, tools: 20 },
+    costScale: 1.28,
+    effects: { foodRateFlat: 0.55, cap_food: 220, jobCap_forager: 1 },
+    unlocked: (s) => hasTech(s, "irrigation"),
+  },
+  {
+    id: "warehouse",
+    name: "谷仓库房",
+    tab: "settlement",
+    desc: "集中保管粮食、木料、石料和工具，显著提高物资上限。",
+    costs: { gold: 90, wood: 140, stone: 95, tools: 30 },
+    costScale: 1.24,
+    effects: { cap_food: 360, cap_wood: 220, cap_stone: 220, cap_tools: 90, cap_gold: 160 },
+    unlocked: (s) => hasTech(s, "warehousing"),
+  },
+  {
     id: "lumberyard",
     name: "山麓木场",
     tab: "production",
@@ -454,6 +497,36 @@ const buildings = [
     costScale: 1.3,
     effects: { woodRateFlat: 0.35, cap_wood: 160, jobCap_woodcutter: 1 },
     unlocked: (s) => hasTech(s, "carpentry"),
+  },
+  {
+    id: "workshop",
+    name: "共用工坊",
+    tab: "production",
+    desc: "木匠和石匠共用的工棚，开始稳定产出工具。",
+    costs: { gold: 75, wood: 110, stone: 85 },
+    costScale: 1.28,
+    effects: { toolsRateFlat: 0.35, cap_tools: 120, jobCap_artisan: 1 },
+    unlocked: (s) => hasTech(s, "craftsmanship"),
+  },
+  {
+    id: "toolmaker",
+    name: "工具棚",
+    tab: "production",
+    desc: "专门打磨木柄、石锤和铜刃，提高工具产出。",
+    costs: { gold: 110, wood: 120, stone: 90, ore: 35 },
+    costScale: 1.3,
+    effects: { toolsRateFlat: 0.65, cap_tools: 160, jobCap_artisan: 1 },
+    unlocked: (s) => hasTech(s, "toolmaking"),
+  },
+  {
+    id: "sawmill",
+    name: "山涧锯棚",
+    tab: "production",
+    desc: "借山涧水势带动粗锯，提高木材处理能力。",
+    costs: { gold: 130, wood: 180, stone: 110, tools: 45 },
+    costScale: 1.28,
+    effects: { woodRateFlat: 0.8, cap_wood: 300, jobCap_woodcutter: 1 },
+    unlocked: (s) => hasTech(s, "sawing"),
   },
   {
     id: "quarry",
@@ -476,6 +549,16 @@ const buildings = [
     unlocked: (s) => hasTech(s, "stoneTools"),
   },
   {
+    id: "stoneworks",
+    name: "石作坊",
+    tab: "production",
+    desc: "用滑轮和楔槽处理大块石料，提高石料产出。",
+    costs: { gold: 135, wood: 90, stone: 190, tools: 45 },
+    costScale: 1.28,
+    effects: { stoneRateFlat: 0.7, cap_stone: 300, jobCap_mason: 1 },
+    unlocked: (s) => hasTech(s, "stonecutting"),
+  },
+  {
     id: "orepit",
     name: "赤砂矿坑",
     tab: "production",
@@ -484,6 +567,16 @@ const buildings = [
     costScale: 1.4,
     effects: { cap_ore: 100, jobCap_miner: 1 },
     unlocked: (s) => hasTech(s, "smelting"),
+  },
+  {
+    id: "mineShaft",
+    name: "竖井矿架",
+    tab: "production",
+    desc: "支起木架深入赤砂矿脉，提高矿砂产出与储量。",
+    costs: { gold: 180, wood: 170, stone: 140, tools: 70 },
+    costScale: 1.3,
+    effects: { oreRateFlat: 0.65, cap_ore: 180, jobCap_miner: 1 },
+    unlocked: (s) => hasTech(s, "deepMining"),
   },
   {
     id: "scribe",
@@ -506,6 +599,36 @@ const buildings = [
     unlocked: (s) => hasTech(s, "omens"),
   },
   {
+    id: "archive",
+    name: "档案棚",
+    tab: "culture",
+    desc: "集中保管木简、陶片和星图，提高学识上限与产出。",
+    costs: { gold: 120, wood: 150, stone: 70, knowledge: 120 },
+    costScale: 1.24,
+    effects: { knowledgeRateFlat: 0.9, cap_knowledge: 260, jobCap_scribe: 1 },
+    unlocked: (s) => hasTech(s, "archives"),
+  },
+  {
+    id: "school",
+    name: "算筹学堂",
+    tab: "culture",
+    desc: "让年轻人学习账册、测量和历法，稳定提高学识。",
+    costs: { gold: 180, wood: 170, stone: 110, knowledge: 180, tools: 55 },
+    costScale: 1.26,
+    effects: { knowledgeRateFlat: 1.2, knowledgeRate: 0.08, cap_knowledge: 320 },
+    unlocked: (s) => hasTech(s, "education"),
+  },
+  {
+    id: "temple",
+    name: "星辉庙",
+    tab: "culture",
+    desc: "把守灯人的祭仪固定下来，提高星辉产出与士气。",
+    costs: { gold: 160, stone: 180, faith: 90, tools: 45 },
+    costScale: 1.25,
+    effects: { faithRateFlat: 0.65, cap_faith: 180, morale: 0.03, jobCap_acolyte: 1 },
+    unlocked: (s) => hasTech(s, "templeRites"),
+  },
+  {
     id: "barracks",
     name: "木栅营地",
     tab: "war",
@@ -516,6 +639,16 @@ const buildings = [
     unlocked: (s) => hasTech(s, "watch"),
   },
   {
+    id: "palisade",
+    name: "环村栅墙",
+    tab: "war",
+    desc: "围住住处和粮仓，增加军队容量并稳定民心。",
+    costs: { wood: 150, stone: 70, food: 80 },
+    costScale: 1.24,
+    effects: { armyCap: 4, morale: 0.02 },
+    unlocked: (s) => hasTech(s, "fortification"),
+  },
+  {
     id: "range",
     name: "简易靶场",
     tab: "war",
@@ -524,6 +657,26 @@ const buildings = [
     costScale: 1.24,
     effects: { armyCap: 3 },
     unlocked: (s) => hasTech(s, "archery"),
+  },
+  {
+    id: "signalTower",
+    name: "烽火哨塔",
+    tab: "war",
+    desc: "在山脊立起火台和旗杆，提高远征准备效率。",
+    costs: { gold: 130, wood: 120, stone: 160, tools: 40 },
+    costScale: 1.25,
+    effects: { armyCap: 5, allRate: 0.02 },
+    unlocked: (s) => hasTech(s, "signals"),
+  },
+  {
+    id: "armory",
+    name: "军械棚",
+    tab: "war",
+    desc: "统一保养盾牌、箭束和刃口，提升军队战力。",
+    costs: { gold: 180, wood: 150, stone: 110, ore: 90, tools: 80 },
+    costScale: 1.28,
+    effects: { armyCap: 4, toolsRateFlat: -0.15 },
+    unlocked: (s) => hasTech(s, "armsWorkshop"),
   },
   {
     id: "market",
@@ -594,6 +747,51 @@ const techs = [
     unlocked: (s) => hasTech(s, "pottery") && buildingCount(s, "granary") >= 1,
   },
   {
+    id: "granaryManagement",
+    name: "粮仓管理",
+    tab: "settlement",
+    desc: "统一记录收储和口粮分配，进一步提高粮食效率。",
+    costs: { knowledge: 115, food: 180, wood: 90 },
+    effects: { foodRate: 0.08, cap_food: 180 },
+    unlocked: (s) => hasTech(s, "cropRotation") && buildingCount(s, "potter") >= 1,
+  },
+  {
+    id: "villagePlanning",
+    name: "村落规划",
+    tab: "settlement",
+    desc: "按道路、屋舍和仓区重新规划村落，解锁长屋。",
+    costs: { knowledge: 130, wood: 140, stone: 80 },
+    effects: { cap_food: 120, cap_wood: 80, cap_stone: 80 },
+    unlocked: (s) => hasTech(s, "pottery") && buildingCount(s, "hut") >= 4,
+  },
+  {
+    id: "irrigation",
+    name: "水渠",
+    tab: "settlement",
+    desc: "把山泉引到梯田和长屋旁，解锁山泉水渠。",
+    costs: { knowledge: 170, stone: 150, tools: 35 },
+    effects: { foodRate: 0.14 },
+    unlocked: (s) => hasTech(s, "granaryManagement") && hasTech(s, "craftsmanship"),
+  },
+  {
+    id: "warehousing",
+    name: "库房制度",
+    tab: "settlement",
+    desc: "把分散堆场整合为库房，解锁谷仓库房。",
+    costs: { knowledge: 190, wood: 160, stone: 130, tools: 45 },
+    effects: { cap_food: 240, cap_wood: 160, cap_stone: 160, cap_tools: 60 },
+    unlocked: (s) => hasTech(s, "villagePlanning") && hasTech(s, "craftsmanship"),
+  },
+  {
+    id: "publicWorks",
+    name: "公共工程",
+    tab: "settlement",
+    desc: "把水渠、道路、库房和工坊纳入统一调度，提高全局效率。",
+    costs: { knowledge: 320, gold: 180, wood: 220, stone: 220, tools: 120 },
+    effects: { allRate: 0.05, cap_tools: 80, cap_gold: 180 },
+    unlocked: (s) => hasTech(s, "warehousing") && hasTech(s, "irrigation"),
+  },
+  {
     id: "woodcutting",
     name: "木材切削",
     tab: "production",
@@ -610,6 +808,33 @@ const techs = [
     costs: { knowledge: 60, wood: 90 },
     effects: { woodRate: 0.1 },
     unlocked: (s) => hasTech(s, "woodcutting") && buildingCount(s, "lumberyard") >= 1,
+  },
+  {
+    id: "craftsmanship",
+    name: "工艺分工",
+    tab: "production",
+    desc: "让木匠、石匠和修理者分工协作，解锁共用工坊和工匠岗位。",
+    costs: { knowledge: 90, wood: 80, stone: 65 },
+    effects: { cap_tools: 80, jobCap_artisan: 1 },
+    unlocked: (s) => hasTech(s, "carpentry") && hasTech(s, "stoneTools"),
+  },
+  {
+    id: "toolmaking",
+    name: "工具制造",
+    tab: "production",
+    desc: "集中制作石锤、木柄和铜刃，解锁工具棚。",
+    costs: { knowledge: 150, wood: 120, stone: 90, ore: 25 },
+    effects: { toolsRate: 0.12, cap_tools: 120 },
+    unlocked: (s) => hasTech(s, "craftsmanship") && hasTech(s, "smelting") && buildingCount(s, "orepit") >= 1,
+  },
+  {
+    id: "sawing",
+    name: "水力锯架",
+    tab: "production",
+    desc: "用水轮和锯架处理木料，解锁山涧锯棚。",
+    costs: { knowledge: 220, wood: 220, stone: 130, tools: 70 },
+    effects: { woodRate: 0.16 },
+    unlocked: (s) => hasTech(s, "irrigation") && hasTech(s, "toolmaking"),
   },
   {
     id: "masonry",
@@ -630,6 +855,24 @@ const techs = [
     unlocked: (s) => hasTech(s, "masonry") && buildingCount(s, "quarry") >= 1,
   },
   {
+    id: "stonecutting",
+    name: "切石",
+    tab: "production",
+    desc: "用滑轮和楔槽处理大块石料，解锁石作坊。",
+    costs: { knowledge: 210, wood: 120, stone: 220, tools: 60 },
+    effects: { stoneRate: 0.16 },
+    unlocked: (s) => hasTech(s, "craftsmanship") && buildingCount(s, "stonemason") >= 1,
+  },
+  {
+    id: "quarryLifts",
+    name: "采石滑车",
+    tab: "production",
+    desc: "用滑车和绳架搬运大块石料，进一步提高石料效率。",
+    costs: { knowledge: 280, wood: 180, stone: 260, tools: 95 },
+    effects: { stoneRate: 0.12, toolsRate: 0.04 },
+    unlocked: (s) => hasTech(s, "stonecutting") && hasTech(s, "sawing"),
+  },
+  {
     id: "records",
     name: "结绳账簿",
     tab: "culture",
@@ -648,6 +891,24 @@ const techs = [
     unlocked: (s) => hasTech(s, "records") && buildingCount(s, "scribe") >= 1,
   },
   {
+    id: "archives",
+    name: "档案",
+    tab: "culture",
+    desc: "把木简和陶片集中保存，解锁档案棚。",
+    costs: { knowledge: 160, wood: 120, stone: 70 },
+    effects: { knowledgeRate: 0.1, cap_knowledge: 160 },
+    unlocked: (s) => hasTech(s, "writing"),
+  },
+  {
+    id: "education",
+    name: "学堂",
+    tab: "culture",
+    desc: "让年轻人学习账册、测量和历法，解锁算筹学堂。",
+    costs: { knowledge: 240, wood: 160, stone: 120, tools: 50 },
+    effects: { knowledgeRate: 0.14 },
+    unlocked: (s) => hasTech(s, "archives") && hasTech(s, "mathematics") && hasTech(s, "craftsmanship"),
+  },
+  {
     id: "mathematics",
     name: "算筹",
     tab: "culture",
@@ -655,6 +916,24 @@ const techs = [
     costs: { knowledge: 150, wood: 120, stone: 90 },
     effects: { allRate: 0.04, cap_knowledge: 100 },
     unlocked: (s) => hasTech(s, "writing") && hasTech(s, "carpentry"),
+  },
+  {
+    id: "coinage",
+    name: "铸币",
+    tab: "culture",
+    desc: "用标准重量的金属片结算劳务，提高金币和贸易效率。",
+    costs: { knowledge: 230, gold: 180, ore: 80, tools: 45 },
+    effects: { goldRate: 0.16, cap_gold: 260 },
+    unlocked: (s) => hasTech(s, "mathematics") && hasTech(s, "toolmaking"),
+  },
+  {
+    id: "calendar",
+    name: "山历",
+    tab: "culture",
+    desc: "用星象和气候记录安排农时、远征和祭仪。",
+    costs: { knowledge: 260, food: 220, faith: 35 },
+    effects: { foodRate: 0.08, faithRate: 0.08, allRate: 0.03 },
+    unlocked: (s) => hasTech(s, "omens") && hasTech(s, "mathematics") && buildingCount(s, "shrine") >= 1,
   },
   {
     id: "watch",
@@ -666,6 +945,15 @@ const techs = [
     unlocked: (s) => buildingCount(s, "hut") >= 2,
   },
   {
+    id: "fortification",
+    name: "木栅防线",
+    tab: "war",
+    desc: "围住住处和粮仓，解锁环村栅墙。",
+    costs: { knowledge: 90, wood: 130, stone: 60 },
+    effects: { armyCap: 3 },
+    unlocked: (s) => hasTech(s, "watch") && hasTech(s, "storage"),
+  },
+  {
     id: "archery",
     name: "弓术",
     tab: "war",
@@ -673,6 +961,51 @@ const techs = [
     costs: { knowledge: 110, wood: 130, food: 90 },
     effects: { armyPower: 0.08 },
     unlocked: (s) => hasTech(s, "watch") && hasTech(s, "carpentry"),
+  },
+  {
+    id: "shieldDrill",
+    name: "盾列训练",
+    tab: "war",
+    desc: "让守卫学会以盾列推进和撤退，提高战力。",
+    costs: { knowledge: 150, wood: 140, stone: 80, tools: 35 },
+    effects: { armyPower: 0.1, armyCap: 2 },
+    unlocked: (s) => hasTech(s, "fortification") && hasTech(s, "craftsmanship") && buildingCount(s, "barracks") >= 1,
+  },
+  {
+    id: "signals",
+    name: "烽火信号",
+    tab: "war",
+    desc: "用烟火和旗语联系山路队伍，解锁烽火哨塔。",
+    costs: { knowledge: 190, wood: 150, stone: 160, tools: 45 },
+    effects: { armyCap: 3, allRate: 0.02 },
+    unlocked: (s) => hasTech(s, "archery") && hasTech(s, "mathematics") && hasTech(s, "craftsmanship"),
+  },
+  {
+    id: "patrolRoutes",
+    name: "巡逻路线",
+    tab: "war",
+    desc: "固定巡逻山路和林线，提高军队容量与远征准备。",
+    costs: { knowledge: 220, food: 170, wood: 130, tools: 55 },
+    effects: { armyCap: 4, armyPower: 0.06 },
+    unlocked: (s) => hasTech(s, "signals") && hasTech(s, "craftsmanship") && s.expeditionsDone.includes("hillfort"),
+  },
+  {
+    id: "earthworks",
+    name: "土垒工事",
+    tab: "war",
+    desc: "在木栅外加筑土垒和石基，扩大守备空间。",
+    costs: { knowledge: 260, wood: 180, stone: 240, tools: 80 },
+    effects: { armyCap: 5, morale: 0.02 },
+    unlocked: (s) => hasTech(s, "fortification") && hasTech(s, "quarryLifts"),
+  },
+  {
+    id: "armsWorkshop",
+    name: "军械保养",
+    tab: "war",
+    desc: "统一保养盾牌、箭束和刃口，解锁军械棚。",
+    costs: { knowledge: 260, wood: 170, ore: 100, tools: 100 },
+    effects: { armyPower: 0.12 },
+    unlocked: (s) => hasTech(s, "shieldDrill") && hasTech(s, "toolmaking"),
   },
   {
     id: "smelting",
@@ -684,6 +1017,33 @@ const techs = [
     unlocked: (s) => hasTech(s, "stoneTools") && buildingCount(s, "quarry") >= 2,
   },
   {
+    id: "charcoal",
+    name: "炭烧",
+    tab: "production",
+    desc: "用炭火稳定炉温，提高矿砂处理和工具制作效率。",
+    costs: { knowledge: 170, wood: 180, stone: 80 },
+    effects: { oreRate: 0.08, toolsRate: 0.08 },
+    unlocked: (s) => hasTech(s, "smelting") && hasTech(s, "carpentry"),
+  },
+  {
+    id: "deepMining",
+    name: "竖井采矿",
+    tab: "production",
+    desc: "用木架和绳索深入矿脉，解锁竖井矿架。",
+    costs: { knowledge: 260, wood: 220, stone: 180, tools: 90 },
+    effects: { oreRate: 0.15, cap_ore: 120 },
+    unlocked: (s) => hasTech(s, "charcoal") && buildingCount(s, "orepit") >= 2,
+  },
+  {
+    id: "bellows",
+    name: "风箱炉",
+    tab: "production",
+    desc: "改良炉膛和风箱，全面提高矿砂与工具产出。",
+    costs: { knowledge: 320, wood: 220, stone: 190, ore: 130, tools: 110 },
+    effects: { oreRate: 0.18, toolsRate: 0.18 },
+    unlocked: (s) => hasTech(s, "deepMining") && hasTech(s, "toolmaking"),
+  },
+  {
     id: "omens",
     name: "星象祭仪",
     tab: "culture",
@@ -691,6 +1051,60 @@ const techs = [
     costs: { knowledge: 95, food: 90 },
     effects: { faithRate: 0.08 },
     unlocked: (s) => hasTech(s, "writing"),
+  },
+  {
+    id: "myths",
+    name: "山神谱系",
+    tab: "culture",
+    desc: "把星象、山路和祖灵故事整理成谱系，提高士气。",
+    costs: { knowledge: 160, food: 120, faith: 50 },
+    effects: { morale: 0.03, cap_faith: 90 },
+    unlocked: (s) => hasTech(s, "omens") && buildingCount(s, "shrine") >= 1,
+  },
+  {
+    id: "templeRites",
+    name: "庙祝仪轨",
+    tab: "culture",
+    desc: "把守灯人的祭仪固定下来，解锁星辉庙。",
+    costs: { knowledge: 240, stone: 160, faith: 120, tools: 35 },
+    effects: { faithRate: 0.14, morale: 0.02 },
+    unlocked: (s) => hasTech(s, "myths") && buildingCount(s, "shrine") >= 1,
+  },
+  {
+    id: "starCharts",
+    name: "星图校订",
+    tab: "culture",
+    desc: "校准观星记录，提高学识、星辉与远征准备效率。",
+    costs: { knowledge: 360, ore: 120, faith: 160, tools: 80 },
+    effects: { knowledgeRate: 0.12, faithRate: 0.12, allRate: 0.04 },
+    unlocked: (s) => hasTech(s, "calendar") && hasTech(s, "templeRites") && buildingCount(s, "orepit") >= 1,
+  },
+  {
+    id: "trailMapping",
+    name: "山路测绘",
+    tab: "culture",
+    desc: "把远征队走过的山路绘成图册，开放更远的探索路线。",
+    costs: { knowledge: 180, wood: 100, stone: 80 },
+    effects: { allRate: 0.02 },
+    unlocked: (s) => hasTech(s, "mathematics") && s.expeditionsDone.includes("mistwood"),
+  },
+  {
+    id: "supplyCaravans",
+    name: "补给驮队",
+    tab: "culture",
+    desc: "用驮队和驿点保障远征，减少长途探索压力。",
+    costs: { knowledge: 260, food: 240, wood: 150, tools: 55 },
+    effects: { cap_food: 180, armyCap: 3 },
+    unlocked: (s) => hasTech(s, "trailMapping") && hasTech(s, "warehousing"),
+  },
+  {
+    id: "outpostCharters",
+    name: "外勤据点",
+    tab: "culture",
+    desc: "在远征路线上设立临时据点，扩大探索收益。",
+    costs: { knowledge: 340, wood: 220, stone: 180, tools: 90, faith: 60 },
+    effects: { allRate: 0.05, cap_gold: 220 },
+    unlocked: (s) => hasTech(s, "supplyCaravans") && hasTech(s, "signals") && buildingCount(s, "shrine") >= 1,
   },
   {
     id: "trade",
@@ -702,13 +1116,49 @@ const techs = [
     unlocked: (s) => hasTech(s, "mathematics") && buildingCount(s, "granary") >= 2,
   },
   {
+    id: "tradeLedgers",
+    name: "商旅账册",
+    tab: "culture",
+    desc: "用统一账册记录商旅契约，提高市集收益。",
+    costs: { knowledge: 280, gold: 220, wood: 140, tools: 60 },
+    effects: { goldRate: 0.12, allRate: 0.03 },
+    unlocked: (s) => hasTech(s, "trade") && hasTech(s, "coinage"),
+  },
+  {
     id: "iron",
     name: "黑铁刃口",
     tab: "war",
     desc: "士兵战力提高，解锁重装斧兵。",
     costs: { knowledge: 180, ore: 100, faith: 20 },
     effects: { armyPower: 0.2 },
-    unlocked: (s) => hasTech(s, "smelting") && hasTech(s, "archery") && buildingCount(s, "orepit") >= 2,
+    unlocked: (s) => hasTech(s, "smelting") && hasTech(s, "archery") && buildingCount(s, "orepit") >= 2 && buildingCount(s, "shrine") >= 1,
+  },
+  {
+    id: "steelEdges",
+    name: "淬火刃口",
+    tab: "war",
+    desc: "改良刃口淬火方法，大幅提高重装部队战力。",
+    costs: { knowledge: 340, ore: 180, tools: 140, faith: 60 },
+    effects: { armyPower: 0.22 },
+    unlocked: (s) => hasTech(s, "iron") && hasTech(s, "bellows"),
+  },
+  {
+    id: "fieldTactics",
+    name: "山地战术",
+    tab: "war",
+    desc: "把斥候、守卫和斧兵编入固定小队，提高远征可靠性。",
+    costs: { knowledge: 380, food: 240, tools: 120, faith: 80 },
+    effects: { armyPower: 0.16, armyCap: 5 },
+    unlocked: (s) => hasTech(s, "signals") && hasTech(s, "steelEdges"),
+  },
+  {
+    id: "starNavigation",
+    name: "星路导航",
+    tab: "war",
+    desc: "把星图用于夜间行军，提高高风险远征的成功准备。",
+    costs: { knowledge: 460, ore: 160, faith: 180, tools: 120 },
+    effects: { armyPower: 0.12, allRate: 0.04 },
+    unlocked: (s) => hasTech(s, "fieldTactics") && hasTech(s, "starCharts"),
   },
   {
     id: "astrolabe",
@@ -717,7 +1167,7 @@ const techs = [
     desc: "解锁观星台，推进苍岭进入星图时代。",
     costs: { knowledge: 260, ore: 150, faith: 90 },
     effects: { allRate: 0.08 },
-    unlocked: (s) => hasTech(s, "omens") && hasTech(s, "trade"),
+    unlocked: (s) => hasTech(s, "starCharts") && hasTech(s, "trade"),
   },
 ];
 
@@ -764,6 +1214,13 @@ const jobs = [
     effects: { oreRateFlat: 0.8 },
     unlocked: (s) => hasTech(s, "smelting"),
   },
+  {
+    id: "artisan",
+    name: "工匠",
+    desc: "制作工具、修理器具并协助工坊生产，每人生产 0.55 工具/秒。",
+    effects: { toolsRateFlat: 0.55 },
+    unlocked: (s) => hasTech(s, "craftsmanship"),
+  },
 ];
 
 const units = [
@@ -786,6 +1243,24 @@ const units = [
     unlocked: (s) => hasTech(s, "watch") && buildingCount(s, "barracks") >= 1,
   },
   {
+    id: "archer",
+    name: "山林弓手",
+    desc: "熟悉林间伏击的弓手，适合中期远征。",
+    costs: { food: 55, wood: 70 },
+    power: 2.8,
+    upkeep: {},
+    unlocked: (s) => hasTech(s, "archery") && buildingCount(s, "range") >= 1,
+  },
+  {
+    id: "spearman",
+    name: "盾矛卫",
+    desc: "携带盾牌和长矛的守卫，能稳定推进山路。",
+    costs: { food: 75, wood: 55, stone: 35, tools: 18 },
+    power: 3.4,
+    upkeep: {},
+    unlocked: (s) => hasTech(s, "shieldDrill"),
+  },
+  {
     id: "axeman",
     name: "黑铁斧兵",
     desc: "佩戴粗铁刃口，是山岭战斗的硬拳头。",
@@ -793,6 +1268,15 @@ const units = [
     power: 4.5,
     upkeep: {},
     unlocked: (s) => hasTech(s, "iron"),
+  },
+  {
+    id: "starward",
+    name: "星辉卫",
+    desc: "接受守灯人祝祷的精锐守卫，适合高风险远征。",
+    costs: { food: 100, ore: 55, tools: 40, faith: 45 },
+    power: 6.2,
+    upkeep: { faithRateFlat: -0.03 },
+    unlocked: (s) => hasTech(s, "fieldTactics") && buildingCount(s, "temple") >= 1,
   },
 ];
 
@@ -806,6 +1290,7 @@ const expeditions = [
     costs: { food: 40 },
     rewards: { wood: 120, stone: 45, knowledge: 16 },
     unlocks: [],
+    unlocked: (s) => hasTech(s, "watch"),
   },
   {
     id: "redpass",
@@ -816,6 +1301,29 @@ const expeditions = [
     costs: { food: 90, wood: 45 },
     rewards: { stone: 120, ore: 70, knowledge: 36 },
     unlocks: ["smelting"],
+    unlocked: (s) => hasTech(s, "trailMapping") || hasTech(s, "smelting"),
+  },
+  {
+    id: "hillfort",
+    name: "山顶废垒",
+    desc: "旧日石垒被藤蔓吞没，里面仍有可用工具和战术刻痕。",
+    power: 18,
+    duration: 90,
+    costs: { food: 130, tools: 25 },
+    rewards: { stone: 160, tools: 70, knowledge: 65 },
+    unlocks: ["fortification"],
+    unlocked: (s) => hasTech(s, "signals"),
+  },
+  {
+    id: "oldroad",
+    name: "古道关",
+    desc: "山脊古道连接几处废弃驿点，适合建立长期补给线。",
+    power: 28,
+    duration: 125,
+    costs: { food: 190, wood: 90, tools: 55 },
+    rewards: { gold: 180, wood: 160, tools: 90, knowledge: 95 },
+    unlocks: ["supplyCaravans"],
+    unlocked: (s) => hasTech(s, "supplyCaravans"),
   },
   {
     id: "starfall",
@@ -826,6 +1334,29 @@ const expeditions = [
     costs: { food: 160, faith: 30 },
     rewards: { ore: 130, faith: 120, knowledge: 90 },
     unlocks: ["omens"],
+    unlocked: (s) => hasTech(s, "templeRites"),
+  },
+  {
+    id: "marketruins",
+    name: "旧市遗址",
+    desc: "石阶之间还能找到旧秤砣和契约残片。",
+    power: 34,
+    duration: 150,
+    costs: { food: 230, gold: 90, tools: 70 },
+    rewards: { gold: 320, ore: 120, knowledge: 140, faith: 70 },
+    unlocks: ["trade"],
+    unlocked: (s) => hasTech(s, "outpostCharters"),
+  },
+  {
+    id: "starring",
+    name: "星陨环",
+    desc: "环形石阵在夜里发出冷光，只有精锐队伍能靠近。",
+    power: 48,
+    duration: 190,
+    costs: { food: 320, faith: 130, tools: 110 },
+    rewards: { ore: 240, faith: 260, knowledge: 220, gold: 180 },
+    unlocks: ["starCharts"],
+    unlocked: (s) => hasTech(s, "starCharts"),
   },
 ];
 
@@ -833,7 +1364,10 @@ const achievements = [
   { id: "pop10", name: "十户之村", desc: "人口达到 10。", done: (s) => s.population >= 10 },
   { id: "build10", name: "初具规模", desc: "累计建造 10 座建筑。", done: (s) => totalBuildings(s) >= 10 },
   { id: "tech5", name: "墨迹未干", desc: "完成 5 项研究。", done: (s) => s.techs.length >= 5 },
+  { id: "tech20", name: "百工初兴", desc: "完成 20 项研究。", done: (s) => s.techs.length >= 20 },
   { id: "army10", name: "有备无患", desc: "拥有 10 点军力。", done: (s) => armyPower(s) >= 10 },
+  { id: "army50", name: "山脊军势", desc: "拥有 50 点军力。", done: (s) => armyPower(s) >= 50 },
+  { id: "expedition5", name: "远路成图", desc: "完成 5 条远征路线。", done: (s) => s.expeditionsDone.length >= 5 },
   { id: "starAge", name: "星图时代", desc: "研究铜制星盘。", done: (s) => hasTech(s, "astrolabe") },
 ];
 
@@ -876,6 +1410,7 @@ const baseStartResources = {
   food: 90,
   wood: 35,
   stone: 35,
+  tools: 0,
   knowledge: 6,
 };
 
@@ -904,6 +1439,7 @@ const defaultState = () => ({
     scribe: 0,
     acolyte: 0,
     miner: 0,
+    artisan: 0,
   },
   army: {},
   expeditionsDone: [],
@@ -1514,6 +2050,7 @@ function disbandUnit(id) {
 function startExpedition(id) {
   const item = expeditions.find((expedition) => expedition.id === id);
   if (!item || state.currentExpedition) return;
+  if (item.unlocked && !item.unlocked(state)) return;
   if (armyPower() < item.power) return toast("军力不足");
   const costs = adjustedCost(item.costs, "expedition");
   const shortfalls = capShortfalls(costs);
@@ -2163,6 +2700,7 @@ function renderUnitCard(unit) {
 }
 
 function renderExpeditions() {
+  const visible = expeditions.filter((item) => !item.unlocked || item.unlocked(state) || state.expeditionsDone.includes(item.id));
   return `
     <section>
       <div class="section-head">
@@ -2172,7 +2710,7 @@ function renderExpeditions() {
         </div>
       </div>
       ${state.currentExpedition ? renderCurrentExpedition() : ""}
-      <div class="item-grid">${expeditions.map(renderExpeditionCard).join("")}</div>
+      <div class="item-grid">${visible.map(renderExpeditionCard).join("") || `<div class="empty">暂无可执行远征。</div>`}</div>
     </section>
   `;
 }
