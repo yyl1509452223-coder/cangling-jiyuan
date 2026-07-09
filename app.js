@@ -1,7 +1,7 @@
 const SAVE_KEY = "ridge-age-save-v1";
 const ANNOUNCEMENT_KEY = "ridge-age-seen-version";
 const GUIDE_KEY = "ridge-age-guide-seen";
-const APP_VERSION = "0.9.8";
+const APP_VERSION = "0.9.9";
 const TICK_MS = 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -50,6 +50,15 @@ const accentVars = {
 };
 
 const changelog = [
+  {
+    version: "0.9.9",
+    date: "2026-07-09",
+    title: "成本预览精简",
+    notes: [
+      "资源不足时，悬停预览只显示缺少数量，不再挤入当前数量和等待秒数。",
+      "缺口数字仍会随资源生产逐秒减少，方便判断还差多少。",
+    ],
+  },
   {
     version: "0.9.8",
     date: "2026-07-09",
@@ -3162,10 +3171,7 @@ function costRows(costs = {}) {
 
 function formatCostStatus(current, cost, missing, wait = null, capBlocked = false) {
   if (capBlocked) return `${fmt(current, 1)} / ${fmt(cost)} · 需扩容`;
-  if (missing > 0) {
-    const waitText = wait ? ` · 约${wait}秒` : "";
-    return `${fmt(current, 1)} / ${fmt(cost)} · 缺${fmt(missing, 1)}${waitText}`;
-  }
+  if (missing > 0) return `缺${fmt(missing, 1)}`;
   return `${fmt(current, 1)} / ${fmt(cost)}`;
 }
 
